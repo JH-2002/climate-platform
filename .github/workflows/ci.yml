@@ -1,0 +1,111 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend (Python)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      db:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: climate
+          POSTGRES_PASSWORD: ci-only
+          POSTGRES_DB: climate
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U climate -d climate"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+      redis:
+        image: redis:7.4-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    env:
+      APP_ENV: test
+      DATABASE_URL: postgresql+asyncpg://climate:ci-only@localhost:5432/climate
+      REDIS_URL: redis://localhost:6379/0
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/pyproject.toml
+      - name: Instalar dependências
+        run: pip install -e ".[dev]"
+      - name: Lint e formatação (ruff)
+        run: ruff check . && ruff format --check .
+      - name: Tipagem (mypy)
+        run: mypy app
+      - name: Fronteiras entre módulos (import-linter)
+        run: lint-imports
+      - name: Migrações (alembic)
+        run: alembic upgrade head
+      - name: Iniciar worker Celery (para o teste de integração de prontidão)
+        run: |
+          celery -A app.workers.celery_app worker --loglevel=WARNING --detach \
+            --pidfile=/tmp/celery.pid --logfile=/tmp/celery.log
+          sleep 5
+      - name: Testes (unitários + integração)
+        env:
+          RUN_INTEGRATION: "1"
+        run: pytest --cov=app --cov-report=term-missing
+      - name: Testes do script de fontes
+        working-directory: .
+        run: pytest scripts/tests
+      - name: Auditoria de dependências (pip-audit)
+        run: pip-audit
+      - name: Log do worker em caso de falha
+        if: failure()
+        run: cat /tmp/celery.log || true
+
+  frontend:
+    name: Frontend (Next.js)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+      - name: Configurar Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Instalar dependências
+        run: if [ -f package-lock.json ]; then npm ci; else npm install; fi
+      - name: Lint (ESLint)
+        run: npm run lint
+      - name: Tipagem (tsc)
+        run: npm run typecheck
+      - name: Testes (Vitest)
+        run: npm test
+      - name: Auditoria de dependências (npm audit)
+        run: npm audit --audit-level=high
+
+  secrets:
+    name: Varredura de segredos (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Executar gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

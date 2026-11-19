@@ -1,0 +1,101 @@
+name: climate-platform
+
+x-backend-common: &backend-common
+  build:
+    context: ./backend
+  env_file: .env
+  volumes:
+    - ./backend:/app
+  depends_on:
+    db:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_HOST_PORT:-5433}:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7.4-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    <<: *backend-common
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn app.main:create_app --factory --host 0.0.0.0 --port 8000 --reload"
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.workers.healthcheck", "api"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  worker:
+    <<: *backend-common
+    command: celery -A app.workers.celery_app worker --loglevel=INFO --concurrency=2
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.workers.healthcheck", "worker"]
+      interval: 15s
+      timeout: 10s
+      retries: 8
+      start_period: 20s
+
+  beat:
+    <<: *backend-common
+    command: celery -A app.workers.celery_app beat --loglevel=INFO --schedule /tmp/celerybeat-schedule
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.workers.healthcheck", "beat"]
+      interval: 30s
+      timeout: 5s
+      retries: 6
+      start_period: 60s
+
+  frontend:
+    build:
+      context: ./frontend
+    env_file: .env
+    environment:
+      WATCHPACK_POLLING: "true"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - frontend-node-modules:/app/node_modules
+      - frontend-next:/app/.next
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 10s
+      retries: 12
+      start_period: 60s
+
+volumes:
+  db-data:
+  frontend-node-modules:
+  frontend-next:

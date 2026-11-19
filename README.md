@@ -1,0 +1,92 @@
+# Climate Intelligence Platform
+
+Plataforma web de monitoramento meteorológico, análise geoespacial, estimativa de condições favoráveis a alagamentos, simulação de cenários e relatórios — construída com dados reais, rastreáveis e com limitações declaradas.
+
+> **Estado:** Fase 1 (Foundation) implementada, aguardando validação local. Nenhum dado meteorológico integrado ainda. Veja [CURRENT_STATUS.md](CURRENT_STATUS.md).
+
+## Região piloto
+Município de São Paulo, com expansão para a RMSP ([ADR-002](docs/architecture/adr/ADR-002-pilot-region-sao-paulo.md)).
+
+## Arquitetura
+Monólito modular FastAPI + workers Celery + PostgreSQL/PostGIS + Redis + Next.js. Detalhes em [ARCHITECTURE.md](ARCHITECTURE.md).
+
+| Serviço | Porta (host) | Função |
+|---|---|---|
+| frontend | 3000 | Next.js (App Router) |
+| backend | 8000 | API REST `/api/v1`, docs em `/api/docs` |
+| worker | — | Celery (processamento em background) |
+| beat | — | Agendador Celery |
+| db | **5433** | PostgreSQL 16 + PostGIS 3.4 (5433 para não conflitar com um PostgreSQL local) |
+| redis | 6379 | Broker e cache |
+
+## Pré-requisitos
+- **Docker Desktop** com backend WSL2 (Windows) ou Docker Engine (Linux).
+- Python ≥ 3.11 apenas para rodar `scripts/smoke_sources.py` fora do Docker (opcional).
+
+## Executar
+```bash
+cp .env.example .env          # PowerShell: Copy-Item .env.example .env
+docker compose up -d --build
+docker compose ps             # todos os serviços devem ficar "healthy" (até ~3 min)
+```
+- Frontend: http://localhost:3000 — página de estado: http://localhost:3000/status
+- API: http://localhost:8000/api/v1/health/ready — OpenAPI: http://localhost:8000/api/docs
+
+Na primeira execução o container do frontend roda `npm install`. Depois, gere e versione o lockfile:
+```bash
+docker compose cp frontend:/app/package-lock.json frontend/package-lock.json
+```
+
+## Testes
+```bash
+# Backend: unitários + integração (com banco, Redis e worker reais)
+docker compose exec -e RUN_INTEGRATION=1 backend pytest --cov=app
+
+# Qualidade backend
+docker compose exec backend ruff format .
+docker compose exec backend ruff check .
+docker compose exec backend mypy app
+docker compose exec backend lint-imports
+
+# Frontend
+docker compose exec frontend npm test
+docker compose exec frontend npm run lint
+docker compose exec frontend npm run typecheck
+docker compose exec frontend npm run format
+
+# Smoke test das fontes externas (na máquina host, sem dependências)
+python scripts/smoke_sources.py
+```
+
+## Validação da Fase 1 (roteiro)
+| # | Verificação | Critério |
+|---|---|---|
+| 1 | `docker compose ps` | 6 serviços `healthy` (AC-001) |
+| 2 | `GET /api/v1/health/ready` | 200, `db`, `postgis`, `redis`, `worker` = `ok` (AC-002) |
+| 3 | `docker compose stop redis` e repetir 2 | 503, `redis: unavailable`, demais com estado real (AC-003); depois `docker compose start redis` |
+| 4 | `curl -i -H "X-Correlation-ID: abc" localhost:8000/api/v1/nope` | 404 `application/problem+json` com `correlation_id: "abc"`; `docker compose logs backend` mostra o mesmo id (AC-004) |
+| 5 | `docker compose stop backend` e abrir `/status` | mensagem de erro + "Tentar novamente" (AC-005) |
+| 6 | Remover `DATABASE_URL` do `.env` e `docker compose up backend` | sai com log `missing_required_setting` (AC-007) |
+| 7 | `python scripts/smoke_sources.py` | gera `docs/data-sources/smoke-results.md` (AC-008) |
+| 8 | Push para o GitHub | CI verde (AC-006) |
+
+## Documentos
+| Arquivo | Função |
+|---|---|
+| [PROJECT_CONSTITUTION.md](PROJECT_CONSTITUTION.md) | Regras permanentes |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Visão técnica global |
+| [ROADMAP.md](ROADMAP.md) | Fases |
+| [CURRENT_STATUS.md](CURRENT_STATUS.md) | Estado atual e bloqueios |
+| [DECISIONS.md](DECISIONS.md) | Índice de ADRs |
+| [docs/data-sources/SOURCES.md](docs/data-sources/SOURCES.md) | Fontes de dados |
+| [specs/](specs/) | Especificações, planos e tarefas |
+
+## Metodologia
+Spec-Driven Development: Constituição → Spec → Plan → Tasks → Implementação → Testes → Revisão.
+
+## Fontes e atribuições
+Previsão: Open-Meteo.com (CC BY 4.0). Observações: INMET. Elevação: Copernicus DEM (ESA) — texto de atribuição exato a confirmar na licença antes da Fase 8.
+
+## Limitações atuais
+- Nenhuma fonte de dados integrada (Fase 2).
+- Sem autenticação: a API é somente leitura e expõe apenas estado do sistema.
