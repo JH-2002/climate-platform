@@ -2,7 +2,7 @@
 
 > Data da validação: 2026-11-19
 > Método: pesquisa em documentação oficial, manuais e repositórios públicos.
-> **Limitação importante:** nenhuma chamada HTTP real foi executada nesta fase. O ambiente de trabalho (container e shell local) estava sem acesso de rede a esses domínios. Toda fonte abaixo tem status **"documentada, não testada ao vivo"** até a tarefa T014 (smoke test de fontes) da spec 001 ser executada na máquina do desenvolvedor.
+> **Teste ao vivo (T014):** executado em 2026-11-19 a partir da rede do responsável — ver [smoke-results.md](smoke-results.md). INMET (lista de estações) e Open-Meteo confirmados com respostas reais gravadas como fixtures de teste.
 
 Legenda de status:
 - **VIÁVEL** — acesso programático documentado e compatível com o projeto.
@@ -28,7 +28,7 @@ Legenda de status:
 | Variáveis | temperatura, umidade, pressão, vento (vel., dir., rajada), precipitação, radiação |
 | Histórico | BDMEP / "Dados Históricos" (arquivos anuais CSV) — **verificar URL e formato na T014** |
 | Licença | Dados públicos federais; termo de uso específico **não localizado** — registrar ao obter o token |
-| Status | **CONDICIONAL** (token) |
+| Status | **VIÁVEL** para lista de estações (testado: 200, 675 estações) · **CONDICIONAL** para dados horários (rota sem token testada: 204) |
 
 **Decisão:** INMET é a fonte primária de observações (ADR-003). Sem token, o sistema exibe observações como `UNAVAILABLE` — não substitui por outra fonte silenciosamente.
 
@@ -104,7 +104,7 @@ Legenda de status:
 | Limites (termos) | < 10.000 chamadas/dia, 5.000/hora, 600/minuto; uso não comercial |
 | Licença dos dados | CC BY 4.0 — **atribuição obrigatória** |
 | Formato | JSON; previsão horária e diária até 7+ dias |
-| Status | **VIÁVEL** |
+| Status | **VIÁVEL** (testado: 200; vento em km/h por padrão) |
 
 **Decisão:** fonte de **previsão** e de séries **modeladas** (ADR-004). Todo dado da Open-Meteo é rotulado `kind = FORECAST` ou `kind = MODELED`, **nunca** `OBSERVED`. Uso comercial futuro exige plano pago ou self-hosting (código AGPLv3).
 

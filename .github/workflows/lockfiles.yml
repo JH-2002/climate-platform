@@ -1,0 +1,32 @@
+name: Gerar lockfiles
+
+# Gera frontend/package-lock.json com o mesmo Node da imagem Docker e publica em um branch.
+# Execução manual (Actions › Gerar lockfiles › Run workflow).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  frontend:
+    name: package-lock.json do frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+      - name: Configurar Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Resolver dependências
+        working-directory: frontend
+        run: npm install --package-lock-only --ignore-scripts
+      - name: Publicar no branch chore/lockfiles
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B chore/lockfiles
+          git add frontend/package-lock.json
+          git commit -m "chore: gera package-lock.json do frontend"
+          git push --force origin chore/lockfiles

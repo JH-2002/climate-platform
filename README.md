@@ -32,10 +32,7 @@ docker compose ps             # todos os serviços devem ficar "healthy" (até ~
 - Frontend: http://localhost:3000 — página de estado: http://localhost:3000/status
 - API: http://localhost:8000/api/v1/health/ready — OpenAPI: http://localhost:8000/api/docs
 
-Na primeira execução o container do frontend roda `npm install`. Depois, gere e versione o lockfile:
-```bash
-docker compose cp frontend:/app/package-lock.json frontend/package-lock.json
-```
+O `frontend/package-lock.json` é versionado e gerado pelo workflow **Gerar lockfiles** (Actions), com o mesmo Node da imagem. Ao mudar dependências do frontend, rode o workflow de novo ou, localmente, `docker compose run --rm frontend npm install` (grava o lock na pasta montada).
 
 ## Testes
 ```bash
