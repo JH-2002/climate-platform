@@ -67,13 +67,13 @@ GET /api/v1/health/ready  → 200|503
     "db":      {"status":"ok","latency_ms":3.1},
     "postgis": {"status":"ok","version":"3.4"},
     "redis":   {"status":"ok","latency_ms":0.8},
-    "worker":  {"status":"unavailable","detail":"no reply in 2s"}
+    "worker":  {"status":"unavailable","detail":"sem resposta em 5 s"}
   }
 }
 ```
 
 ## Fluxo de dados
-Navegador → Next.js (`/status`) → `GET /api/v1/health/ready` → checagens em paralelo com timeout de 2 s cada → resposta agregada.
+Navegador → Next.js (`/status`) → `GET /api/v1/health/ready` → checagens em paralelo com timeout configurável (`READINESS_TIMEOUT_S`, padrão 5 s; o ping do worker usa 60% disso) → resposta agregada.
 
 ## Estratégia de testes
 - Unit: settings faltando (AC-007), formatação de Problem Details, middleware de correlation ID.

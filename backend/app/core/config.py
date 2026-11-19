@@ -23,7 +23,8 @@ class Settings(BaseSettings):
     redis_url: str = Field(min_length=1)
 
     frontend_origin: str = "http://localhost:3000"
-    readiness_timeout_s: float = Field(default=2.0, gt=0, le=10)
+    # O ping do Celery abre conexão com o broker a cada chamada; 5 s evita falsos negativos.
+    readiness_timeout_s: float = Field(default=5.0, gt=0, le=10)
 
     inmet_token: SecretStr | None = None
 

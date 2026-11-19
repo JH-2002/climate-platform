@@ -25,7 +25,7 @@ def app() -> FastAPI:
 
     @application.get("/api/v1/_test/boom")
     async def boom() -> None:
-        raise RuntimeError("inesperado")
+        raise RuntimeError("detalhe-interno-secreto")
 
     return application
 
@@ -87,7 +87,7 @@ def test_unhandled_error_is_500_problem_without_internal_details(client: TestCli
     body = response.json()
     assert body["correlation_id"] == "err-1"
     assert body["title"] == "Erro interno"
-    assert "inesperado" not in json.dumps(body, ensure_ascii=False)
+    assert "detalhe-interno-secreto" not in json.dumps(body, ensure_ascii=False)
 
 
 def test_cors_allows_only_configured_origin(client: TestClient) -> None:
