@@ -37,9 +37,7 @@ class Resources:
         await self.engine.dispose()
 
 
-def build_readiness_checks(
-    resources: Resources, ping_workers: CheckFn
-) -> Mapping[str, CheckFn]:
+def build_readiness_checks(resources: Resources, ping_workers: CheckFn) -> Mapping[str, CheckFn]:
     async def check_db() -> None:
         async with resources.engine.connect() as conn:
             await conn.execute(text("SELECT 1"))

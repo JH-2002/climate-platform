@@ -69,6 +69,15 @@ jobs:
         run: pytest scripts/tests
       - name: Auditoria de dependências (pip-audit)
         run: pip-audit
+      - name: Registrar versões resolvidas (lock do backend)
+        if: always()
+        run: pip freeze --exclude-editable > requirements.lock
+      - name: Publicar lock do backend
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-requirements-lock
+          path: backend/requirements.lock
       - name: Log do worker em caso de falha
         if: failure()
         run: cat /tmp/celery.log || true
@@ -96,6 +105,12 @@ jobs:
         run: npm test
       - name: Auditoria de dependências (npm audit)
         run: npm audit --audit-level=high
+      - name: Publicar lock do frontend
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-package-lock
+          path: frontend/package-lock.json
 
   secrets:
     name: Varredura de segredos (gitleaks)

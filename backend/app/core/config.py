@@ -58,9 +58,7 @@ def load_settings() -> Settings:
     try:
         return Settings()  # valores vêm das variáveis de ambiente
     except ValidationError as exc:
-        missing = [
-            str(err["loc"][0]).upper() for err in exc.errors() if err["type"] == "missing"
-        ]
+        missing = [str(err["loc"][0]).upper() for err in exc.errors() if err["type"] == "missing"]
         invalid = [
             {"setting": str(err["loc"][0]).upper(), "reason": err["msg"]}
             for err in exc.errors()
