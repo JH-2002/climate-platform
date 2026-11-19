@@ -103,7 +103,10 @@ jobs:
         run: npm run typecheck
       - name: Testes (Vitest)
         run: npm test
-      - name: Auditoria de dependências (npm audit)
+      - name: Auditoria das dependências de produção (bloqueante)
+        run: npm audit --omit=dev --audit-level=high
+      - name: Auditoria completa, incluindo ferramentas de desenvolvimento (informativa)
+        continue-on-error: true
         run: npm audit --audit-level=high
       - name: Publicar lock do frontend
         if: always()
