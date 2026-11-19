@@ -17,7 +17,7 @@ export interface NavItem {
 export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/", label: "Visão geral", section: "primary", phase: 1, implemented: true },
   { href: "/weather", label: "Clima", section: "primary", phase: 3, implemented: true },
-  { href: "/map", label: "Mapa ao vivo", section: "primary", phase: 4, implemented: false },
+  { href: "/map", label: "Mapa", section: "primary", phase: 4, implemented: true },
   { href: "/risk", label: "Risco de alagamento", section: "primary", phase: 5, implemented: false },
   { href: "/analytics", label: "Análises", section: "primary", phase: 6, implemented: false },
   { href: "/geo-3d", label: "Geointeligência 3D", section: "primary", phase: 8, implemented: false },

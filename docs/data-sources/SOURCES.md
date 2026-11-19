@@ -140,3 +140,14 @@ Legenda de status:
 | 1 | INMET | Observações horárias | Token |
 | 2 | Open-Meteo | Previsão 7 dias | Nenhum |
 | 3 | CEMADEN | Pluviometria 10 min (importação manual) | Download manual |
+
+---
+
+## 9. Mapa base e relevo (visualização — Fase 4)
+
+| Fonte | Uso | Acesso | Licença/atribuição | Teste (2026-11-19, rede do responsável) |
+|---|---|---|---|---|
+| OpenFreeMap (estilo `liberty`) | Mapa base vetorial | `https://tiles.openfreemap.org/styles/liberty`, sem chave, sem cookies | Atribuição obrigatória (OpenFreeMap © OpenMapTiles, dados do OpenStreetMap), exibida automaticamente pelo MapLibre | 200, CORS liberado, 111 camadas |
+| AWS Terrain Tiles (Mapzen) | Relevo 3D e sombreamento | `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png`, sem chave | Atribuição exigida (ver docs do Joerd/Mapzen) | 200, CORS liberado |
+
+Uso apenas visual. Análise hidrológica e de declividade continua planejada com o Copernicus DEM (Fase 8).

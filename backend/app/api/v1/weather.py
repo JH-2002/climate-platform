@@ -2,25 +2,18 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import datetime
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
-from app.api.v1.deps import SessionDep, SettingsDep
+from app.api.v1.deps import ClockDep, SessionDep, SettingsDep, get_clock
 from app.services import forecast as fc
 from app.services.freshness import Freshness, Reason
 from app.services.sources import list_source_status
 
-
-def get_clock() -> Callable[[], datetime]:
-    """Relógio injetável: os testes substituem por um horário fixo."""
-    return lambda: datetime.now(UTC)
-
-
-ClockDep = Annotated[Callable[[], datetime], Depends(get_clock)]
+__all__ = ["get_clock", "router"]
 
 router = APIRouter(prefix="/weather", tags=["clima"])
 

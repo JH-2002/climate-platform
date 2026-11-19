@@ -11,7 +11,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.pool import NullPool
 
-from app.api.v1.weather import get_clock
+from app.api.v1.deps import get_clock
 from app.core.config import get_settings
 from app.ingestion.jobs import make_forecast_job
 from app.ingestion.pipeline import run_ingestion

@@ -1,6 +1,6 @@
 # PROJECT CONSTITUTION — Climate Intelligence Platform
 
-> Versão: 1.1.0 · Criada em: 2026-11-19 · Status: **Aprovada (2026-11-19)**
+> Versão: 1.2.0 · Criada em: 2026-11-19 · Status: **Aprovada (2026-11-19)**
 > Esta é a referência permanente do projeto. Qualquer alteração exige registro em `DECISIONS.md`, justificativa e análise de impacto.
 
 ---
@@ -27,7 +27,7 @@ Construir uma plataforma web de inteligência climática para **monitoramento me
 
 | Camada | Tecnologia |
 |---|---|
-| Frontend | Next.js (App Router), React, TypeScript (strict), Tailwind CSS, TanStack Query, Recharts, React Leaflet; Three.js/R3F só no módulo 3D (lazy) |
+| Frontend | Next.js (App Router), React, TypeScript (strict), Tailwind CSS, TanStack Query, Recharts, MapLibre GL (mapa 2D/3D, ADR-009); Three.js/R3F só no módulo de análise 3D (lazy) |
 | Backend | Python 3.12, FastAPI, Pydantic v2, SQLAlchemy 2, Alembic, GeoAlchemy2 |
 | Banco | PostgreSQL 16 + PostGIS 3 |
 | Processamento | Redis, Celery, Celery Beat |
@@ -163,3 +163,4 @@ Constituição → Spec → Plan → Tasks → Implementação → Testes → Re
 |---|---|---|---|
 | 1.0.0 | 2026-11-19 | Criação | Fase 0 |
 | 1.1.0 | 2026-11-19 | §9.1 Idioma: todo texto legível do projeto em português | Pedido do responsável |
+| 1.2.0 | 2026-11-19 | §3: MapLibre GL substitui React Leaflet | Mapa 2D/3D a pedido do responsável (ADR-009) |
