@@ -6,6 +6,7 @@
  */
 
 import "maplibre-gl/dist/maplibre-gl.css";
+import type { GeoJSON as GeoJSONData, Point } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap, MapLayerMouseEvent } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import type { SavedLocation } from "@/features/locations/store";
@@ -115,7 +116,7 @@ function weatherHref(lat: number, lon: number, name: string): string {
 }
 
 function setData(map: MapLibreMap, id: string, data: Json) {
-  (map.getSource(id) as GeoJSONSource | undefined)?.setData(data as unknown as GeoJSON.GeoJSON);
+  (map.getSource(id) as GeoJSONSource | undefined)?.setData(data as unknown as GeoJSONData);
 }
 
 export default function MapView(props: MapViewProps) {
@@ -174,7 +175,7 @@ export default function MapView(props: MapViewProps) {
         });
 
         for (const id of ["regiao", "estacoes", "chuva-pontos", "chuva-colunas", "locais"]) {
-          map.addSource(id, { type: "geojson", data: emptyCollection() as unknown as GeoJSON.GeoJSON });
+          map.addSource(id, { type: "geojson", data: emptyCollection() as unknown as GeoJSONData });
         }
         map.addLayer({
           id: "regiao-contorno",
@@ -241,7 +242,7 @@ export default function MapView(props: MapViewProps) {
           const f = e.features?.[0];
           if (!f) return;
           const p = f.properties as unknown as StationProps;
-          const [lon, lat] = (f.geometry as GeoJSON.Point).coordinates as [number, number];
+          const [lon, lat] = (f.geometry as Point).coordinates as [number, number];
           popup
             .setLngLat([lon, lat])
             .setDOMContent(
@@ -264,7 +265,7 @@ export default function MapView(props: MapViewProps) {
           const complete = String(p.precipitation_24h_complete) === "true";
           const coords =
             f.geometry.type === "Point"
-              ? ((f.geometry as GeoJSON.Point).coordinates as [number, number])
+              ? ((f.geometry as Point).coordinates as [number, number])
               : ([e.lngLat.lng, e.lngLat.lat] as [number, number]);
           const temp = p.air_temperature_now == null ? null : Number(p.air_temperature_now);
           popup

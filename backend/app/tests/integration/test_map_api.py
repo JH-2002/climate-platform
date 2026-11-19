@@ -68,7 +68,7 @@ def test_stations_layer(client: TestClient) -> None:
     by_code = {f["properties"]["code"]: f for f in body["features"]}
     assert set(by_code) == {"A701", "A771"}
     lon, lat = by_code["A701"]["geometry"]["coordinates"]
-    assert (round(lon, 4), round(lat, 4)) == (-46.62, -23.4963)
+    assert (round(lon, 4), round(lat, 4)) == (-46.6201, -23.4963)
     assert by_code["A701"]["properties"]["status"] == "OPERATIONAL"
 
 

@@ -53,7 +53,7 @@ describe("escalas e geometria (BR-050, BR-051)", () => {
     const ring = circlePolygon(-46.63, -23.55, 1000, 16);
     expect(ring).toHaveLength(17);
     expect(ring[0]).toEqual(ring[16]);
-    const [lon, lat] = ring[4]!; // 90°: deslocamento só em latitude
+    const [lon, lat] = ring[4] as [number, number]; // 90°: deslocamento só em latitude
     expect(lon).toBeCloseTo(-46.63, 6);
     expect((lat - -23.55) * 111_195).toBeCloseTo(1000, -1);
   });
