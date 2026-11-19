@@ -10,6 +10,8 @@
 | [ADR-004](docs/architecture/adr/ADR-004-open-meteo-forecast.md) | Open-Meteo para previsão, rotulada como FORECAST/MODELED | Aceita | 2026-11-19 |
 | [ADR-005](docs/architecture/adr/ADR-005-long-format-observations.md) | Observações em formato longo (variable/value) | Aceita | 2026-11-19 |
 | [ADR-006](docs/architecture/adr/ADR-006-postgis-srid.md) | PostGIS, SRID 4326 para armazenamento, 31983 para métricas | Aceita | 2026-11-19 |
+| [ADR-007](docs/architecture/adr/ADR-007-current-conditions-from-forecast.md) | "Agora" a partir da previsão horária, rotulado como estimativa | Aceita | 2026-11-19 |
+| [ADR-008](docs/architecture/adr/ADR-008-locations-in-browser.md) | Locais salvos no navegador até existir autenticação | Aceita | 2026-11-19 |
 
 ## Decisões menores (sem ADR)
 

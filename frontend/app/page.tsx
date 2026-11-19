@@ -20,13 +20,12 @@ export default function OverviewPage() {
         <h2 id="dados-titulo" className="text-lg font-semibold">
           Dados meteorológicos
         </h2>
-        <StatusBadge tone="warn" label="Coleta ativa; painel na Fase 3" />
+        <StatusBadge tone="ok" label="Previsão disponível" />
         <p className="text-sm text-ink-muted">
-          O cadastro de estações do INMET e a previsão da Open-Meteo já são coletados
-          automaticamente. As observações horárias do INMET aguardam o token de acesso. O painel
-          com os valores chega na Fase 3; até lá, acompanhe a coleta em{" "}
-          <Link href="/status" className="font-medium text-accent underline">
-            Estado do sistema
+          A previsão da Open-Meteo e o cadastro de estações do INMET são coletados
+          automaticamente. As medições das estações aguardam o token de acesso do INMET.{" "}
+          <Link href="/weather" className="font-medium text-accent underline">
+            Abrir o painel do clima
           </Link>
           .
         </p>
