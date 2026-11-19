@@ -38,8 +38,20 @@ export function HourlyChart({ hours }: HourlyChartProps) {
               <ComposedChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#dde3e8" />
                 <XAxis dataKey="hora" interval={5} tick={{ fontSize: 12 }} />
-                <YAxis yAxisId="temp" unit=" °C" tick={{ fontSize: 12 }} width={56} />
-                <YAxis yAxisId="chuva" orientation="right" unit=" mm" tick={{ fontSize: 12 }} width={56} />
+                <YAxis
+                  yAxisId="temp"
+                  domain={[(min: number) => Math.floor(min - 2), (max: number) => Math.ceil(max + 2)]}
+                  tickFormatter={(v: number) => `${formatNumber(v, 0)} °C`}
+                  tick={{ fontSize: 12 }}
+                  width={56}
+                />
+                <YAxis
+                  yAxisId="chuva"
+                  orientation="right"
+                  tickFormatter={(v: number) => `${formatNumber(v, 1)} mm`}
+                  tick={{ fontSize: 12 }}
+                  width={60}
+                />
                 <Tooltip
                   formatter={(value, name) =>
                     String(name) === "Chuva"

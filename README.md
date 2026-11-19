@@ -2,7 +2,7 @@
 
 Plataforma web de monitoramento meteorológico, análise geoespacial, estimativa de condições favoráveis a alagamentos, simulação de cenários e relatórios — construída com dados reais, rastreáveis e com limitações declaradas.
 
-> **Estado:** Fases 0–2 concluídas. Coleta automática de estações do INMET e previsão da Open-Meteo em funcionamento; observações horárias do INMET aguardam token. Veja [CURRENT_STATUS.md](CURRENT_STATUS.md).
+> **Estado:** Fases 0–3 concluídas. Coleta automática de estações do INMET e previsão da Open-Meteo; painel do clima em http://localhost:3000/weather. Observações medidas do INMET aguardam token. Veja [CURRENT_STATUS.md](CURRENT_STATUS.md).
 
 ## Região piloto
 Município de São Paulo, com expansão para a RMSP ([ADR-002](docs/architecture/adr/ADR-002-pilot-region-sao-paulo.md)).
@@ -89,4 +89,4 @@ Previsão: Open-Meteo.com (CC BY 4.0). Observações: INMET. Elevação: Coperni
 
 ## Limitações atuais
 - Observações horárias do INMET dependem de token (pedido em andamento).
-- Ainda sem painel de dados (Fase 3) e sem autenticação: a API é somente leitura.
+- Sem autenticação: a API é somente leitura e os locais salvos ficam no navegador (ADR-008).

@@ -7,7 +7,7 @@ Cada fase tem spec, plan, tasks e critérios de conclusão próprios. Uma fase s
 | 0 ✅ | Discovery & Specification | — | Constituição, arquitetura, fontes, specs 001–002 | — |
 | 1 ✅ | Foundation | 001 | Ambiente Docker, API com health, frontend shell, CI | Docker Desktop |
 | 2 ✅* | Data Ingestion | 002, 002b | INMET + Open-Meteo + importador CEMADEN | **Token INMET** |
-| 3 | Weather Dashboard | 003 | Clima atual, histórico, acumulados, previsão, locais | — |
+| 3 ✅* | Weather Dashboard | 003 | Clima atual, histórico, acumulados, previsão, locais | — |
 | 4 | Geospatial Map | 004 | Mapa 2D com estações, camadas, clustering | — |
 | 5 | Flood Risk Engine | 005 | Modelo heurístico v0 experimental, explicável | Cadastro ANA; dados GeoSampa/CGE |
 | 6 | Analytics | 006 | KPIs, Analytics Studio, Data Explorer, insights por regra | — |
@@ -24,4 +24,4 @@ Cada fase tem spec, plan, tasks e critérios de conclusão próprios. Uma fase s
 4. Diferencial de demonstração (Fases 7–8).
 5. Operação (Fases 9–11).
 
-\* Fase 2 concluída exceto observações horárias do INMET (aguardando token).
+\* Fases 2 e 3 concluídas exceto as observações medidas do INMET (aguardando token).

@@ -1,6 +1,6 @@
 # Spec 003 — Painel do clima
 
-> Status: **Aprovada** (2026-11-19) · Fase: 3 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md)
+> Status: **Concluída** (2026-11-19) — medições aguardam o token do INMET · Fase: 3 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md)
 
 ## Contexto
 A Fase 2 coleta a previsão da Open-Meteo e o cadastro de estações do INMET. As observações medidas pelas estações dependem de um token do INMET que ainda não chegou. O usuário cotidiano precisa responder rápido: *como está o tempo agora, vai chover, e quanto?* — sem ser induzido a tomar estimativa por medição.
