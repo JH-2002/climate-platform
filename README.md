@@ -2,7 +2,7 @@
 
 Plataforma web de monitoramento meteorológico, análise geoespacial, estimativa de condições favoráveis a alagamentos, simulação de cenários e relatórios — construída com dados reais, rastreáveis e com limitações declaradas.
 
-> **Estado:** Fase 1 (Foundation) implementada, aguardando validação local. Nenhum dado meteorológico integrado ainda. Veja [CURRENT_STATUS.md](CURRENT_STATUS.md).
+> **Estado:** Fases 0–2 concluídas. Coleta automática de estações do INMET e previsão da Open-Meteo em funcionamento; observações horárias do INMET aguardam token. Veja [CURRENT_STATUS.md](CURRENT_STATUS.md).
 
 ## Região piloto
 Município de São Paulo, com expansão para a RMSP ([ADR-002](docs/architecture/adr/ADR-002-pilot-region-sao-paulo.md)).
@@ -84,6 +84,9 @@ Spec-Driven Development: Constituição → Spec → Plan → Tasks → Implemen
 ## Fontes e atribuições
 Previsão: Open-Meteo.com (CC BY 4.0). Observações: INMET. Elevação: Copernicus DEM (ESA) — texto de atribuição exato a confirmar na licença antes da Fase 8.
 
+## Configuração da região
+`REGION_BBOX` (lon_min,lat_min,lon_max,lat_max) define quais estações são sincronizadas e `FORECAST_POINTS` (lat,lon;lat,lon) define os pontos de previsão. Padrão: município de São Paulo.
+
 ## Limitações atuais
-- Nenhuma fonte de dados integrada (Fase 2).
-- Sem autenticação: a API é somente leitura e expõe apenas estado do sistema.
+- Observações horárias do INMET dependem de token (pedido em andamento).
+- Ainda sem painel de dados (Fase 3) e sem autenticação: a API é somente leitura.

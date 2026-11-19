@@ -1,6 +1,6 @@
 # Spec 002 — Weather Data Ingestion (INMET + Open-Meteo)
 
-> Status: **Aprovada** (2026-11-19) · Fase: 2 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md)
+> Status: **Concluída, exceto observações horárias do INMET (aguardando token)** (2026-11-19) · Fase: 2 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md)
 
 ## Contexto
 A plataforma precisa de observações reais e previsão para alimentar dashboard, mapa e risco. As fontes foram avaliadas em `docs/data-sources/SOURCES.md`.
