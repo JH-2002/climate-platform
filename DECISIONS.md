@@ -23,5 +23,7 @@
 | 2026-11-19 | Heartbeat do Celery Beat via Redis para o healthcheck do container | Beat não tem comando de ping; heartbeat prova o caminho beat → broker → worker |
 | 2026-11-19 | Testes de cliente HTTP sem MSW (fetch injetável) | Menos dependências, mesma cobertura |
 | 2026-11-19 | `npm audit` bloqueia o CI só para dependências de produção; auditoria completa fica informativa | Alertas restantes estão no Vitest 2.x (ferramenta de teste local, não vai para produção) |
+| 2026-11-19 | Frontend chama a API pela própria origem; o Next encaminha `/api/*` para o backend (`API_INTERNAL_URL`) | Elimina dependência de CORS e de portas expostas ao navegador; o navegador integrado do app bloqueava a chamada entre portas |
+| 2026-11-19 | Healthcheck do banco via TCP (`pg_isready -h 127.0.0.1`) | Na primeira subida o PostGIS usa um servidor temporário só no socket local; o backend falhava na migração |
 | 2026-11-19 | `overrides` força o `postcss` atualizado também dentro do Next | Next 15 embute um `postcss` com alertas altos |
 | 2026-11-19 | **Pendente:** migrar Vitest 2 → versão principal atual (5.x) e revisar Next 16, Python 3.15, Node 26 | Atualizações principais exigem teste dedicado; Dependabot ignora majors até lá |

@@ -30,8 +30,9 @@ export interface ApiResponse<T> {
   correlationId: string | null;
 }
 
+/** Vazio = mesma origem (o Next encaminha /api/* para o backend). */
 export function apiBaseUrl(): string {
-  return (process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000").replace(/\/+$/, "");
+  return (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/+$/, "");
 }
 
 function isProblem(value: unknown): value is ProblemDetails {

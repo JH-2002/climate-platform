@@ -179,6 +179,7 @@ Erros padronizados (RFC 9457 Problem Details): `{type, title, status, detail, in
 - `app/` (rotas App Router): `/` (Overview), `/weather`, `/map`, `/risk`, `/analytics`, `/geo-3d`, `/reports`, `/simulation`, `/locations`, `/settings`, `/status`.
 - `features/<domínio>/` contém hooks TanStack Query, tipos e lógica; `components/` só apresentação.
 - Estado de contexto global (local, período, modo) na URL via search params.
+- O navegador chama a API pela própria origem (`/api/...`); o Next encaminha para o backend (`API_INTERNAL_URL`, padrão `http://backend:8000`). Sem chamadas entre origens.
 - Módulo 3D carregado por `dynamic(() => import(...), { ssr: false })` apenas em `/geo-3d`.
 
 ## 7. Infraestrutura (Fase 1)
