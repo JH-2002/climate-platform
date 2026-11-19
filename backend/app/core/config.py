@@ -11,6 +11,8 @@ from typing import Literal
 from pydantic import Field, SecretStr, ValidationError, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from app.core.geo import BoundingBox, parse_points
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(extra="ignore", case_sensitive=False)
@@ -27,6 +29,39 @@ class Settings(BaseSettings):
     readiness_timeout_s: float = Field(default=5.0, gt=0, le=10)
 
     inmet_token: SecretStr | None = None
+
+    # Região de interesse: "lon_min,lat_min,lon_max,lat_max" (WGS84). Padrão: município de SP.
+    region_name: str = "Município de São Paulo"
+    region_bbox: str = "-46.83,-24.01,-46.36,-23.35"
+    # Pontos de previsão: "lat,lon;lat,lon". Padrão: centro de São Paulo.
+    forecast_points: str = "-23.55,-46.63"
+    http_timeout_s: float = Field(default=15.0, gt=0, le=60)
+
+    @property
+    def inmet_token_value(self) -> str | None:
+        if self.inmet_token is None:
+            return None
+        return self.inmet_token.get_secret_value() or None
+
+    @property
+    def region(self) -> BoundingBox:
+        return BoundingBox.parse(self.region_bbox)
+
+    @property
+    def forecast_point_list(self) -> list[tuple[float, float]]:
+        return parse_points(self.forecast_points)
+
+    @field_validator("region_bbox")
+    @classmethod
+    def _validate_bbox(cls, value: str) -> str:
+        BoundingBox.parse(value)
+        return value
+
+    @field_validator("forecast_points")
+    @classmethod
+    def _validate_points(cls, value: str) -> str:
+        parse_points(value)
+        return value
 
     @field_validator("database_url")
     @classmethod

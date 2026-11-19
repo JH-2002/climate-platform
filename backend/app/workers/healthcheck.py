@@ -30,7 +30,7 @@ def heartbeat_is_fresh(raw: bytes | str | None, now: datetime, max_age_s: int) -
 
 def check_api() -> bool:
     try:
-        with urllib.request.urlopen(API_HEALTH_URL, timeout=3) as resp:  # noqa: S310
+        with urllib.request.urlopen(API_HEALTH_URL, timeout=3) as resp:
             return bool(resp.status == 200)
     except OSError:
         return False

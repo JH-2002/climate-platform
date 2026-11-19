@@ -8,7 +8,7 @@ import pytest
 
 pytest.importorskip("pydantic_settings")
 
-from app.core.config import load_settings  # noqa: E402
+from app.core.config import load_settings
 
 
 def test_missing_database_url_exits_with_clear_log(

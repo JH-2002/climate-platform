@@ -5,20 +5,22 @@ from __future__ import annotations
 from typing import Any
 
 from celery import Celery
-from celery.signals import setup_logging
+from celery.signals import beat_init, setup_logging
 
 from app.core.config import get_settings
 from app.core.logging import configure_logging
 
 HEARTBEAT_KEY = "climate:beat:last_heartbeat"
 HEARTBEAT_INTERVAL_S = 30
+STATIONS_SYNC_INTERVAL_S = 24 * 3600
+FORECAST_INTERVAL_S = 3600
 
 _settings = get_settings()
 
 celery_app = Celery(
     "climate",
     broker=_settings.redis_url,
-    include=["app.workers.tasks.system"],
+    include=["app.workers.tasks.system", "app.workers.tasks.ingestion"],
 )
 
 celery_app.conf.update(
@@ -31,10 +33,20 @@ celery_app.conf.update(
     task_acks_late=True,
     worker_prefetch_multiplier=1,
     broker_connection_retry_on_startup=True,
+    # Agendas por intervalo só disparam após o primeiro intervalo; a coleta inicial é
+    # enviada em _initial_ingestion (sinal beat_init).
     beat_schedule={
         "system-heartbeat": {
             "task": "system.heartbeat",
             "schedule": float(HEARTBEAT_INTERVAL_S),
+        },
+        "inmet-stations-sync": {
+            "task": "ingestion.sync_inmet_stations",
+            "schedule": float(STATIONS_SYNC_INTERVAL_S),
+        },
+        "open-meteo-forecast": {
+            "task": "ingestion.open_meteo_forecast",
+            "schedule": float(FORECAST_INTERVAL_S),
         },
     },
 )
@@ -44,3 +56,13 @@ celery_app.conf.update(
 def _configure_celery_logging(**_kwargs: Any) -> None:
     """Substitui o logging padrão do Celery pelo pipeline JSON."""
     configure_logging(_settings.log_level, service="worker")
+
+
+STARTUP_TASKS = ("ingestion.sync_inmet_stations", "ingestion.open_meteo_forecast")
+
+
+@beat_init.connect
+def _initial_ingestion(**_kwargs: Any) -> None:
+    """Dispara uma coleta assim que o agendador inicia (sem esperar o primeiro intervalo)."""
+    for task_name in STARTUP_TASKS:
+        celery_app.send_task(task_name)
