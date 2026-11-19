@@ -57,9 +57,9 @@ def make_station_sync_job(fetcher: Fetcher, region: BoundingBox) -> Job:
                 "first_seen_at": ctx.now,
                 "last_seen_at": ctx.now,
             }
-            stmt = insert(weather_stations).values(values)
-            updatable = {k: stmt.excluded[k] for k in values if k not in ("first_seen_at",)}
-            stmt = stmt.on_conflict_do_update(
+            base = insert(weather_stations).values(values)
+            updatable = {k: base.excluded[k] for k in values if k not in ("first_seen_at",)}
+            stmt = base.on_conflict_do_update(
                 index_elements=["source_id", "external_code"], set_=updatable
             ).returning(_inserted_flag())
             inserted = bool((await ctx.session.execute(stmt)).scalar_one())
@@ -115,14 +115,14 @@ def make_forecast_job(fetcher: Fetcher, points: Sequence[tuple[float, float]]) -
                     "mode": "REAL",
                     "raw_payload_id": raw_id,
                 }
-                stmt = insert(weather_forecasts).values(values)
-                stmt = stmt.on_conflict_do_update(
+                base = insert(weather_forecasts).values(values)
+                stmt = base.on_conflict_do_update(
                     index_elements=["source_id", "point_key", "resolution", "variable", "valid_at"],
                     set_={
-                        "value": stmt.excluded.value,
-                        "unit": stmt.excluded.unit,
-                        "issued_at": stmt.excluded.issued_at,
-                        "raw_payload_id": stmt.excluded.raw_payload_id,
+                        "value": base.excluded.value,
+                        "unit": base.excluded.unit,
+                        "issued_at": base.excluded.issued_at,
+                        "raw_payload_id": base.excluded.raw_payload_id,
                     },
                 ).returning(_inserted_flag())
                 if bool((await ctx.session.execute(stmt)).scalar_one()):

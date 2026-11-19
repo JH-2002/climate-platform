@@ -74,7 +74,7 @@ async def list_stations(
     limit: int,
     offset: int,
 ) -> tuple[list[Station], int]:
-    conditions = []
+    conditions: list[Any] = []
     if bbox is not None:
         conditions.append(
             func.ST_Intersects(func.geometry(weather_stations.c.location), _envelope(bbox))

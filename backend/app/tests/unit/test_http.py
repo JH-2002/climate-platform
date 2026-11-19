@@ -7,9 +7,11 @@ import random
 
 import pytest
 
-httpx = pytest.importorskip("httpx")
+pytest.importorskip("httpx")
 
-from app.integrations.http import SourceHTTPError, backoff_delay, fetch  # noqa: E402
+import httpx
+
+from app.integrations.http import SourceHTTPError, backoff_delay, fetch
 
 
 def _client(responses: list[object]) -> tuple[object, list[str]]:

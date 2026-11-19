@@ -35,7 +35,7 @@ class FetchResult:
 
 def backoff_delay(attempt: int, base_s: float, rng: random.Random) -> float:
     """Atraso da tentativa `attempt` (1, 2, ...): base * 2^(attempt-1), com jitter de até 50%."""
-    delay = base_s * (2 ** (attempt - 1))
+    delay = base_s * 2.0 ** (attempt - 1)
     return delay * (1 + rng.random() * 0.5)
 
 
