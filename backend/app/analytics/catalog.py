@@ -45,8 +45,9 @@ class Dataset:
         return next((v for v in self.variables if v.code == code), None)
 
 
-_RAIN: tuple[Agg, ...] = ("sum", "mean", "min", "max", "count")
-_TEMP: tuple[Agg, ...] = ("mean", "min", "max", "count")
+# "count" fica de fora: contar dias com dado não é "dias de chuva" e induziria a erro.
+_RAIN: tuple[Agg, ...] = ("sum", "mean", "min", "max")
+_TEMP: tuple[Agg, ...] = ("mean", "min", "max")
 
 DATASETS: dict[str, Dataset] = {
     d.id: d
@@ -120,7 +121,7 @@ DATASETS: dict[str, Dataset] = {
                 Variable("relative_humidity", "Umidade relativa", "%", _TEMP, "mean"),
                 Variable("wind_speed", "Vento", "m/s", _TEMP, "mean"),
             ),
-            grains=("hour", "day"),
+            grains=("day",),
             visualizations=("line", "bar", "area", "table"),
             numeric=True,
             caveats=("Previsão de modelo: não é medição.",),
@@ -153,8 +154,8 @@ DATASETS: dict[str, Dataset] = {
             variables=(
                 Variable("sectors", "Setores por categoria", "setores", ("count",), "count"),
             ),
-            grains=("hour", "day"),
-            visualizations=("line", "bar", "ranking", "table"),
+            grains=("day",),
+            visualizations=("line", "bar", "table"),
             numeric=False,
             caveats=("Estimativa experimental do sistema: não é alerta oficial.",),
         ),
@@ -170,7 +171,7 @@ DATASETS: dict[str, Dataset] = {
                 Variable("runs", "Execuções", "execuções", ("count",), "count"),
                 Variable("duration_s", "Duração", "s", ("mean", "max", "count"), "mean"),
             ),
-            grains=("hour", "day"),
+            grains=("day",),
             visualizations=("bar", "line", "table"),
             numeric=False,
         ),
