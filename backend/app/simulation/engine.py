@@ -70,9 +70,12 @@ def sectors_fingerprint(sectors: Iterable[SimSector]) -> str:
     return digest.hexdigest()
 
 
-def relabel(factor: Factor) -> Factor:
+def relabel(factor: Factor, *, hybrid: bool = False) -> Factor:
+    """No HYBRID a chuva das 72 h anteriores é a real: o texto do motor fica como está."""
     text = factor.text
     for old, new in _RELABEL:
+        if hybrid and old.startswith("Chuva estimada nas 72 h"):
+            continue
         text = text.replace(old, new)
     return replace(factor, text=text)
 
@@ -147,7 +150,11 @@ def simulate(
 
     outcomes = tuple(
         SectorOutcome(
-            assessment=replace(a, factors=tuple(relabel(f) for f in a.factors), point_key=None),
+            assessment=replace(
+                a,
+                factors=tuple(relabel(f, hybrid=hybrid is not None) for f in a.factors),
+                point_key=None,
+            ),
             rain_factor=round(spatial[a.sector_id][0], 3),
             distance_km=None
             if spatial[a.sector_id][1] is None

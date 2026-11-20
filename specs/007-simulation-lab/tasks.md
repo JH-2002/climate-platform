@@ -26,8 +26,15 @@ Validação da Parte A (2026-11-20), com os 793 setores reais:
 
 | ID | Tarefa | Arquivos | Critério de conclusão | Testes | Status |
 |---|---|---|---|---|---|
-| T108 | Variações com seed e agregação | `simulation/ensemble.py` | FR-108, AC-104, NFR-101 | unitários | [ ] |
-| T109 | Modo HYBRID sobre a previsão real | `simulation/rain.py`, `services/simulation.py` | FR-109, BR-103, AC-105 | unitários + integração | [ ] |
-| T110 | Histórico, repetir e aviso de mudança | `api/v1/simulation.py`, `components/simulation/HistoryList.tsx` | FR-110 | integração + frontend | [ ] |
-| T111 | Retenção diária | `workers/tasks/simulation.py` | NFR-102 | integração | [ ] |
-| T112 | Validação da Parte B e documentação | docs | Navegador + CI | manual | [ ] |
+| T108 | Variações com seed e agregação | `simulation/ensemble.py` | FR-108, AC-104, NFR-101 | unitários | [x] |
+| T109 | Modo HYBRID sobre a previsão real | `simulation/rain.py`, `services/simulation.py` | FR-109, BR-103, AC-105 | unitários + integração | [x] |
+| T110 | Histórico, repetir e aviso de mudança | `api/v1/simulation.py`, `components/simulation/HistoryList.tsx` | FR-110 | integração + frontend | [x] |
+| T111 | Retenção diária | `workers/tasks/simulation.py` | NFR-102 | integração | [x] |
+| T112 | Validação da Parte B e documentação | docs | Navegador + CI | manual | [x] |
+
+Validação da Parte B (2026-11-20), com os dados reais:
+- 100 variações com seed 42 em 0,4 s pela API; a tabela mostra a chance de alto ou crítico por setor (ex.: Parque do Gato, Sé: alto em 97%, crítico em 9%);
+- "Repetir" com o mesmo seed devolve resultado idêntico, setor por setor; com outro seed, a diferença é apontada;
+- modo a partir da previsão real: × 100% reproduz o risco real (793 setores em baixo); × 300% continua em baixo porque a previsão do dia tem no máximo 2,2 mm em 1 h (6,6 mm × 3, abaixo do gatilho de 10 mm);
+- histórico lista as execuções recentes com link; limpeza diária registrada no agendador;
+- correção da validação: no modo a partir da previsão real, a chuva das 72 h anteriores é descrita como real, não "no cenário".

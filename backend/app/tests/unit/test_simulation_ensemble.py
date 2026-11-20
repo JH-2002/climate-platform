@@ -145,3 +145,15 @@ def test_hybrid_ensemble_varies_the_multiplier() -> None:
     # 22 mm/h é moderada (R4 → moderado); com até +30% passa de 25 (forte → alto)
     p = result.outcomes[0].p_high
     assert p is not None and 0.0 < p < 1.0
+
+
+def test_hybrid_keeps_real_antecedent_wording() -> None:
+    result = simulate(
+        SECTORS, STORM, now=NOW, hybrid=Hybrid(1.0), base=dict.fromkeys(range(1, 5), REAL)
+    )
+    texts = [f.text for f in result.outcomes[0].assessment.factors]
+    assert (
+        "Chuva estimada nas 72 h anteriores: 55 mm (solo encharcado e galerias cheias)" in texts
+        or any(t.startswith("Chuva estimada nas 72 h anteriores") for t in texts)
+    )
+    assert not any("anteriores no cenário" in t for t in texts)
