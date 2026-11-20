@@ -17,6 +17,13 @@ export function MapFeatureList({ stations, forecast }: MapFeatureListProps) {
   return (
     <section aria-labelledby="lista-titulo" className="space-y-4">
       <h2 id="lista-titulo" className="text-lg font-semibold">Dados do mapa em lista</h2>
+      <p className="text-sm">
+        Os setores com risco estimado de alagamento estão em lista, com filtros e explicação, na{" "}
+        <Link className="font-medium text-accent underline" href="/risk">
+          página Risco de alagamento
+        </Link>
+        .
+      </p>
 
       <div className="overflow-x-auto rounded-lg border border-surface-border">
         <table className="w-full border-collapse bg-surface text-left text-sm">

@@ -682,9 +682,9 @@ async def risk_area_features(session: AsyncSession) -> list[dict[str, Any]]:
     if run is None:
         return []
     s, a = hydro_risk_sectors, risk_assessments
-    geometry = func.ST_AsGeoJSON(
-        func.ST_SimplifyPreserveTopology(s.c.geom, SIMPLIFY_TOLERANCE_DEG), 6
-    )
+    # ST_Multi: a simplificação devolve Polygon quando o setor tem uma parte só.
+    simplified = func.ST_Multi(func.ST_SimplifyPreserveTopology(s.c.geom, SIMPLIFY_TOLERANCE_DEG))
+    geometry = func.ST_AsGeoJSON(simplified, 6)
     rows = await session.execute(
         select(
             s.c.id,

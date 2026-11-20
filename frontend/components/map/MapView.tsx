@@ -13,6 +13,9 @@ import type { SavedLocation } from "@/features/locations/store";
 import { COLUMN_MAX_M, STATION_STATUS, circlePolygon, columnHeight, rainClass } from "@/features/map/geometry";
 import type { LayerId, MapMode } from "@/features/map/state";
 import type { FeatureCollection, ForecastPointProps, RegionFeature, StationProps } from "@/features/map/types";
+import { CATEGORIES, OCCURRENCE_TYPE_LABELS, categoryLabel, titleCase } from "@/features/risk/categories";
+import { riskHref } from "@/features/risk/state";
+import type { OccurrenceProps, RiskCategory, RiskLayer, RiskLayerProps } from "@/features/risk/types";
 import { formatDateTime, formatNumber } from "@/lib/format";
 
 const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL ?? "https://tiles.openfreemap.org/styles/liberty";
@@ -23,7 +26,8 @@ const TERRAIN_URL =
 const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? "/vendor/maplibre-gl-worker.mjs";
 const TERRAIN_ATTRIBUTION =
   '<a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md" target="_blank" rel="noopener">Relevo: Terrain Tiles (Mapzen/AWS)</a>';
-const DATA_ATTRIBUTION = "Previsão: Open-Meteo.com (CC BY 4.0) · Estações: INMET";
+const DATA_ATTRIBUTION =
+  "Previsão: Open-Meteo.com (CC BY 4.0) · Estações: INMET · Setores e ocorrências: GeoSampa — Prefeitura de São Paulo";
 const SAO_PAULO: [number, number] = [-46.6333, -23.5505];
 const PITCH_3D = 60;
 const EXAGGERATION = 1.5;
@@ -31,6 +35,8 @@ const EXAGGERATION = 1.5;
 const LAYER_GROUPS: Record<LayerId, string[]> = {
   estacoes: ["estacoes-circulos"],
   chuva: ["chuva-2d", "chuva-3d"],
+  risco: ["risco-2d", "risco-contorno", "risco-3d"],
+  ocorrencias: ["ocorrencias-pontos"],
   locais: ["locais-circulos"],
   regiao: ["regiao-contorno"],
 };
@@ -41,6 +47,8 @@ interface MapViewProps {
   region?: RegionFeature;
   stations?: FeatureCollection<StationProps>;
   forecast?: FeatureCollection<ForecastPointProps>;
+  risk?: RiskLayer;
+  occurrences?: FeatureCollection<OccurrenceProps>;
   locations: SavedLocation[];
   reducedMotion: boolean;
   onError: (message: string) => void;
@@ -113,6 +121,17 @@ function popupContent(title: string, lines: string[], link?: { href: string; lab
   return root;
 }
 
+/** Expressão MapLibre: categoria -> valor (cor ou altura), com cinza/mínimo como padrão. */
+function byCategory(field: "color" | "height"): unknown[] {
+  const pairs = (Object.keys(CATEGORIES) as RiskCategory[]).flatMap((c) => [c, CATEGORIES[c][field]]);
+  return ["match", ["get", "category"], ...pairs, CATEGORIES.UNKNOWN[field]];
+}
+
+function formatDate(isoDate: string): string {
+  const [y, m, d] = isoDate.split("-");
+  return d && m && y ? `${d}/${m}/${y}` : isoDate;
+}
+
 function weatherHref(lat: number, lon: number, name: string): string {
   return `/weather?${new URLSearchParams({ lat: lat.toFixed(4), lon: lon.toFixed(4), nome: name })}`;
 }
@@ -122,7 +141,7 @@ function setData(map: MapLibreMap, id: string, data: Json) {
 }
 
 export default function MapView(props: MapViewProps) {
-  const { mode, layers, region, stations, forecast, locations, reducedMotion, onError } = props;
+  const { mode, layers, region, stations, forecast, risk, occurrences, locations, reducedMotion, onError } = props;
   const container = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const [ready, setReady] = useState(false);
@@ -177,7 +196,7 @@ export default function MapView(props: MapViewProps) {
           paint: { "hillshade-exaggeration": 0.35, "hillshade-shadow-color": "#47515a" },
         });
 
-        for (const id of ["regiao", "estacoes", "chuva-pontos", "chuva-colunas", "locais"]) {
+        for (const id of ["regiao", "risco", "ocorrencias", "estacoes", "chuva-pontos", "chuva-colunas", "locais"]) {
           map.addSource(id, { type: "geojson", data: emptyCollection() as unknown as GeoJSONData });
         }
         map.addLayer({
@@ -185,6 +204,30 @@ export default function MapView(props: MapViewProps) {
           type: "line",
           source: "regiao",
           paint: { "line-color": "#0b5c7a", "line-width": 2, "line-dasharray": [3, 2] },
+        });
+        // Risco estimado (spec 005): preenchimento em 2D, extrusão por categoria em 3D.
+        map.addLayer({
+          id: "risco-2d",
+          type: "fill",
+          source: "risco",
+          paint: { "fill-color": byCategory("color") as never, "fill-opacity": 0.55 },
+        });
+        map.addLayer({
+          id: "risco-contorno",
+          type: "line",
+          source: "risco",
+          paint: { "line-color": byCategory("color") as never, "line-width": 1.5 },
+        });
+        map.addLayer({
+          id: "risco-3d",
+          type: "fill-extrusion",
+          source: "risco",
+          paint: {
+            "fill-extrusion-color": byCategory("color") as never,
+            "fill-extrusion-height": byCategory("height") as never,
+            "fill-extrusion-base": 0,
+            "fill-extrusion-opacity": 0.8,
+          },
         });
         map.addLayer({
           id: "chuva-2d",
@@ -207,6 +250,18 @@ export default function MapView(props: MapViewProps) {
             "fill-extrusion-height": ["get", "altura"],
             "fill-extrusion-base": 0,
             "fill-extrusion-opacity": 0.85,
+          },
+        });
+        map.addLayer({
+          id: "ocorrencias-pontos",
+          type: "circle",
+          source: "ocorrencias",
+          paint: {
+            "circle-radius": 4,
+            "circle-color": "#1f2937",
+            "circle-opacity": 0.8,
+            "circle-stroke-color": "#ffffff",
+            "circle-stroke-width": 1,
           },
         });
         map.addLayer({
@@ -287,10 +342,61 @@ export default function MapView(props: MapViewProps) {
             )
             .addTo(map!);
         };
+        const showRisk = (e: MapLayerMouseEvent) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          const p = f.properties as unknown as RiskLayerProps;
+          const p1h = p.p1h_max_mm == null ? null : Number(p.p1h_max_mm);
+          const p24 = p.p24_mm == null ? null : Number(p.p24_mm);
+          popup
+            .setLngLat(e.lngLat)
+            .setDOMContent(
+              popupContent(
+                `Setor ${p.code} — ${titleCase(p.name ?? null)}`,
+                [
+                  `Risco estimado: ${categoryLabel(String(p.category))}`,
+                  `Subprefeitura: ${titleCase(p.subprefecture ?? null)} · grau R${p.grade}`,
+                  p1h === null
+                    ? "Chuva prevista: indisponível"
+                    : `Chuva prevista: até ${formatNumber(p1h)} mm/h · ${formatNumber(p24)} mm em 24 h`,
+                  "Estimativa experimental do sistema — não é alerta oficial.",
+                ],
+                { href: riskHref(Number(p.id)), label: "Ver por que esta estimativa" },
+              ),
+            )
+            .addTo(map!);
+        };
+        const showOccurrence = (e: MapLayerMouseEvent) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          const p = f.properties as unknown as OccurrenceProps;
+          const [lon, lat] = (f.geometry as Point).coordinates as [number, number];
+          popup
+            .setLngLat([lon, lat])
+            .setDOMContent(
+              popupContent(`${OCCURRENCE_TYPE_LABELS[p.type] ?? p.type} registrado`, [
+                `Data: ${formatDate(String(p.occurred_on))}`,
+                `Subprefeitura: ${titleCase(p.subprefecture ?? null)}`,
+                "Fonte: GeoSampa (Defesa Civil). Registro de atendimento; pode não incluir todos os eventos.",
+              ]),
+            )
+            .addTo(map!);
+        };
+        map.on("click", "risco-2d", showRisk);
+        map.on("click", "risco-3d", showRisk);
+        map.on("click", "ocorrencias-pontos", showOccurrence);
         map.on("click", "estacoes-circulos", showStation);
         map.on("click", "chuva-2d", showForecast);
         map.on("click", "chuva-3d", showForecast);
-        for (const id of ["estacoes-circulos", "chuva-2d", "chuva-3d", "locais-circulos"]) {
+        for (const id of [
+          "estacoes-circulos",
+          "chuva-2d",
+          "chuva-3d",
+          "locais-circulos",
+          "risco-2d",
+          "risco-3d",
+          "ocorrencias-pontos",
+        ]) {
           map.on("mouseenter", id, () => (map!.getCanvas().style.cursor = "pointer"));
           map.on("mouseleave", id, () => (map!.getCanvas().style.cursor = ""));
         }
@@ -330,7 +436,9 @@ export default function MapView(props: MapViewProps) {
     setData(map, "chuva-pontos", forecastPoints(forecast));
     setData(map, "chuva-colunas", forecastColumns(forecast));
     setData(map, "locais", locationsCollection(locations));
-  }, [ready, region, stations, forecast, locations]);
+    setData(map, "risco", (risk as unknown as Json) ?? emptyCollection());
+    setData(map, "ocorrencias", (occurrences as unknown as Json) ?? emptyCollection());
+  }, [ready, region, stations, forecast, risk, occurrences, locations]);
 
   // Modo 2D/3D e visibilidade das camadas.
   useEffect(() => {
@@ -343,6 +451,8 @@ export default function MapView(props: MapViewProps) {
         let visible = layers.includes(group);
         if (id === "chuva-2d") visible &&= !is3d;
         if (id === "chuva-3d") visible &&= is3d;
+        if (id === "risco-2d") visible &&= !is3d;
+        if (id === "risco-3d") visible &&= is3d;
         map.setLayoutProperty(id, "visibility", visible ? "visible" : "none");
       }
     }

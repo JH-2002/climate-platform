@@ -1,13 +1,22 @@
 /** Modo (2D/3D) e camadas do mapa, sincronizados com a URL (FR-059). Funções puras. */
 
 export type MapMode = "2d" | "3d";
-export type LayerId = "estacoes" | "chuva" | "locais" | "regiao";
+export type LayerId = "estacoes" | "chuva" | "risco" | "ocorrencias" | "locais" | "regiao";
 
-export const ALL_LAYERS: readonly LayerId[] = ["estacoes", "chuva", "locais", "regiao"];
+export const ALL_LAYERS: readonly LayerId[] = [
+  "estacoes",
+  "chuva",
+  "risco",
+  "ocorrencias",
+  "locais",
+  "regiao",
+];
 
 export const LAYER_LABELS: Record<LayerId, string> = {
   estacoes: "Estações do INMET",
   chuva: "Chuva prevista (24 h)",
+  risco: "Risco estimado (setores)",
+  ocorrencias: "Ocorrências registradas",
   locais: "Meus locais",
   regiao: "Região de interesse",
 };

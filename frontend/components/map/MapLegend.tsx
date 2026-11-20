@@ -1,5 +1,7 @@
 import { COLUMN_MAX_M, RAIN_CLASSES, STATION_STATUS } from "@/features/map/geometry";
 import type { MapMode } from "@/features/map/state";
+import { RiskSwatch } from "@/components/risk/RiskBadge";
+import { CATEGORIES, CATEGORY_ORDER } from "@/features/risk/categories";
 
 /** Legenda com cor e texto (FR-056): a informação nunca depende só da cor. */
 export function MapLegend({ mode }: { mode: MapMode }) {
@@ -31,6 +33,28 @@ export function MapLegend({ mode }: { mode: MapMode }) {
           ))}
         </ul>
         <p className="mt-1 text-xs text-ink-muted">Faixas visuais, não são alertas oficiais.</p>
+      </div>
+      <div>
+        <h3 className="text-xs font-medium text-ink-muted">
+          Risco estimado de alagamento por setor (experimental)
+          {mode === "3d" ? " — altura do bloco cresce com a categoria" : ""}
+        </h3>
+        <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+          {CATEGORY_ORDER.map((c) => (
+            <li key={c} className="flex items-center gap-2">
+              <RiskSwatch category={c} />
+              {CATEGORIES[c].label}
+            </li>
+          ))}
+          <li className="flex items-center gap-2">
+            <span aria-hidden="true" className="inline-block h-2.5 w-2.5 rounded-full border border-white bg-gray-800" />
+            Ocorrência registrada (12 meses)
+          </li>
+        </ul>
+        <p className="mt-1 text-xs text-ink-muted">
+          Setores de risco hidrológico do GeoSampa × chuva prevista. Estimativa do sistema, não
+          aviso oficial; detalhes na página Risco de alagamento.
+        </p>
       </div>
       <div className="flex flex-wrap gap-x-4 gap-y-1">
         <span className="flex items-center gap-2">

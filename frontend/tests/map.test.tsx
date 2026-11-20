@@ -28,8 +28,15 @@ describe("estado do mapa na URL (FR-059, AC-052)", () => {
 
   it("alterna camadas mantendo a ordem", () => {
     const off = toggleLayer(DEFAULT_STATE, "chuva");
-    expect(off.layers).toEqual(["estacoes", "locais", "regiao"]);
-    expect(toggleLayer(off, "chuva").layers).toEqual(["estacoes", "chuva", "locais", "regiao"]);
+    expect(off.layers).toEqual(["estacoes", "risco", "ocorrencias", "locais", "regiao"]);
+    expect(toggleLayer(off, "chuva").layers).toEqual([
+      "estacoes",
+      "chuva",
+      "risco",
+      "ocorrencias",
+      "locais",
+      "regiao",
+    ]);
   });
 });
 

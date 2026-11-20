@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { MapControls } from "@/components/map/MapControls";
 import { MapFeatureList } from "@/components/map/MapFeatureList";
 import { MapLegend } from "@/components/map/MapLegend";
+import { RiskDisclaimer } from "@/components/risk/RiskDisclaimer";
 import { useLocations } from "@/features/locations/useLocations";
 import { prefersReducedMotion, supportsWebGL } from "@/features/map/capabilities";
 import { useMapLayers } from "@/features/map/hooks";
@@ -26,7 +27,7 @@ function MapPage() {
   const router = useRouter();
   const pathname = usePathname();
   const state = parseMapState(params);
-  const { region, stations, forecast } = useMapLayers();
+  const { region, stations, forecast, risk, occurrences } = useMapLayers();
   const locations = useLocations();
   const [webgl, setWebgl] = useState<boolean | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -41,15 +42,16 @@ function MapPage() {
     router.replace(`${pathname}?${serializeMapState(next)}`, { scroll: false });
   }
 
-  const loadError = region.isError || stations.isError || forecast.isError;
+  const loadError =
+    region.isError || stations.isError || forecast.isError || risk.isError || occurrences.isError;
 
   return (
     <div className="mx-auto max-w-6xl space-y-4">
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold">Mapa</h1>
         <p className="text-sm text-ink-muted">
-          Estações oficiais, chuva prevista e relevo. Em 3D, arraste com o botão direito (ou Ctrl +
-          arrastar) para inclinar e girar.
+          Estações oficiais, chuva prevista, risco estimado de alagamento e relevo. Em 3D, arraste
+          com o botão direito (ou Ctrl + arrastar) para inclinar e girar.
         </p>
       </header>
 
@@ -60,6 +62,8 @@ function MapPage() {
         onModeChange={(mode) => update({ ...state, mode })}
         onToggleLayer={(id) => update(toggleLayer(state, id))}
       />
+
+      {state.layers.includes("risco") && <RiskDisclaimer compact />}
 
       {loadError && (
         <p role="alert" className="rounded-lg border border-surface-border bg-surface p-3 text-sm">
@@ -84,6 +88,8 @@ function MapPage() {
           region={region.data}
           stations={stations.data}
           forecast={forecast.data}
+          risk={risk.data}
+          occurrences={occurrences.data}
           locations={locations.locations}
           reducedMotion={reducedMotion}
           onError={setMapError}

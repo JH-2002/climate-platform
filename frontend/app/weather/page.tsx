@@ -5,11 +5,13 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { DailyTable } from "@/components/weather/DailyTable";
 import { HourlyChart } from "@/components/weather/HourlyChart";
 import { LocationPicker } from "@/components/weather/LocationPicker";
+import { NearbyRisk } from "@/components/weather/NearbyRisk";
 import { NearbyStations } from "@/components/weather/NearbyStations";
 import { NowCard } from "@/components/weather/NowCard";
 import { RainOutlook } from "@/components/weather/RainOutlook";
 import { SourceNote } from "@/components/weather/SourceNote";
 import { useLocations } from "@/features/locations/useLocations";
+import { useNearestRisk } from "@/features/risk/hooks";
 import { useSourcesStatus } from "@/features/sources/useSourcesStatus";
 import { useForecast, useNearbyStations } from "@/features/weather/hooks";
 import { ApiError } from "@/lib/api-client";
@@ -24,6 +26,7 @@ function WeatherDashboard() {
 
   const forecast = useForecast(selected.lat, selected.lon);
   const nearby = useNearbyStations(selected.lat, selected.lon);
+  const risk = useNearestRisk(selected.lat, selected.lon);
   const sources = useSourcesStatus();
   const observationsAvailable =
     sources.data?.items.find((s) => s.code === "inmet-observations")?.freshness === "FRESH";
@@ -96,6 +99,10 @@ function WeatherDashboard() {
               observationsAvailable={observationsAvailable}
             />
           </div>
+          <NearbyRisk
+            state={risk.isPending ? "loading" : risk.isError ? "error" : "success"}
+            data={risk.data}
+          />
           <HourlyChart hours={forecast.data.hourly} />
           <DailyTable days={forecast.data.daily} />
           <SourceNote forecast={forecast.data} />
