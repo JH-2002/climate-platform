@@ -14,7 +14,7 @@ from zoneinfo import ZoneInfo
 
 from geoalchemy2 import Geography
 from pydantic import BaseModel
-from sqlalchemy import cast, func, select
+from sqlalchemy import Select, cast, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.tables import data_sources, weather_forecasts
@@ -25,6 +25,9 @@ MAX_POINT_DISTANCE_KM = 25.0
 HOURLY_WINDOW_H = 48
 DAILY_DAYS = 7
 OUTLOOK_HOURS = (1, 3, 24, 72)
+# Um ponto retirado de FORECAST_POINTS deixa de receber coletas; depois desta folga em relação
+# à coleta mais recente, ele sai das consultas (senão a janela de previsão dele se esgota).
+RETIRED_POINT_GRACE = timedelta(hours=3)
 
 HOURLY_FIELDS = ("air_temperature", "precipitation", "relative_humidity", "wind_speed")
 DAILY_FIELDS = (
@@ -124,6 +127,19 @@ def precipitation_outlook(
 # --- consultas -------------------------------------------------------------------------------
 
 
+def active_point_keys() -> Select[tuple[str]]:
+    """Pontos atualizados até RETIRED_POINT_GRACE antes da coleta mais recente da fonte."""
+    t = weather_forecasts
+    source = select(data_sources.c.id).where(data_sources.c.code == FORECAST_SOURCE)
+    latest = select(func.max(t.c.issued_at)).where(t.c.source_id.in_(source)).scalar_subquery()
+    return (
+        select(t.c.point_key)
+        .where(t.c.source_id.in_(source))
+        .group_by(t.c.point_key)
+        .having(func.max(t.c.issued_at) >= latest - RETIRED_POINT_GRACE)
+    )
+
+
 def _origin(lat: float, lon: float) -> Any:
     return cast(func.ST_SetSRID(func.ST_MakePoint(lon, lat), 4326), Geography)
 
@@ -144,6 +160,7 @@ async def nearest_point(
             )
             .join(data_sources, data_sources.c.id == t.c.source_id)
             .where(data_sources.c.code == FORECAST_SOURCE)
+            .where(t.c.point_key.in_(active_point_keys()))
             .where(func.ST_DWithin(t.c.point, origin, max_km * 1000.0))
             .order_by(distance)
             .limit(1)

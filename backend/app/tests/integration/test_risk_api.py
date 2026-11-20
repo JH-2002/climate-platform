@@ -22,7 +22,7 @@ from app.core.config import get_settings
 from app.ingestion.jobs import make_forecast_job
 from app.ingestion.pipeline import run_ingestion
 from app.main import create_app
-from app.models.tables import data_sources, risk_assessments, risk_runs
+from app.models.tables import data_sources, risk_assessments, risk_runs, weather_forecasts
 from app.risk.coefficients import ENGINE_VERSION
 from app.services.risk import RiskRunSummary, compute_flood_risk
 from app.tests.fixtures import OPEN_METEO_SP, load
@@ -261,3 +261,45 @@ def test_no_sectors_records_failed_run() -> None:
         select(data_sources.c.last_status).where(data_sources.c.code == "flood-risk-engine")
     )
     assert rows[0][0] == "FAILED"
+
+
+def test_retired_forecast_point_is_ignored(client: TestClient) -> None:
+    """Ponto que saiu de FORECAST_POINTS não é usado depois da folga (nem no mapa)."""
+    seed_and_compute()
+
+    async def go() -> RiskRunSummary:
+        engine = create_async_engine(get_settings().database_url, poolclass=NullPool)
+        factory = async_sessionmaker(engine, expire_on_commit=False)
+        try:
+            async with factory() as s:
+                await s.execute(
+                    update(weather_forecasts).values(
+                        issued_at=weather_forecasts.c.issued_at - timedelta(hours=6)
+                    )
+                )
+                await s.commit()
+            moved = forecast_payload(heavy_rain_mm=30.0)
+            moved["latitude"], moved["longitude"] = -23.47, -46.42  # perto de São Miguel
+
+            async def fetcher(_url: str, _params: dict[str, str] | None) -> Any:
+                return moved
+
+            await run_ingestion(
+                factory, "open-meteo-forecast", make_forecast_job(fetcher, [(-23.47, -46.42)])
+            )
+            async with factory() as session:
+                await session.execute(
+                    update(data_sources)
+                    .where(data_sources.c.code == "open-meteo-forecast")
+                    .values(last_success_at=FIXED_NOW, last_status="SUCCESS")
+                )
+                await session.commit()
+                return await compute_flood_risk(session, FIXED_NOW)
+        finally:
+            await engine.dispose()
+
+    asyncio.run(go())
+    areas = by_code(client)
+    assert areas["HMP-01-03"]["category"] == "HIGH"  # usa o ponto novo, com chuva forte
+    points = client.get("/api/v1/map/layers/forecast-points").json()["features"]
+    assert [p["properties"]["point_key"] for p in points] == ["-23.4700,-46.4200"]

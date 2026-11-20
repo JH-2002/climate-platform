@@ -31,7 +31,7 @@ from app.models.tables import (
 )
 from app.risk.coefficients import DEFAULT_COEFFICIENTS, ENGINE_VERSION, Category, Coefficients
 from app.risk.engine import RainInput, RunResult, SectorInput, assess
-from app.services.forecast import FORECAST_SOURCE, current_hour
+from app.services.forecast import FORECAST_SOURCE, active_point_keys, current_hour
 from app.services.freshness import classify_freshness
 
 logger = structlog.get_logger(__name__)
@@ -126,6 +126,7 @@ async def _forecast_points(session: AsyncSession) -> list[ForecastPoint]:
             )
             .join(data_sources, data_sources.c.id == t.c.source_id)
             .where(data_sources.c.code == FORECAST_SOURCE)
+            .where(t.c.point_key.in_(active_point_keys()))
             .group_by(t.c.point_key, t.c.point)
         )
     ).all()

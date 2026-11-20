@@ -49,6 +49,7 @@ async def forecast_point_features(session: AsyncSession, now: datetime) -> list[
             )
             .join(data_sources, data_sources.c.id == t.c.source_id)
             .where(data_sources.c.code == fc.FORECAST_SOURCE)
+            .where(t.c.point_key.in_(fc.active_point_keys()))
             .group_by(t.c.point_key, t.c.point)
             .order_by(t.c.point_key)
         )
