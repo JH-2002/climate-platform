@@ -1,6 +1,6 @@
 # ADR-011 — Séries de referência para análises e insights por regra
 
-**Status:** Proposta · **Data:** 2026-11-19
+**Status:** Aceita · **Data:** 2026-11-19
 
 ## Contexto
 A Fase 6 pede percentis históricos, anomalias, sazonalidade, tendências e insights automáticos (documento mestre §13). Em 2026-11-19 o sistema não tinha nenhuma série longa:

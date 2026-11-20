@@ -116,3 +116,16 @@ forbidden_modules = [
     "app.api",
     "app.workers",
 ]
+
+[[tool.importlinter.contracts]]
+name = "motor analítico é puro: sem modelos, serviços, ingestão, integrações, api ou workers"
+type = "forbidden"
+source_modules = ["app.analytics"]
+forbidden_modules = [
+    "app.models",
+    "app.services",
+    "app.ingestion",
+    "app.integrations",
+    "app.api",
+    "app.workers",
+]

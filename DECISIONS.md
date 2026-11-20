@@ -14,7 +14,7 @@
 | [ADR-008](docs/architecture/adr/ADR-008-locations-in-browser.md) | Locais salvos no navegador até existir autenticação | Aceita | 2026-11-19 |
 | [ADR-009](docs/architecture/adr/ADR-009-maplibre-2d-3d.md) | MapLibre GL para o mapa 2D/3D (no lugar de Leaflet) | Aceita | 2026-11-19 |
 | [ADR-010](docs/architecture/adr/ADR-010-geosampa-risk-matrix.md) | GeoSampa como base de suscetibilidade e motor de risco em matriz | Aceita | 2026-11-19 |
-| [ADR-011](docs/architecture/adr/ADR-011-reference-series-and-rule-insights.md) | Séries de referência (IAG/USP e reanálise) e insights por regra | Proposta | 2026-11-19 |
+| [ADR-011](docs/architecture/adr/ADR-011-reference-series-and-rule-insights.md) | Séries de referência (IAG/USP e reanálise) e insights por regra | Aceita | 2026-11-19 |
 
 ## Decisões menores (sem ADR)
 

@@ -22,3 +22,6 @@ GEOSAMPA_SECTORS = "geosampa_risco_hidrologico_2026-11-19.json"
 GEOSAMPA_FLOOD_EXTENT = "geosampa_area_inundavel_2026-11-19.json"
 GEOSAMPA_OCC_ALAGAMENTO = "geosampa_ocorrencia_alagamento_2026-11-19.json"
 GEOSAMPA_OCC_INUNDACAO = "geosampa_ocorrencia_inundacao_2026-11-19.json"
+
+# Open-Meteo Historical (reanálise), ponto -23.57,-46.62, nov/2025–jan/2026, gravada em 2026-11-19.
+OPEN_METEO_ARCHIVE_SP = "open_meteo_archive_sao_paulo_2025-11_2026-01.json"

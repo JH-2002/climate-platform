@@ -15,6 +15,10 @@ HEARTBEAT_INTERVAL_S = 30
 STATIONS_SYNC_INTERVAL_S = 24 * 3600
 FORECAST_INTERVAL_S = 3600
 GEOSAMPA_SYNC_INTERVAL_S = 24 * 3600
+ARCHIVE_UPDATE_INTERVAL_S = 24 * 3600
+# Carga inicial da reanálise: um ponto a cada 2 min (limite gratuito da fonte, NFR-082).
+ARCHIVE_BACKFILL_INTERVAL_S = 120
+REFERENCE_IMPORT_INTERVAL_S = 7 * 24 * 3600
 
 _settings = get_settings()
 
@@ -25,6 +29,7 @@ celery_app = Celery(
         "app.workers.tasks.system",
         "app.workers.tasks.ingestion",
         "app.workers.tasks.risk",
+        "app.workers.tasks.analytics",
     ],
 )
 
@@ -57,6 +62,18 @@ celery_app.conf.update(
             "task": "ingestion.sync_geosampa",
             "schedule": float(GEOSAMPA_SYNC_INTERVAL_S),
         },
+        "open-meteo-archive": {
+            "task": "ingestion.open_meteo_archive",
+            "schedule": float(ARCHIVE_UPDATE_INTERVAL_S),
+        },
+        "open-meteo-archive-backfill": {
+            "task": "ingestion.open_meteo_archive_backfill",
+            "schedule": float(ARCHIVE_BACKFILL_INTERVAL_S),
+        },
+        "reference-import": {
+            "task": "ingestion.import_reference",
+            "schedule": float(REFERENCE_IMPORT_INTERVAL_S),
+        },
     },
 )
 
@@ -71,6 +88,8 @@ STARTUP_TASKS = (
     "ingestion.sync_inmet_stations",
     "ingestion.open_meteo_forecast",
     "ingestion.sync_geosampa",
+    "ingestion.import_reference",
+    "ingestion.open_meteo_archive_backfill",
 )
 
 

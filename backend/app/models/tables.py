@@ -219,3 +219,61 @@ risk_assessments = Table(
     Column("unknown_reason", Text),
     UniqueConstraint("run_id", "sector_id"),
 )
+
+# --- spec 006: análises -----------------------------------------------------------------------
+
+climate_daily = Table(
+    "climate_daily",
+    metadata,
+    Column("id", BigInteger, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("point_key", Text, nullable=False),
+    Column("point", Geography("POINT", srid=4326, spatial_index=False), nullable=False),
+    Column("cell_key", Text, nullable=False),
+    Column("day", Date, nullable=False),
+    Column("variable", Text, nullable=False),
+    Column("value", Float, nullable=False),
+    Column("unit", Text, nullable=False),
+    Column("kind", Text, nullable=False),
+    Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
+    Column("ingested_at", DateTime(timezone=True), nullable=False),
+    UniqueConstraint("source_id", "point_key", "day", "variable"),
+)
+
+rain_monthly_observed = Table(
+    "rain_monthly_observed",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("station_code", Text, nullable=False),
+    Column("year", SmallInteger, nullable=False),
+    Column("month", SmallInteger, nullable=False),
+    Column("value_mm", Float, nullable=False),
+    Column("kind", Text, nullable=False),
+    Column("source_file", Text, nullable=False),
+    Column("file_hash", Text, nullable=False),
+    Column("imported_at", DateTime(timezone=True), nullable=False),
+    UniqueConstraint("source_id", "station_code", "year", "month"),
+)
+
+published_normals = Table(
+    "published_normals",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("station_code", Text, nullable=False),
+    Column("period", Text, nullable=False),
+    Column("month", SmallInteger, nullable=False),
+    Column("value_mm", Float, nullable=False),
+    UniqueConstraint("source_id", "station_code", "period", "month"),
+)
+
+backfill_progress = Table(
+    "backfill_progress",
+    metadata,
+    Column("source_id", Integer, ForeignKey("data_sources.id"), primary_key=True),
+    Column("point_key", Text, primary_key=True),
+    Column("loaded_until", Date),
+    Column("completed", Boolean, nullable=False),
+    Column("updated_at", DateTime(timezone=True), nullable=False),
+)

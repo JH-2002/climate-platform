@@ -5,14 +5,21 @@ from __future__ import annotations
 import json
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime, timedelta
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import httpx
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.pool import NullPool
 
 from app.core.config import Settings
+from app.ingestion.archive_jobs import (
+    make_archive_backfill_job,
+    make_archive_update_job,
+    pending_points,
+)
 from app.ingestion.geosampa_jobs import (
     make_flood_extent_sync_job,
     make_occurrence_sync_job,
@@ -20,7 +27,9 @@ from app.ingestion.geosampa_jobs import (
 )
 from app.ingestion.jobs import Fetcher, make_forecast_job, make_station_sync_job
 from app.ingestion.pipeline import RunOutcome, run_ingestion
+from app.ingestion.reference_import import make_iag_import_job
 from app.integrations.http import fetch
+from app.models.tables import data_sources
 from app.services.risk import RiskRunSummary, compute_flood_risk
 
 STATIONS_SOURCE = "inmet-stations"
@@ -28,6 +37,11 @@ FORECAST_SOURCE = "open-meteo-forecast"
 GEOSAMPA_SECTORS_SOURCE = "geosampa-risk-sectors"
 GEOSAMPA_EXTENT_SOURCE = "geosampa-flood-extent"
 GEOSAMPA_OCCURRENCES_SOURCE = "geosampa-flood-occurrences"
+ARCHIVE_SOURCE = "open-meteo-archive"
+IAG_SOURCE = "iag-usp-rain-monthly"
+# 35 anos diários de um ponto levam ~11 s na fonte (SOURCES.md §12).
+ARCHIVE_TIMEOUT_S = 90.0
+LOCAL_TZ = ZoneInfo("America/Sao_Paulo")
 # Camadas do GeoSampa chegam a 1,6 MB; o servidor responde devagar em horários de pico.
 GEOSAMPA_TIMEOUT_S = 60.0
 
@@ -91,3 +105,40 @@ async def run_flood_risk(settings: Settings) -> RiskRunSummary:
     """Motor de risco v0 (spec 005, FR-064) sobre os dados já coletados."""
     async with _session_factory(settings) as sessions, sessions() as session:
         return await compute_flood_risk(session, datetime.now(UTC))
+
+
+def local_yesterday(now: datetime | None = None) -> date:
+    return (now or datetime.now(UTC)).astimezone(LOCAL_TZ).date() - timedelta(days=1)
+
+
+async def run_iag_import(settings: Settings) -> RunOutcome:
+    async with _session_factory(settings) as sessions:
+        return await run_ingestion(sessions, IAG_SOURCE, make_iag_import_job())
+
+
+async def run_archive_backfill(settings: Settings) -> RunOutcome | None:
+    """Carga inicial de um ponto. Sem pontos pendentes, não registra execução."""
+    points = settings.forecast_point_list
+    async with _session_factory(settings) as sessions:
+        async with sessions() as session:
+            source_id = (
+                await session.execute(
+                    select(data_sources.c.id).where(data_sources.c.code == ARCHIVE_SOURCE)
+                )
+            ).scalar_one()
+            if not await pending_points(session, source_id, points):
+                return None
+        async with httpx.AsyncClient(timeout=ARCHIVE_TIMEOUT_S) as client:
+            job = make_archive_backfill_job(make_http_fetcher(client), points, local_yesterday())
+            return await run_ingestion(sessions, ARCHIVE_SOURCE, job)
+
+
+async def run_archive_update(settings: Settings) -> RunOutcome:
+    async with (
+        _session_factory(settings) as sessions,
+        httpx.AsyncClient(timeout=ARCHIVE_TIMEOUT_S) as client,
+    ):
+        job = make_archive_update_job(
+            make_http_fetcher(client), settings.forecast_point_list, local_yesterday()
+        )
+        return await run_ingestion(sessions, ARCHIVE_SOURCE, job)

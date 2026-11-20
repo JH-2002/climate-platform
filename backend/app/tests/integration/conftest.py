@@ -18,6 +18,7 @@ from sqlalchemy.pool import NullPool
 from app.core.config import get_settings
 
 _TABLES = (
+    "climate_daily, rain_monthly_observed, published_normals, backfill_progress, "
     "risk_assessments, risk_runs, flood_occurrences, flood_extent_areas, hydro_risk_sectors, "
     "weather_forecasts, weather_observations, raw_payloads, ingestion_runs, weather_stations"
 )

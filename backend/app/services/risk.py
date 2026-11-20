@@ -114,7 +114,7 @@ def rain_inputs(
 # --- montagem das entradas -------------------------------------------------------------------
 
 
-async def _forecast_points(session: AsyncSession) -> list[ForecastPoint]:
+async def forecast_points(session: AsyncSession) -> list[ForecastPoint]:
     t = weather_forecasts
     rows = (
         await session.execute(
@@ -135,7 +135,7 @@ async def _forecast_points(session: AsyncSession) -> list[ForecastPoint]:
     ]
 
 
-async def _hourly_precipitation(
+async def hourly_precipitation_by_point(
     session: AsyncSession, start: datetime, end: datetime
 ) -> dict[str, dict[datetime, float]]:
     t = weather_forecasts
@@ -231,13 +231,13 @@ async def compute_flood_risk(
     """Roda o motor e grava a execução (FR-064). Falhas também são gravadas."""
     start = current_hour(now)
     freshness = await source_freshness(session, FORECAST_SOURCE, now)
-    points = await _forecast_points(session)
+    points = await forecast_points(session)
     issued_at = max((p.issued_at for p in points), default=None)
     try:
         rows = await _sector_rows(session, now, c)
         if not rows:
             raise ValueError("nenhum setor de risco sincronizado do GeoSampa")
-        hourly = await _hourly_precipitation(
+        hourly = await hourly_precipitation_by_point(
             session,
             start - timedelta(hours=c.antecedent_hours),
             start + timedelta(hours=c.window_hours),
