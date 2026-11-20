@@ -99,7 +99,13 @@ export function RainTab({ center, yesterday }: RainTabProps) {
     periodo: periodLabel(p.start, "month"),
     chuva: p.value,
     normal: p.reference,
-    situacao: p.insufficient ? "dados insuficientes" : p.partial ? `parcial (${p.n} de ${p.expected} dias)` : "completo",
+    situacao: p.insufficient
+      ? "dados insuficientes"
+      : p.truncated
+        ? `em andamento (${p.n} dias, até ${periodLabel(yesterday, "day")}); sem comparação com a normal do mês inteiro`
+        : p.partial
+          ? `parcial (${p.n} de ${p.expected} dias)`
+          : "completo",
   }));
   const yearRows = (years.data?.points ?? []).map((p) => ({ ano: p.start.slice(0, 4), chuva: p.value, normal: p.reference }));
   const climRows = MONTHS_SHORT.map((label, i) => ({
@@ -134,7 +140,7 @@ export function RainTab({ center, yesterday }: RainTabProps) {
         <ChartFrame
           id="chuva-mensal"
           title={`Chuva mês a mês em ${year} × normal 1991–2020`}
-          summary="Barras: total de cada mês até ontem; linha: média do mesmo mês em 1991–2020 no mesmo ponto. Mês em andamento aparece como parcial."
+          summary="Barras: total de cada mês; linha: média do mesmo mês em 1991–2020 no mesmo ponto. O mês em andamento aparece sem a normal, porque ainda não terminou; o indicador da Visão geral compara o acumulado com a média dos mesmos dias."
           kind="MODELED"
           source="Open-Meteo (reanálise ERA5/ERA5-Land), CC BY 4.0"
           notes={[REANALYSIS_NOTE]}
@@ -150,7 +156,7 @@ export function RainTab({ center, yesterday }: RainTabProps) {
             <ComposedChart data={monthRows}>
               <CartesianGrid strokeDasharray="3 3" stroke="#dde3e8" />
               <XAxis dataKey="periodo" tick={{ fontSize: 12 }} />
-              <YAxis tickFormatter={axisMm} tick={{ fontSize: 12 }} width={44} unit=" mm" />
+              <YAxis tickFormatter={axisMm} tick={{ fontSize: 12 }} width={68} unit=" mm" />
               <Tooltip formatter={(v) => mm(Number(v))} />
               <Legend />
               <Bar dataKey="chuva" name="Chuva no mês" fill="#3a86b4" />
@@ -182,7 +188,7 @@ export function RainTab({ center, yesterday }: RainTabProps) {
             <ComposedChart data={climRows}>
               <CartesianGrid strokeDasharray="3 3" stroke="#dde3e8" />
               <XAxis dataKey="mes" tick={{ fontSize: 12 }} />
-              <YAxis tickFormatter={axisMm} tick={{ fontSize: 12 }} width={44} unit=" mm" />
+              <YAxis tickFormatter={axisMm} tick={{ fontSize: 12 }} width={68} unit=" mm" />
               <Tooltip formatter={(v) => (Array.isArray(v) ? v.map((x) => mm(Number(x))).join(" a ") : mm(Number(v)))} />
               <Legend />
               <Area dataKey="faixa" name="Reanálise p25–p75" fill="#7fb3c9" stroke="none" fillOpacity={0.35} />
@@ -214,7 +220,7 @@ export function RainTab({ center, yesterday }: RainTabProps) {
             <ComposedChart data={yearRows}>
               <CartesianGrid strokeDasharray="3 3" stroke="#dde3e8" />
               <XAxis dataKey="ano" tick={{ fontSize: 11 }} interval={4} />
-              <YAxis tickFormatter={axisMm} tick={{ fontSize: 12 }} width={52} unit=" mm" />
+              <YAxis tickFormatter={axisMm} tick={{ fontSize: 12 }} width={72} unit=" mm" />
               <Tooltip formatter={(v) => mm(Number(v))} />
               <Bar dataKey="chuva" name="Total anual" fill="#3a86b4" />
               <Line dataKey="normal" name="Normal 1991–2020" stroke="#14202b" strokeDasharray="4 3" dot={false} />
@@ -285,7 +291,7 @@ export function RainTab({ center, yesterday }: RainTabProps) {
             <ComposedChart data={comboRows}>
               <CartesianGrid strokeDasharray="3 3" stroke="#dde3e8" />
               <XAxis dataKey="periodo" tick={{ fontSize: 12 }} />
-              <YAxis yAxisId="mm" tickFormatter={axisMm} tick={{ fontSize: 12 }} width={44} unit=" mm" />
+              <YAxis yAxisId="mm" tickFormatter={axisMm} tick={{ fontSize: 12 }} width={68} unit=" mm" />
               <YAxis yAxisId="n" orientation="right" tick={{ fontSize: 12 }} width={40} />
               <Tooltip />
               <Legend />

@@ -90,6 +90,9 @@ STARTUP_TASKS = (
     "ingestion.sync_geosampa",
     "ingestion.import_reference",
     "ingestion.open_meteo_archive_backfill",
+    # A atualização diária também roda ao iniciar: reinícios frequentes do agendador
+    # adiariam o ciclo de 24 h indefinidamente.
+    "ingestion.open_meteo_archive",
 )
 
 

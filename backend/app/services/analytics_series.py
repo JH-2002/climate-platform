@@ -29,6 +29,7 @@ from app.analytics.series import (
     CompareMode,
     Grain,
     Resolution,
+    bucket_end,
     bucket_start,
     buckets,
     expected_count,
@@ -69,6 +70,9 @@ class SeriesPoint(BaseModel):
     coverage: float
     partial: bool
     insufficient: bool
+    # O período não cabe inteiro na janela pedida (ex.: mês em andamento): o total cobre só
+    # parte dele e não é comparado com a normal do período completo.
+    truncated: bool = False
     reference: float | None = None
 
 
@@ -261,8 +265,10 @@ async def _series_points(
         else:
             expected = expected_count(b, effective_grain, _resolution(ds), start, end)
             final = finalize(value, n, expected)
+        truncated = b < start or bucket_end(b, effective_grain) - timedelta(days=1) > end
         points.append(
             SeriesPoint(
+                truncated=truncated,
                 start=b.isoformat(),
                 value=final.value,
                 n=n,
@@ -352,7 +358,7 @@ async def get_series(
         normal = await _normal_reference(session, ds, variable, location, grain, agg)
         for p in points:
             key = 0 if grain == "year" else date.fromisoformat(p.start).month
-            p.reference = normal.get(key)
+            p.reference = None if p.truncated else normal.get(key)
         reference_label = f"Normal {NORMAL_START}–{NORMAL_END} ({_kind_word(ds.kind)})"
         reference_kind = ds.kind
     elif compare in ("previous_period", "same_period_last_year"):
@@ -429,7 +435,9 @@ def series_csv(series: SeriesResponse, generated_at: datetime) -> str:
                 p.n,
                 p.expected,
                 p.coverage,
-                "sim" if p.partial else ("insuficiente" if p.insufficient else "não"),
+                "insuficiente"
+                if p.insufficient
+                else ("sim" if p.partial or p.truncated else "não"),
             ]
         )
     return out.getvalue()

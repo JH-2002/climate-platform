@@ -83,6 +83,7 @@ function SeriesTable({ series }: { series: SeriesResponse }) {
               <td className="px-3 py-1">
                 {p.expected ? `${p.n} de ${p.expected}` : p.n}
                 {p.partial ? " (parcial)" : ""}
+                {p.truncated ? " (período incompleto na janela)" : ""}
               </td>
             </tr>
           ))}

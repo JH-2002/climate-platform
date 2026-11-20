@@ -118,6 +118,7 @@ export interface SeriesPoint {
   coverage: number;
   partial: boolean;
   insufficient: boolean;
+  truncated: boolean;
   reference: number | null;
 }
 

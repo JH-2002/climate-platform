@@ -51,7 +51,7 @@ export function TrendsTab() {
           <ComposedChart data={rows}>
             <CartesianGrid strokeDasharray="3 3" stroke="#dde3e8" />
             <XAxis dataKey="ano" tick={{ fontSize: 11 }} interval={9} />
-            <YAxis tickFormatter={(v: number) => formatNumber(v, 0)} tick={{ fontSize: 12 }} width={52} unit=" mm" />
+            <YAxis tickFormatter={(v: number) => formatNumber(v, 0)} tick={{ fontSize: 12 }} width={72} unit=" mm" />
             <Tooltip formatter={(v) => mm(Number(v))} />
             <Legend />
             <Line dataKey="total" name="Total anual" stroke="#7fb3c9" dot={false} />

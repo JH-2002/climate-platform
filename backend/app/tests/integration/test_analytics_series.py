@@ -266,3 +266,21 @@ def test_risk_history_and_sources_health(client: TestClient) -> None:
     assert iag["coverage"] == "93 anos completos"
     assert health["geosampa-risk-sectors"]["coverage"] == "6 setores ativos"
     assert health["inmet-observations"]["reason"] == "missing_credentials"
+
+
+def test_month_in_progress_is_not_compared_with_full_normal(client: TestClient) -> None:
+    body = series(
+        client,
+        dataset="reanalysis-daily",
+        variable="precipitation_sum",
+        location=POINT_KEY,
+        start="2026-11-01",
+        end="2026-11-18",
+        grain="month",
+        agg="sum",
+        compare="normal",
+    ).json()
+    point = body["points"][0]
+    assert (point["value"], point["n"], point["expected"]) == (108.0, 18, 18)
+    assert point["truncated"] is True and point["partial"] is False
+    assert point["reference"] is None  # normal do mês inteiro não vale para 18 dias
