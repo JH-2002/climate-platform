@@ -203,7 +203,7 @@ export function ScenarioForm(props: Props) {
               </label>
               <select id="sim-centro" className={field} value="" onChange={(e) => chooseCenter(e.target.value)}>
                 <option value="">
-                  {formatNumber(scenario.cell.latitude, 4)}, {formatNumber(scenario.cell.longitude, 4)} (clique no mapa para mudar)
+                  Posição atual ({formatNumber(scenario.cell.latitude, 3)}; {formatNumber(scenario.cell.longitude, 3)})
                 </option>
                 <option value="se:">Centro (Praça da Sé)</option>
                 {locations.length > 0 && (
@@ -234,7 +234,8 @@ export function ScenarioForm(props: Props) {
               onChange={(radius_km) => set({ cell: { ...scenario.cell!, radius_km } })}
             />
             <p className="text-xs text-ink-muted sm:col-span-2">
-              100% da chuva até o raio, caindo em linha reta até 0% em duas vezes o raio.
+              Escolha na lista ou clique no mapa. 100% da chuva até o raio, caindo em linha reta até 0% em
+              duas vezes o raio.
             </p>
           </div>
         )}

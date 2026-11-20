@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <aside className="border-b border-surface-border bg-surface md:w-60 md:shrink-0 md:border-b-0 md:border-r">
               <Sidebar />
             </aside>
-            <main id="conteudo" className="flex-1 p-4 md:p-8">
+            <main id="conteudo" className="min-w-0 flex-1 p-4 md:p-8">
               {children}
             </main>
           </div>

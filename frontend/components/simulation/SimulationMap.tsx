@@ -60,9 +60,9 @@ function setData(map: MapLibreMap, id: string, data: Json) {
 export default function SimulationMap({ layer, cell, onPickCenter, onSelectSector }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
-  const handlers = useRef({ onPickCenter, onSelectSector, cellMode: cell !== null });
+  const handlers = useRef({ onPickCenter, onSelectSector, cellMode: cell !== null, cell });
   const [ready, setReady] = useState(false);
-  handlers.current = { onPickCenter, onSelectSector, cellMode: cell !== null };
+  handlers.current = { onPickCenter, onSelectSector, cellMode: cell !== null, cell };
 
   useEffect(() => {
     let cancelled = false;
@@ -90,13 +90,19 @@ export default function SimulationMap({ layer, cell, onPickCenter, onSelectSecto
           id: "simulacao-preenchimento",
           type: "fill",
           source: "simulacao",
-          paint: { "fill-color": byCategory() as never, "fill-opacity": 0.6 },
+          paint: { "fill-color": byCategory() as never, "fill-opacity": 0.75 },
         });
         map.addLayer({
           id: "simulacao-contorno",
           type: "line",
           source: "simulacao",
-          paint: { "line-color": VIOLET, "line-width": 1.2, "line-dasharray": [2, 1.5] },
+          // Setores são pequenos: na escala da cidade, o contorno na cor da categoria os torna
+          // visíveis; de perto, o tracejado roxo marca que é simulação.
+          paint: {
+            "line-color": ["step", ["zoom"], byCategory(), 13, VIOLET] as never,
+            "line-width": ["interpolate", ["linear"], ["zoom"], 9, 1.5, 13, 1.5, 15, 2] as never,
+            "line-dasharray": [2, 1],
+          },
         });
         map.addLayer({
           id: "celula-borda",
@@ -148,6 +154,20 @@ export default function SimulationMap({ layer, cell, onPickCenter, onSelectSecto
     const map = mapRef.current;
     if (!ready || !map) return;
     setData(map, "simulacao", (layer ?? { type: "FeatureCollection", features: [] }) as unknown as Json);
+    // Resultado novo com célula: enquadra a área atingida (duas vezes o raio).
+    const c = handlers.current.cell;
+    if (layer && c) {
+      const ring = circlePolygon(c.longitude, c.latitude, c.radius_km * 2000, 16);
+      const lons = ring.map((p) => p[0]!);
+      const lats = ring.map((p) => p[1]!);
+      map.fitBounds(
+        [
+          [Math.min(...lons), Math.min(...lats)],
+          [Math.max(...lons), Math.max(...lats)],
+        ],
+        { padding: 24, duration: 0 },
+      );
+    }
   }, [ready, layer]);
 
   useEffect(() => {

@@ -52,7 +52,7 @@ export function SimulationSummary({ run }: { run: SimulationRun }) {
         </p>
       )}
 
-      <ul className="grid grid-cols-2 gap-2 sm:grid-cols-5" aria-label="Setores por categoria na simulação">
+      <ul className="grid grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] gap-2" aria-label="Setores por categoria na simulação">
         {CATEGORY_ORDER.map((cat) => (
           <li key={cat} className="rounded-md border border-surface-border p-2">
             <RiskBadge category={cat} />

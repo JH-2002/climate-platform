@@ -6,14 +6,21 @@ Legenda: `[ ]` pendente · `[x]` validada.
 
 | ID | Tarefa | Arquivos | Critério de conclusão | Testes | Status |
 |---|---|---|---|---|---|
-| T100 | Cenário, faixas e presets | `simulation/scenario.py` | FR-100, FR-103, BR-104 | unitários | [ ] |
-| T101 | Chuva por setor (hietograma e fator espacial) | `simulation/rain.py` | FR-101 | unitários | [ ] |
-| T102 | Motor de simulação sobre o motor de risco + contrato do import-linter | `simulation/engine.py`, `pyproject.toml` | FR-102, NFR-100, AC-100, AC-101 | unitários | [ ] |
-| T103 | Migration `0005_simulation` | `migrations/`, `models/tables.py` | upgrade/downgrade no CI | integração | [ ] |
-| T104 | Serviço: setores com ponto interno, execução, gravação, comparação com o real | `services/simulation.py` | FR-104, FR-106, BR-101, BR-102 | integração | [ ] |
-| T105 | API e camada do mapa | `api/v1/simulation.py`, `api/v1/maps.py` | FR-105, AC-103, AC-106 | integração | [ ] |
-| T106 | Página `/simulation`: formulário, presets, mapa, resultados, faixa | `app/simulation/`, `components/simulation/` | FR-107, BR-100, AC-102, AC-107 | `simulation.test.tsx` | [ ] |
-| T107 | Validação da Parte A no navegador e documentação | docs | Navegador + CI | manual | [ ] |
+| T100 | Cenário, faixas e presets | `simulation/scenario.py` | FR-100, FR-103, BR-104 | unitários | [x] |
+| T101 | Chuva por setor (hietograma e fator espacial) | `simulation/rain.py` | FR-101 | unitários | [x] |
+| T102 | Motor de simulação sobre o motor de risco + contrato do import-linter | `simulation/engine.py`, `pyproject.toml` | FR-102, NFR-100, AC-100, AC-101 | unitários | [x] |
+| T103 | Migration `0005_simulation` | `migrations/`, `models/tables.py` | upgrade/downgrade no CI | integração | [x] |
+| T104 | Serviço: setores com ponto interno, execução, gravação, comparação com o real | `services/simulation.py` | FR-104, FR-106, BR-101, BR-102 | integração | [x] |
+| T105 | API e camada do mapa | `api/v1/simulation.py`, `api/v1/maps.py` | FR-105, AC-103, AC-106 | integração | [x] |
+| T106 | Página `/simulation`: formulário, presets, mapa, resultados, faixa | `app/simulation/`, `components/simulation/` | FR-107, BR-100, AC-102, AC-107 | `simulation.test.tsx` | [x] |
+| T107 | Validação da Parte A no navegador e documentação | docs | Navegador + CI | manual | [x] |
+
+Validação da Parte A (2026-11-20), com os 793 setores reais:
+- os 4 cenários prontos executam em ~0,2 s, e as categorias seguem a matriz do motor (40 mm em 1 h → alto nos setores de suscetibilidade 3–4; 80 mm em 24 h → 456 setores em alto);
+- a célula move com clique no mapa ou por subprefeitura, e o mapa enquadra a área atingida;
+- a explicação por setor fala de "cenário", não de previsão;
+- Risco, indicadores da Visão geral e Fontes e dados ficam iguais depois das simulações (AC-103);
+- correções da validação: a página não vaza mais para a direita em telas estreitas (`min-w-0` no conteúdo e caixas de rolagem como referência dos textos só para leitores de tela), e os setores aparecem na cor da categoria na escala da cidade.
 
 ## Parte B — incerteza com seed e modo HYBRID
 
