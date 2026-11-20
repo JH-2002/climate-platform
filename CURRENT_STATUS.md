@@ -10,6 +10,7 @@
 - **Fase 5 — Motor de risco de alagamento v0: concluída** (setores de risco do GeoSampa × chuva prevista, matriz explicável, ADR-010). Estimativa experimental, não alerta oficial.
 - **Fase 6 — Analytics: concluída** (painel executivo na Visão geral; abas Chuva, Tendências 1933–2025, Risco, Fontes e dados e Studio; Explorador de dados; séries de referência IAG/USP e reanálise ERA5, ADR-011).
 - **Fase 7 — Laboratório de simulação: concluída** (cenários sobre o motor de risco na resolução de setor, variações com seed, modo a partir da previsão real, histórico e repetição verificada; ADR-012).
+- **Fase 8 — Geointeligência 3D: spec 008 em revisão** (Copernicus DEM, bacias, drenagem e piscinões do GeoSampa, perfil e bloco 3D da bacia; ADR-013 proposta).
 
 ## Repositório
 - GitHub: https://github.com/JH-2002/climate-platform (público), branch `main`, CI verde.
@@ -37,4 +38,4 @@
 - Branches temporários `feat/fase-3`, `feat/fase-4`, `feat/fase-5` e `chore/lockfiles` (o proxy desta sessão não permite apagar branches; podem ser removidos pela interface do GitHub).
 
 ## Próxima tarefa
-Escrever a spec 008 (Geointeligência 3D: terreno Copernicus DEM, camadas 3D, fallback 2D) para aprovação. Melhorias em aberto: calibrar as faixas de chuva do risco com ocorrências de anos anteriores; reproduzir eventos passados quando houver chuva horária medida (INMET ou CEMADEN); nomes das subprefeituras vêm sem acento do GeoSampa.
+Aprovar a spec 008 e implementar a Parte A (T120–T128). Melhorias em aberto: calibrar as faixas de chuva do risco com ocorrências de anos anteriores; reproduzir eventos passados quando houver chuva horária medida (INMET ou CEMADEN); nomes das subprefeituras vêm sem acento do GeoSampa.
