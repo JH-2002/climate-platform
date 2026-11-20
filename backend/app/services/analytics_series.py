@@ -51,6 +51,7 @@ from app.models.tables import (
     weather_forecasts,
 )
 from app.services.analytics import LOCAL_TZ
+from app.services.forecast import active_point_keys
 from app.services.sources import list_source_status
 
 MAX_POINTS = 5000
@@ -857,9 +858,9 @@ class SourceHealth(BaseModel):
 async def _coverage_texts(session: AsyncSession) -> dict[str, str]:
     texts: dict[str, str] = {}
     points = (
-        await session.execute(select(func.count(func.distinct(weather_forecasts.c.point_key))))
+        await session.execute(select(func.count()).select_from(active_point_keys().subquery()))
     ).scalar_one()
-    texts["open-meteo-forecast"] = f"{points} pontos de previsão"
+    texts["open-meteo-forecast"] = f"{points} pontos de previsão ativos"
     archive = (
         await session.execute(select(func.count(func.distinct(climate_daily.c.point_key))))
     ).scalar_one()
