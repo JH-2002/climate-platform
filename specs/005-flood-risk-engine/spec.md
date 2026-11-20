@@ -1,6 +1,6 @@
 # Spec 005 — Motor de risco de alagamento v0 (experimental)
 
-> Status: **Aprovada** (2026-11-19) · Fase: 5 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md)
+> Status: **Concluída** (2026-11-20) · Fase: 5 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md)
 
 ## Contexto
 As fases 2–4 entregam previsão de chuva e um mapa. Falta responder **"onde a chuva prevista pode causar alagamento"**. O roteiro previa ANA e CGE como dependências, mas:

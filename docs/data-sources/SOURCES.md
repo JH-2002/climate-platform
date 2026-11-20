@@ -164,7 +164,7 @@ Uso apenas visual. Análise hidrológica e de declividade continua planejada com
 | Requisição | `service=WFS&version=2.0.0&request=GetFeature&typeNames=geoportal:<camada>&outputFormat=application/json&srsName=EPSG:4326` |
 | Limite | O servidor corta respostas em 30.000 feições (afeta `mancha_inundacao_5/25/100`, que não são usadas na v0) |
 | Restrições | Metadados: acesso "sem restrições"; termos da licença **não informados** → registrar atribuição e confirmar antes de uso público |
-| Status | **VIÁVEL** (testado em 2026-11-19 a partir da rede do responsável; o sandbox de desenvolvimento não alcança o host) |
+| Status | **VIÁVEL** (testado em 2026-11-19 a partir da rede do responsável; em produção local desde 2026-11-20: 793 setores, 53 manchas e 630 ocorrências sincronizados pelo Docker) |
 
 Camadas testadas:
 
