@@ -7,7 +7,7 @@
 - **Fase 2 — Data Ingestion: concluída**, exceto o adaptador de observações horárias do INMET (T020), que aguarda o token.
 - **Fase 3 — Weather Dashboard: concluída** com previsão de modelo; medições das estações entram com o token.
 - **Fase 4 — Mapa geoespacial: concluída** (MapLibre 2D/3D com relevo, estações, chuva prevista em 24 h, locais e região de interesse).
-- Próxima: **Fase 5 — Flood Risk Engine** (spec 005 a escrever).
+- **Fase 5 — Flood Risk Engine: spec 005 em revisão** (setores de risco do GeoSampa × chuva prevista; ADR-010 proposta).
 
 ## Repositório
 - GitHub: https://github.com/JH-2002/climate-platform (público), branch `main`, CI verde.
@@ -32,4 +32,4 @@
 - Branches temporários `feat/fase-3`, `feat/fase-4` e `chore/lockfiles` (o proxy desta sessão não permite apagar branches; podem ser removidos pela interface do GitHub).
 
 ## Próxima tarefa
-Escrever a spec 005 (motor heurístico de risco de alagamento v0, experimental e explicável).
+Aprovar a spec 005 e implementar a partir da T050.

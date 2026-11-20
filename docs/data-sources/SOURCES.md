@@ -151,3 +151,32 @@ Legenda de status:
 | AWS Terrain Tiles (Mapzen) | Relevo 3D e sombreamento | `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png`, sem chave | Atribuição exigida (ver docs do Joerd/Mapzen) | 200, CORS liberado |
 
 Uso apenas visual. Análise hidrológica e de declividade continua planejada com o Copernicus DEM (Fase 8).
+
+---
+
+## 10. GeoSampa — Prefeitura de São Paulo (Fase 5)
+
+| Campo | Valor |
+|---|---|
+| Responsável | Prefeitura de São Paulo — SMUL/Geoinfo (distribuição); SIURB (manchas); Defesa Civil/SIGRC (ocorrências) |
+| URL | https://geosampa.prefeitura.sp.gov.br · metadados: https://metadados.geosampa.prefeitura.sp.gov.br |
+| Serviço | WFS (GeoServer) `http://wfs.geosampa.prefeitura.sp.gov.br/geoserver/geoportal/wfs` — **sem HTTPS**, sem chave |
+| Requisição | `service=WFS&version=2.0.0&request=GetFeature&typeNames=geoportal:<camada>&outputFormat=application/json&srsName=EPSG:4326` |
+| Limite | O servidor corta respostas em 30.000 feições (afeta `mancha_inundacao_5/25/100`, que não são usadas na v0) |
+| Restrições | Metadados: acesso "sem restrições"; termos da licença **não informados** → registrar atribuição e confirmar antes de uso público |
+| Status | **VIÁVEL** (testado em 2026-11-19 a partir da rede do responsável; o sandbox de desenvolvimento não alcança o host) |
+
+Camadas testadas:
+
+| Camada | Feições | Tamanho | Atributos principais | Atualização |
+|---|---|---|---|---|
+| `risco_hidrologico` | 793 polígonos (R1 59 · R2 365 · R3 298 · R4 71; 69.648 moradias; vistorias 2021–2026) | 1,6 MB | `sg_setor_risco_hidrologico`, `tx_grau_risco_hidrologico`, `tx_tipo_processo`, `qt_moradia`, `nm_subprefeitura`, `nm_bacia_hidrografica`, `dt_vistoria` | Mensal |
+| `area_inundavel` | 53 polígonos (todos TR 100 anos) | 0,3 MB | `cd_identificador_area_inundavel`, `qt_tempo_retorno`, `dt_carga` | Conforme necessidade |
+| `risco_ocorrencia_alagamento` | 315 pontos (jan–out/2026) | 0,1 MB | `cd_identificador`, `dc_tipo_ocorrencia`, `dt_ocorrencia`, `nm_subprefeitura`, `sg_fonte_original` (SIGRC) | Mensal; anos anteriores só por download |
+| `risco_ocorrencia_inundacao` | 315 pontos | 0,1 MB | idem | Mensal |
+| `pluviometro` | 90 pontos, sem latitude/longitude nos atributos e carga de 2015 | 35 KB | — | Não usado (sem medições) |
+
+**Observações:**
+- `tx_tipo_processo` vem com variações ("INUNDACAO"/"INUNDAÇÃO", quebras de linha, ordem diferente); o adaptador normaliza em um conjunto de processos.
+- As ocorrências são registros de atendimento e podem ter subnotificação. Elas servem para ajuste de suscetibilidade, não como verdade de campo.
+- Atribuição exibida: "GeoSampa — Prefeitura de São Paulo".
