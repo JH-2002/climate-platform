@@ -9,6 +9,7 @@
 - **Fase 4 — Mapa geoespacial: concluída** (MapLibre 2D/3D com relevo, estações, chuva prevista em 24 h, locais e região de interesse).
 - **Fase 5 — Motor de risco de alagamento v0: concluída** (setores de risco do GeoSampa × chuva prevista, matriz explicável, ADR-010). Estimativa experimental, não alerta oficial.
 - **Fase 6 — Analytics: concluída** (painel executivo na Visão geral; abas Chuva, Tendências 1933–2025, Risco, Fontes e dados e Studio; Explorador de dados; séries de referência IAG/USP e reanálise ERA5, ADR-011).
+- **Fase 7 — Laboratório de simulação: spec 007 em revisão** (cenários sobre o motor de risco, na resolução de setor; ADR-012 proposta).
 
 ## Repositório
 - GitHub: https://github.com/JH-2002/climate-platform (público), branch `main`, CI verde.
@@ -35,4 +36,4 @@
 - Branches temporários `feat/fase-3`, `feat/fase-4`, `feat/fase-5` e `chore/lockfiles` (o proxy desta sessão não permite apagar branches; podem ser removidos pela interface do GitHub).
 
 ## Próxima tarefa
-Escrever a spec 007 (Simulation Lab: motor com seed, modos SIMULATION/HYBRID) para aprovação. Melhorias em aberto: calibrar as faixas de chuva do risco com ocorrências de anos anteriores; usar observações do INMET quando o token chegar; nomes das subprefeituras vêm sem acento do GeoSampa (avaliar tabela de nomes oficiais).
+Aprovar a spec 007 e implementar a Parte A (T100–T107). Melhorias em aberto: calibrar as faixas de chuva do risco com ocorrências de anos anteriores; usar observações do INMET quando o token chegar; nomes das subprefeituras vêm sem acento do GeoSampa (avaliar tabela de nomes oficiais).
