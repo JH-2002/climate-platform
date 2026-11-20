@@ -200,7 +200,8 @@ def test_ensemble_probabilities_and_repeat(client: TestClient) -> None:
     assert check["identical_results"] is True
     assert check["same_engine_versions"] and check["same_sectors"]
     assert check["same_forecast"] is None  # sem previsão no modo SIMULATION
-    other = simulate(client, {**ENSEMBLE, "seed": 43, "repeat_of": first["id"]})
+    # seed 7: 13 de 20 variações passam de 50 mm/h, contra 16 com o seed 42 (setores R2 e R3)
+    other = simulate(client, {**ENSEMBLE, "seed": 7, "repeat_of": first["id"]})
     assert other["repeat_check"]["identical_results"] is False
 
 
