@@ -5,12 +5,12 @@ import {
   createSimulation,
   fetchCenters,
   fetchPresets,
+  fetchRecentRuns,
   fetchSimulatedSector,
   fetchSimulatedSectors,
   fetchSimulation,
   fetchSimulationLayer,
 } from "./api";
-import type { ScenarioInput } from "./types";
 
 const notFound = (count: number, error: Error) => count < 1 && !("status" in error && error.status === 404);
 
@@ -67,11 +67,17 @@ export function useSimulationLayer(id: string | null) {
   });
 }
 
+export function useRecentRuns() {
+  return useQuery({ queryKey: ["simulation", "recent"], queryFn: ({ signal }) => fetchRecentRuns(signal) });
+}
+
 export function useRunSimulation() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: ({ scenario, preset }: { scenario: ScenarioInput; preset: string | null }) =>
-      createSimulation(scenario, preset),
-    onSuccess: (run) => client.setQueryData(["simulation", "run", run.id], run),
+    mutationFn: (body: Record<string, unknown>) => createSimulation(body),
+    onSuccess: (run) => {
+      client.setQueryData(["simulation", "run", run.id], run);
+      void client.invalidateQueries({ queryKey: ["simulation", "recent"] });
+    },
   });
 }

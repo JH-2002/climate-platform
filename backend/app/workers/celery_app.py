@@ -19,6 +19,7 @@ ARCHIVE_UPDATE_INTERVAL_S = 24 * 3600
 # Carga inicial da reanálise: um ponto a cada 2 min (limite gratuito da fonte, NFR-082).
 ARCHIVE_BACKFILL_INTERVAL_S = 120
 REFERENCE_IMPORT_INTERVAL_S = 7 * 24 * 3600
+SIMULATION_PURGE_INTERVAL_S = 24 * 3600
 
 _settings = get_settings()
 
@@ -30,6 +31,7 @@ celery_app = Celery(
         "app.workers.tasks.ingestion",
         "app.workers.tasks.risk",
         "app.workers.tasks.analytics",
+        "app.workers.tasks.simulation",
     ],
 )
 
@@ -73,6 +75,10 @@ celery_app.conf.update(
         "reference-import": {
             "task": "ingestion.import_reference",
             "schedule": float(REFERENCE_IMPORT_INTERVAL_S),
+        },
+        "simulation-purge": {
+            "task": "simulation.purge_old_runs",
+            "schedule": float(SIMULATION_PURGE_INTERVAL_S),
         },
     },
 )

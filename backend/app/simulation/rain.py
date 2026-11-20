@@ -42,3 +42,22 @@ def scenario_rain(scenario: Scenario, factor: float) -> RainInput:
         hours_available=FULL_WINDOW_HOURS,
         a72=scenario.antecedent_mm,
     )
+
+
+def combine(base: RainInput, storm: RainInput | None, multiplier: float) -> RainInput:
+    """HYBRID: previsão real × multiplicador, somada à chuva do cenário (se houver).
+
+    Somar as horas de pico supõe que o temporal do cenário cai na hora mais chuvosa da
+    previsão: é o caso mais desfavorável, dito na tela.
+    """
+    p1h = None if base.p1h_max is None else base.p1h_max * multiplier
+    p24 = base.p24 * multiplier
+    if storm is not None:
+        p1h = (p1h or 0.0) + (storm.p1h_max or 0.0)
+        p24 += storm.p24
+    return RainInput(
+        p1h_max=None if p1h is None else round(p1h, 2),
+        p24=round(p24, 2),
+        hours_available=base.hours_available,
+        a72=base.a72,
+    )

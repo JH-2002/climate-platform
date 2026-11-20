@@ -107,12 +107,13 @@ Dividido em duas partes, entregues e validadas em sequência.
 - **FR-108 Incerteza com seed.**
   - Até 100 variações. A intensidade varia ±u%, com u de 0 a 50. O centro da célula se desloca até s km, com s de 0 a 10.
   - O seed é um número inteiro, informado ou sorteado, e fica gravado.
-  - Resultado por setor: categoria mais frequente, P(≥ alto) e P(crítico).
+  - Resultado por setor: a categoria e a explicação do cenário central (sem variação), mais P(≥ alto) e P(crítico) entre as variações. Mudança na implementação (2026-11-20): a spec previa a categoria mais frequente, mas ela não combinaria com a explicação mostrada ao lado.
   - Resultado geral: média e faixa de 10% a 90% do número de setores em alto + crítico.
 - **FR-109 Modo `HYBRID`.**
   - Parte da previsão real das próximas 24 h e das 72 h anteriores reais nos 12 pontos.
   - Ajustes possíveis: multiplicar a chuva prevista (de 50% a 300%), somar uma célula de chuva, ou os dois.
   - A execução grava o horário da previsão usada.
+  - Somar a chuva do cenário à previsão soma as horas de pico: é o caso mais desfavorável, dito na tela.
   - Se a previsão estiver `STALE` ou `UNAVAILABLE`, o `HYBRID` é recusado com explicação, sem trocar por outra fonte (Constituição §7.1).
 - **FR-110 Histórico.**
   - `GET /simulation/runs`: últimas execuções, com cenário resumido.

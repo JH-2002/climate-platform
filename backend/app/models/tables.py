@@ -297,6 +297,8 @@ simulation_runs = Table(
     Column("counts", JSONB, nullable=False),
     Column("comparison", JSONB, nullable=False),
     Column("duration_ms", Integer, nullable=False),
+    Column("ensemble", JSONB),
+    Column("repeat_of", UUID(as_uuid=True), ForeignKey("simulation_runs.id", ondelete="SET NULL")),
 )
 
 simulation_results = Table(

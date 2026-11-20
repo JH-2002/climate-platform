@@ -7,16 +7,18 @@ telas ou indicadores do risco real (BR-101).
 from __future__ import annotations
 
 import json
+import secrets
 import time
 import uuid
 from collections import Counter
 from collections.abc import Mapping, Sequence
+from dataclasses import asdict
 from datetime import datetime, timedelta
-from typing import Any
+from typing import Any, cast
 
 import structlog
 from pydantic import BaseModel
-from sqlalchemy import case, delete, func, insert, select
+from sqlalchemy import CursorResult, case, delete, func, insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.tables import (
@@ -26,14 +28,29 @@ from app.models.tables import (
     simulation_runs,
 )
 from app.risk.coefficients import DEFAULT_COEFFICIENTS, Category, Coefficients
+from app.risk.engine import RainInput
+from app.risk.rules import UNKNOWN_FRESHNESS
+from app.services.forecast import FORECAST_SOURCE, current_hour
 from app.services.risk import (
     CATEGORY_RANK,
     SIMPLIFY_TOLERANCE_DEG,
+    forecast_points,
+    hourly_precipitation_by_point,
     latest_run,
+    nearest_point,
+    rain_inputs,
     sector_rows,
+    source_freshness,
 )
 from app.simulation.engine import SimSector, SimulationResult, sectors_fingerprint, simulate
-from app.simulation.scenario import PATTERN_LABELS, PRESETS, Pattern, Scenario
+from app.simulation.scenario import (
+    PATTERN_LABELS,
+    PRESETS,
+    Hybrid,
+    Pattern,
+    Scenario,
+    Uncertainty,
+)
 
 logger = structlog.get_logger(__name__)
 
@@ -50,6 +67,20 @@ HIGH_OR_ABOVE = frozenset({Category.HIGH.value, Category.CRITICAL.value})
 
 class SimulationUnavailableError(RuntimeError):
     """Sem setores sincronizados: não há o que simular."""
+
+
+class HybridUnavailableError(RuntimeError):
+    """Previsão vencida ou indisponível: o modo HYBRID é recusado (AC-105)."""
+
+
+HYBRID_BANNER = (
+    "SIMULAÇÃO A PARTIR DA PREVISÃO REAL — cenário hipotético, não é previsão nem alerta"
+)
+FRESHNESS_LABELS = {
+    "STALE": "desatualizada",
+    "UNAVAILABLE": "indisponível",
+    "UNKNOWN": "ainda não coletada",
+}
 
 
 # --- modelos de resposta ---------------------------------------------------------------------
@@ -87,6 +118,28 @@ class Comparison(BaseModel):
     subprefectures: list[SubprefectureChange]
 
 
+class RepeatCheck(BaseModel):
+    """FR-110: a repetição bate com a original? Se não, por quê."""
+
+    original_id: uuid.UUID
+    same_engine_versions: bool
+    same_sectors: bool
+    same_forecast: bool | None
+    identical_results: bool
+
+
+class RunListItem(BaseModel):
+    id: uuid.UUID
+    created_at: datetime
+    mode: str
+    scenario_text: str
+    preset: str | None
+    seed: int | None
+    members: int
+    high_or_above: int
+    unknown: int
+
+
 class SimulationRun(BaseModel):
     id: uuid.UUID
     created_at: datetime
@@ -105,6 +158,10 @@ class SimulationRun(BaseModel):
     counts: dict[str, int]
     comparison: Comparison
     duration_ms: int
+    forecast_issued_at: datetime | None
+    ensemble: dict[str, Any] | None
+    repeat_of: uuid.UUID | None
+    repeat_check: RepeatCheck | None
     banner: str = BANNER
     disclaimer: str = DISCLAIMER
 
@@ -131,23 +188,43 @@ class SimulatedSector(BaseModel):
     a72_mm: float | None
     rain_factor: float
     distance_km: float | None
+    p_high: float | None
+    p_critical: float | None
     factors: list[Factor]
 
 
 # --- funções puras ---------------------------------------------------------------------------
 
 
+def _mm(value: float) -> str:
+    return f"{value:g}".replace(".", ",")
+
+
 def scenario_text(scenario: Mapping[str, Any]) -> str:
     """Resumo legível do cenário, usado no histórico e no topo do resultado."""
-    pattern = PATTERN_LABELS[Pattern(scenario["pattern"])]
-    hours = "1 hora" if scenario["duration_h"] == 1 else f"{scenario['duration_h']} horas"
-    total = f"{scenario['total_mm']:g}".replace(".", ",")
-    where = "na cidade inteira"
-    cell = scenario.get("cell")
-    if cell:
-        where = f"numa célula de {cell['radius_km']:g} km".replace(".", ",")
-    antecedent = f"{scenario['antecedent_mm']:g}".replace(".", ",")
-    return f"{total} mm em {hours}, {pattern}, {where}; {antecedent} mm nas 72 h anteriores"
+    hybrid = scenario.get("hybrid")
+    storm_parts: list[str] = []
+    if hybrid is None or hybrid.get("add_storm"):
+        pattern = PATTERN_LABELS[Pattern(scenario["pattern"])]
+        hours = "1 hora" if scenario["duration_h"] == 1 else f"{scenario['duration_h']} horas"
+        cell = scenario.get("cell")
+        where = f"numa célula de {_mm(cell['radius_km'])} km" if cell else "na cidade inteira"
+        storm_parts.append(f"{_mm(scenario['total_mm'])} mm em {hours}, {pattern}, {where}")
+    if hybrid is None:
+        text = f"{storm_parts[0]}; {_mm(scenario['antecedent_mm'])} mm nas 72 h anteriores"
+    else:
+        pct = round(hybrid["multiplier"] * 100)
+        text = f"previsão real × {pct}%"
+        if storm_parts:
+            text += f" mais {storm_parts[0]}"
+        text += "; chuva das 72 h anteriores real"
+    unc = scenario.get("uncertainty")
+    if unc and unc.get("members", 1) > 1:
+        text += (
+            f"; {unc['members']} variações (intensidade ±{_mm(unc['intensity_pct'])}%, "
+            f"centro até {_mm(unc['shift_km'])} km)"
+        )
+    return text
 
 
 def compare(
@@ -241,12 +318,49 @@ async def _real_categories(session: AsyncSession) -> tuple[Any | None, dict[int,
     return run, {int(i): cat for i, cat in rows.tuples()}
 
 
-async def _enforce_retention(session: AsyncSession, now: datetime) -> None:
+async def purge_old_runs(session: AsyncSession, now: datetime) -> int:
     """NFR-102: 30 dias e no máximo 500 execuções; as mais antigas saem primeiro."""
     r = simulation_runs
-    await session.execute(delete(r).where(r.c.created_at < now - timedelta(days=RETENTION_DAYS)))
+    old = cast(
+        "CursorResult[Any]",
+        await session.execute(
+            delete(r).where(r.c.created_at < now - timedelta(days=RETENTION_DAYS))
+        ),
+    )
     keep = select(r.c.id).order_by(r.c.created_at.desc()).limit(MAX_STORED_RUNS)
-    await session.execute(delete(r).where(r.c.id.not_in(keep.scalar_subquery())))
+    extra = cast(
+        "CursorResult[Any]",
+        await session.execute(delete(r).where(r.c.id.not_in(keep.scalar_subquery()))),
+    )
+    return int(old.rowcount or 0) + int(extra.rowcount or 0)
+
+
+async def _forecast_base(
+    session: AsyncSession, sectors: Sequence[SimSector], now: datetime, c: Coefficients
+) -> tuple[dict[int, RainInput | None], datetime | None]:
+    """Chuva real por setor (ponto de previsão mais próximo), como no risco real."""
+    start = current_hour(now)
+    points = await forecast_points(session)
+    hourly = await hourly_precipitation_by_point(
+        session,
+        start - timedelta(hours=c.antecedent_hours),
+        start + timedelta(hours=c.window_hours),
+    )
+    rain = rain_inputs(hourly, start, c)
+    base: dict[int, RainInput | None] = {}
+    for s in sectors:
+        near = nearest_point(s.latitude, s.longitude, points, c.max_point_distance_km)
+        base[s.sector_id] = rain.get(near[0]) if near else None
+    return base, max((p.issued_at for p in points), default=None)
+
+
+def _scenario_json(
+    scenario: Scenario, hybrid: Hybrid | None, uncertainty: Uncertainty | None
+) -> dict[str, Any]:
+    data: dict[str, Any] = scenario.as_dict()
+    data["hybrid"] = None if hybrid is None else asdict(hybrid)
+    data["uncertainty"] = None if uncertainty is None else asdict(uncertainty)
+    return data
 
 
 async def run_simulation(
@@ -255,6 +369,10 @@ async def run_simulation(
     *,
     now: datetime,
     preset: str | None = None,
+    hybrid: Hybrid | None = None,
+    uncertainty: Uncertainty | None = None,
+    seed: int | None = None,
+    repeat_of: uuid.UUID | None = None,
     c: Coefficients = DEFAULT_COEFFICIENTS,
 ) -> SimulationRun:
     started = time.perf_counter()
@@ -263,7 +381,29 @@ async def run_simulation(
         raise SimulationUnavailableError(
             "Nenhum setor de risco sincronizado do GeoSampa: não há o que simular."
         )
-    result = simulate(sectors, scenario, now=now, c=c)
+    if uncertainty is not None and uncertainty.members > 1 and seed is None:
+        seed = secrets.randbelow(2**31)  # sorteado e gravado (FR-108)
+    base: dict[int, RainInput | None] | None = None
+    issued_at: datetime | None = None
+    if hybrid is not None:
+        freshness = await source_freshness(session, FORECAST_SOURCE, now)
+        if freshness in UNKNOWN_FRESHNESS:
+            raise HybridUnavailableError(
+                f"Previsão {FRESHNESS_LABELS.get(freshness, freshness.lower())}: o modo a partir "
+                "da previsão real precisa da previsão atual. A simulação só com o cenário "
+                "continua disponível."
+            )
+        base, issued_at = await _forecast_base(session, sectors, now, c)
+    result = simulate(
+        sectors,
+        scenario,
+        now=now,
+        c=c,
+        hybrid=hybrid,
+        base=base,
+        uncertainty=uncertainty,
+        seed=seed,
+    )
     real_run, real = await _real_categories(session)
     comparison = compare(result, real, await _subprefectures(session))
     comparison["real_run"] = (
@@ -282,19 +422,21 @@ async def run_simulation(
             id=run_id,
             created_at=now,
             kind="SIMULATED",
-            mode="SIMULATION",
-            scenario=scenario.as_dict(),
+            mode="HYBRID" if hybrid is not None else "SIMULATION",
+            scenario=_scenario_json(scenario, hybrid, uncertainty),
             preset=preset,
-            seed=None,
-            members=1,
+            seed=seed,
+            members=uncertainty.members if uncertainty is not None else 1,
             simulation_engine_version=result.engine_version,
             risk_engine_version=result.risk_engine_version,
             sectors_fingerprint=result.fingerprint,
             sector_count=len(result.outcomes),
-            forecast_issued_at=None,
+            forecast_issued_at=issued_at,
             counts=result.counts,
             comparison=comparison,
             duration_ms=duration_ms,
+            ensemble=None if result.ensemble is None else asdict(result.ensemble),
+            repeat_of=repeat_of,
         )
     )
     rows = [
@@ -302,8 +444,8 @@ async def run_simulation(
             "run_id": run_id,
             "sector_id": o.assessment.sector_id,
             "category": o.assessment.category.value,
-            "p_high": None,
-            "p_critical": None,
+            "p_high": o.p_high,
+            "p_critical": o.p_critical,
             "rain_level": o.assessment.rain_level,
             "susceptibility": o.assessment.susceptibility,
             "p1h_max_mm": o.assessment.p1h_max,
@@ -317,13 +459,43 @@ async def run_simulation(
     ]
     for i in range(0, len(rows), 500):
         await session.execute(insert(simulation_results), rows[i : i + 500])
-    await _enforce_retention(session, now)
+    await purge_old_runs(session, now)
     await session.commit()
-    logger.info("simulation_run", run_id=str(run_id), ms=duration_ms, **result.counts)
+    logger.info("simulation_run", run_id=str(run_id), ms=duration_ms, seed=seed, **result.counts)
     found = await get_run(session, run_id, now=now, c=c)
     if found is None:  # acabou de ser gravada; só some se a retenção a apagar
         raise SimulationUnavailableError("A simulação gravada não foi encontrada.")
     return found
+
+
+async def _results(session: AsyncSession, run_id: uuid.UUID) -> dict[int, tuple[Any, ...]]:
+    r = simulation_results
+    rows = await session.execute(
+        select(r.c.sector_id, r.c.category, r.c.p_high, r.c.p_critical).where(r.c.run_id == run_id)
+    )
+    return {int(row[0]): tuple(row[1:]) for row in rows.tuples()}
+
+
+async def _repeat_check(session: AsyncSession, row: Any) -> RepeatCheck | None:
+    if row.repeat_of is None:
+        return None
+    original = (
+        await session.execute(select(simulation_runs).where(simulation_runs.c.id == row.repeat_of))
+    ).one_or_none()
+    if original is None:
+        return None
+    return RepeatCheck(
+        original_id=original.id,
+        same_engine_versions=(
+            original.simulation_engine_version == row.simulation_engine_version
+            and original.risk_engine_version == row.risk_engine_version
+        ),
+        same_sectors=original.sectors_fingerprint == row.sectors_fingerprint,
+        same_forecast=None
+        if row.mode != "HYBRID"
+        else original.forecast_issued_at == row.forecast_issued_at,
+        identical_results=await _results(session, original.id) == await _results(session, row.id),
+    )
 
 
 async def get_run(
@@ -339,14 +511,36 @@ async def get_run(
     if row is None:
         return None
     current = await load_sectors(session, now, c)
+    banner = HYBRID_BANNER if row.mode == "HYBRID" else BANNER
     return SimulationRun.model_validate(
         {
             **row._mapping,
             "scenario_text": scenario_text(row.scenario),
             "sectors_changed": bool(current)
             and sectors_fingerprint(current) != row.sectors_fingerprint,
+            "repeat_check": await _repeat_check(session, row),
+            "banner": banner,
         }
     )
+
+
+async def list_runs(session: AsyncSession, limit: int) -> list[RunListItem]:
+    r = simulation_runs
+    rows = await session.execute(select(r).order_by(r.c.created_at.desc(), r.c.id).limit(limit))
+    return [
+        RunListItem(
+            id=row.id,
+            created_at=row.created_at,
+            mode=row.mode,
+            scenario_text=scenario_text(row.scenario),
+            preset=row.preset,
+            seed=row.seed,
+            members=row.members,
+            high_or_above=int(row.counts.get("HIGH", 0)) + int(row.counts.get("CRITICAL", 0)),
+            unknown=int(row.counts.get("UNKNOWN", 0)),
+        )
+        for row in rows
+    ]
 
 
 def _sector_columns() -> list[Any]:
@@ -366,6 +560,8 @@ def _sector_columns() -> list[Any]:
         r.c.a72_mm,
         r.c.rain_factor,
         r.c.distance_km,
+        r.c.p_high,
+        r.c.p_critical,
         r.c.factors,
     ]
 
@@ -398,6 +594,7 @@ async def list_sectors(
         await session.execute(
             base.order_by(
                 _sim_rank().desc(),
+                r.c.p_high.desc().nulls_last(),
                 r.c.rain_level.desc().nulls_last(),
                 r.c.susceptibility.desc(),
                 s.c.households.desc().nulls_last(),
@@ -458,9 +655,12 @@ async def simulation_features(session: AsyncSession, run_id: uuid.UUID) -> list[
             r.c.rain_level,
             r.c.p1h_max_mm,
             r.c.p24_mm,
+            r.c.p_high,
+            simulation_runs.c.mode,
             func.ST_AsGeoJSON(simplified, 6).label("geometry"),
         )
         .join(r, r.c.sector_id == s.c.id)
+        .join(simulation_runs, simulation_runs.c.id == r.c.run_id)
         .where(r.c.run_id == run_id)
         .order_by(s.c.id)
     )
@@ -479,8 +679,9 @@ async def simulation_features(session: AsyncSession, run_id: uuid.UUID) -> list[
                 "rain_level": row.rain_level,
                 "p1h_max_mm": row.p1h_max_mm,
                 "p24_mm": row.p24_mm,
+                "p_high": row.p_high,
                 "kind": "SIMULATED",
-                "mode": "SIMULATION",
+                "mode": row.mode,
             },
         }
         for row in rows

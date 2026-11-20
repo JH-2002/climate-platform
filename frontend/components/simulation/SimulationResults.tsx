@@ -1,15 +1,17 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { RiskBadge } from "@/components/risk/RiskBadge";
 import { CATEGORIES, CATEGORY_ORDER, RAIN_LEVEL_LABELS, SUSCEPTIBILITY_LABELS, titleCase } from "@/features/risk/categories";
 import type { RiskCategory } from "@/features/risk/types";
-import { simulationHref } from "@/features/simulation/scenario";
-import type { SimulatedSector, SimulationRun } from "@/features/simulation/types";
+import { formatPercent, simulationHref } from "@/features/simulation/scenario";
+import type { RepeatCheck, RunListItem, SimulatedSector, SimulationRun } from "@/features/simulation/types";
 import { formatDateTime, formatNumber } from "@/lib/format";
 
 /** Resumo do resultado (FR-107) e comparação com a estimativa real (FR-106). */
-export function SimulationSummary({ run }: { run: SimulationRun }) {
+export function SimulationSummary(props: { run: SimulationRun; onRepeat?: () => void; repeating?: boolean }) {
+  const { run, onRepeat, repeating = false } = props;
   const [copied, setCopied] = useState(false);
   const c = run.comparison;
   const highNow = run.counts.HIGH + run.counts.CRITICAL;
@@ -37,14 +39,34 @@ export function SimulationSummary({ run }: { run: SimulationRun }) {
             risco {run.risk_engine_version} · {run.sector_count} setores · {run.duration_ms} ms
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => void copyLink()}
-          className="rounded-md border border-violet-700 px-3 py-1.5 text-sm font-medium text-violet-800 hover:bg-violet-700 hover:text-white"
-        >
-          {copied ? "Link copiado" : "Copiar link"}
-        </button>
+        <div className="flex flex-wrap gap-2">
+          {onRepeat && (
+            <button
+              type="button"
+              onClick={onRepeat}
+              disabled={repeating}
+              className="rounded-md border border-violet-700 px-3 py-1.5 text-sm font-medium text-violet-800 hover:bg-violet-700 hover:text-white disabled:opacity-50"
+            >
+              {repeating ? "Repetindo…" : run.seed !== null ? `Repetir (seed ${run.seed})` : "Repetir"}
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => void copyLink()}
+            className="rounded-md border border-violet-700 px-3 py-1.5 text-sm font-medium text-violet-800 hover:bg-violet-700 hover:text-white"
+          >
+            {copied ? "Link copiado" : "Copiar link"}
+          </button>
+        </div>
       </div>
+      {run.mode === "HYBRID" && (
+        <p className="text-sm">
+          Partiu da previsão real
+          {run.forecast_issued_at ? ` emitida em ${formatDateTime(run.forecast_issued_at)}` : ""} (Open-Meteo.com, CC BY
+          4.0), com a chuva das 72 h anteriores real. Setores sem ponto de previsão por perto ficam como desconhecido.
+        </p>
+      )}
+      {run.repeat_check && <RepeatNote check={run.repeat_check} />}
       {run.sectors_changed && (
         <p role="status" className="rounded-md bg-amber-50 p-2 text-sm">
           Os dados dos setores mudaram desde esta simulação (sincronização diária do GeoSampa). Simular de novo pode dar
@@ -61,6 +83,18 @@ export function SimulationSummary({ run }: { run: SimulationRun }) {
           </li>
         ))}
       </ul>
+
+      {run.ensemble && (
+        <div className="rounded-md bg-violet-50 p-3 text-sm">
+          <h3 className="font-medium">Incerteza: {run.ensemble.members} variações (seed {run.seed})</h3>
+          <p>
+            Setores em alto ou crítico: em média <strong>{formatNumber(run.ensemble.mean)}</strong>; em 80% das
+            variações, entre {formatNumber(run.ensemble.p10, 0)} e {formatNumber(run.ensemble.p90, 0)} (mínimo{" "}
+            {run.ensemble.minimum}, máximo {run.ensemble.maximum}). As categorias acima são do cenário central; a
+            tabela mostra a probabilidade de cada setor chegar a alto ou crítico.
+          </p>
+        </div>
+      )}
 
       <div className="space-y-2">
         <h3 className="font-medium">Comparação com a estimativa real</h3>
@@ -111,6 +145,26 @@ export function SimulationSummary({ run }: { run: SimulationRun }) {
   );
 }
 
+function RepeatNote({ check }: { check: RepeatCheck }) {
+  const reasons = [
+    !check.same_engine_versions && "a versão do motor mudou",
+    !check.same_sectors && "os dados dos setores mudaram",
+    check.same_forecast === false && "a previsão real foi atualizada",
+  ].filter(Boolean);
+  return (
+    <p role="status" className={`rounded-md p-2 text-sm ${check.identical_results ? "bg-emerald-50" : "bg-amber-50"}`}>
+      Repetição de{" "}
+      <Link className="font-medium underline" href={simulationHref(check.original_id)}>
+        uma simulação anterior
+      </Link>
+      :{" "}
+      {check.identical_results
+        ? "resultado idêntico, setor por setor."
+        : `resultado diferente${reasons.length ? ` porque ${reasons.join(", ")}` : ""}.`}
+    </p>
+  );
+}
+
 function RealBadge({ category }: { category: RiskCategory | null }) {
   if (category === null) return <span className="text-ink-muted">—</span>;
   return <span className="text-sm">{CATEGORIES[category].label}</span>;
@@ -123,8 +177,9 @@ export function SimulatedSectorTable(props: {
   selectedId: number | null;
   onSelect: (id: number) => void;
   limit?: number;
+  withProbability?: boolean;
 }) {
-  const { items, total, selectedId, onSelect, limit = 50 } = props;
+  const { items, total, selectedId, onSelect, limit = 50, withProbability = false } = props;
   const shownItems = items.slice(0, limit);
   return (
     <div className="overflow-x-auto rounded-lg border border-surface-border">
@@ -137,6 +192,9 @@ export function SimulatedSectorTable(props: {
             <th scope="col" className="px-4 py-2 font-medium">Setor</th>
             <th scope="col" className="px-4 py-2 font-medium">Subprefeitura</th>
             <th scope="col" className="px-4 py-2 font-medium">Na simulação</th>
+            {withProbability && (
+              <th scope="col" className="px-4 py-2 text-right font-medium">Chance de alto ou crítico</th>
+            )}
             <th scope="col" className="px-4 py-2 font-medium">Real agora</th>
             <th scope="col" className="px-4 py-2 font-medium">Chuva no cenário</th>
             <th scope="col" className="px-4 py-2 font-medium">Suscetibilidade</th>
@@ -156,6 +214,14 @@ export function SimulatedSectorTable(props: {
               <td className="px-4 py-2">
                 <RiskBadge category={s.category} />
               </td>
+              {withProbability && (
+                <td className="px-4 py-2 text-right tabular-nums">
+                  {formatPercent(s.p_high)}
+                  {s.p_critical !== null && s.p_critical > 0 && (
+                    <span className="block text-xs text-ink-muted">crítico: {formatPercent(s.p_critical)}</span>
+                  )}
+                </td>
+              )}
               <td className="px-4 py-2">
                 <RealBadge category={s.real_category} />
               </td>
@@ -208,6 +274,12 @@ export function SimulatedSectorExplanation({ sector, onClose }: { sector: Simula
         Na simulação: <RiskBadge category={sector.category} size="lg" />
         <span className="text-ink-muted">· real agora: {sector.real_category ? CATEGORIES[sector.real_category].label : "—"}</span>
       </p>
+      {sector.p_high !== null && (
+        <p className="text-sm">
+          Entre as variações: chega a alto ou crítico em {formatPercent(sector.p_high)} delas
+          {sector.p_critical !== null && ` (crítico em ${formatPercent(sector.p_critical)})`}.
+        </p>
+      )}
       <p className="text-sm">
         Chuva do cenário neste setor: até {formatNumber(sector.p1h_max_mm)} mm em 1 h e {formatNumber(sector.p24_mm)} mm no
         total ({formatNumber(sector.rain_factor * 100, 0)}% da chuva do cenário
@@ -220,6 +292,37 @@ export function SimulatedSectorExplanation({ sector, onClose }: { sector: Simula
             <span>
               {f.text}
               {f.effect === "raises" && <span className="sr-only"> (aumenta o risco)</span>}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/** Histórico das simulações recentes (FR-110). */
+export function RecentRuns({ items, currentId }: { items: RunListItem[]; currentId: string | null }) {
+  if (items.length === 0) return null;
+  return (
+    <section aria-labelledby="historico-titulo" className="space-y-2 rounded-lg border border-surface-border bg-surface p-4">
+      <h2 id="historico-titulo" className="text-lg font-semibold">
+        Simulações recentes
+      </h2>
+      <ul className="divide-y divide-surface-border text-sm">
+        {items.map((r) => (
+          <li key={r.id} className="py-2">
+            <Link
+              href={simulationHref(r.id)}
+              aria-current={r.id === currentId ? "page" : undefined}
+              className={`font-medium underline ${r.id === currentId ? "text-ink" : "text-violet-800"}`}
+            >
+              {r.scenario_text}
+            </Link>
+            <span className="block text-xs text-ink-muted">
+              {formatDateTime(r.created_at)} · {r.mode === "HYBRID" ? "a partir da previsão real" : "só o cenário"} ·{" "}
+              {r.high_or_above} setores em alto ou crítico
+              {r.unknown > 0 && ` · ${r.unknown} desconhecidos`}
+              {r.seed !== null && ` · seed ${r.seed}`}
             </span>
           </li>
         ))}

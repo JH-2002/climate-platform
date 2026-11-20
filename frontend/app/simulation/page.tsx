@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ScenarioForm } from "@/components/simulation/ScenarioForm";
 import { SimulationBanner } from "@/components/simulation/SimulationBanner";
 import {
+  RecentRuns,
   SimulatedSectorExplanation,
   SimulatedSectorTable,
   SimulationSummary,
@@ -14,14 +15,21 @@ import { useLocations } from "@/features/locations/useLocations";
 import {
   useCenters,
   usePresets,
+  useRecentRuns,
   useRunSimulation,
   useSimulatedSector,
   useSimulatedSectors,
   useSimulation,
   useSimulationLayer,
 } from "@/features/simulation/hooks";
-import { parseSimulationState, serializeSimulationState, type SimulationState } from "@/features/simulation/scenario";
-import type { ScenarioInput } from "@/features/simulation/types";
+import {
+  fromRun,
+  parseSimulationState,
+  requestBody,
+  serializeSimulationState,
+  type SimulationState,
+} from "@/features/simulation/scenario";
+import type { RunOptions, ScenarioInput } from "@/features/simulation/types";
 
 // A biblioteca de mapa só é carregada nesta página e só no navegador.
 const SimulationMap = dynamic(() => import("@/components/simulation/SimulationMap"), {
@@ -38,10 +46,12 @@ function SimulationPage() {
   const router = useRouter();
   const pathname = usePathname();
   const fromUrl = parseSimulationState(params);
-  const [form, setForm] = useState<{ scenario: ScenarioInput; preset: string | null }>({
+  const [form, setForm] = useState<{ scenario: ScenarioInput; options: RunOptions; preset: string | null }>({
     scenario: fromUrl.scenario,
+    options: fromUrl.options,
     preset: fromUrl.preset,
   });
+  const recent = useRecentRuns();
   const presets = usePresets();
   const centers = useCenters();
   const { locations } = useLocations();
@@ -55,26 +65,35 @@ function SimulationPage() {
   // Link só com a execução: o formulário assume o cenário gravado.
   const hasScenarioInUrl = params.has("total");
   useEffect(() => {
-    if (run.data && !hasScenarioInUrl) setForm({ scenario: run.data.scenario, preset: run.data.preset });
+    if (run.data && !hasScenarioInUrl) setForm({ ...fromRun(run.data), preset: run.data.preset });
   }, [run.data, hasScenarioInUrl]);
 
   function navigate(next: SimulationState) {
     router.replace(`${pathname}?${serializeSimulationState(next)}`, { scroll: false });
   }
 
-  function submit() {
-    mutation.mutate(
-      { scenario: form.scenario, preset: form.preset },
-      {
-        onSuccess: (created) => {
-          navigate({ ...form, runId: created.id, sectorId: null });
-          results.current?.focus();
-        },
+  function execute(body: Record<string, unknown>) {
+    mutation.mutate(body, {
+      onSuccess: (created) => {
+        const params = fromRun(created);
+        setForm({ ...params, preset: created.preset });
+        navigate({ ...params, preset: created.preset, runId: created.id, sectorId: null });
+        results.current?.focus();
       },
-    );
+    });
   }
 
-  const state: SimulationState = { ...fromUrl, scenario: form.scenario, preset: form.preset };
+  function submit() {
+    execute(requestBody(form.scenario, form.options, form.preset));
+  }
+
+  function repeat() {
+    if (!run.data) return;
+    const params = fromRun(run.data);
+    execute(requestBody(params.scenario, params.options, run.data.preset, run.data.id));
+  }
+
+  const state: SimulationState = { ...fromUrl, scenario: form.scenario, options: form.options, preset: form.preset };
   const runError = run.isError
     ? "status" in run.error && run.error.status === 404
       ? "Simulação não encontrada. As simulações ficam guardadas por 30 dias."
@@ -96,20 +115,26 @@ function SimulationPage() {
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] [&>*]:min-w-0">
         <ScenarioForm
           scenario={form.scenario}
+          options={form.options}
           preset={form.preset}
           presets={presets.data ?? []}
           centers={centers.data ?? []}
           locations={locations}
           pending={mutation.isPending}
           error={mutation.isError ? mutation.error.message : null}
-          onChange={(scenario, preset) => setForm({ scenario, preset })}
+          onChange={(scenario, preset) => setForm((f) => ({ ...f, scenario, preset }))}
+          onOptionsChange={(options) => setForm((f) => ({ ...f, options }))}
           onSubmit={submit}
         />
         <SimulationMap
           layer={layer.data}
-          cell={form.scenario.cell}
+          cell={form.options.mode === "SIMULATION" || form.options.add_storm ? form.scenario.cell : null}
           onPickCenter={(latitude, longitude) =>
-            setForm((f) => (f.scenario.cell ? { preset: null, scenario: { ...f.scenario, cell: { ...f.scenario.cell, latitude, longitude } } } : f))
+            setForm((f) =>
+              f.scenario.cell
+                ? { ...f, preset: null, scenario: { ...f.scenario, cell: { ...f.scenario.cell, latitude, longitude } } }
+                : f,
+            )
           }
           onSelectSector={(sectorId) => navigate({ ...state, sectorId })}
         />
@@ -129,7 +154,7 @@ function SimulationPage() {
         {run.data && (
           <>
             <SimulationBanner hybrid={run.data.mode === "HYBRID"} />
-            <SimulationSummary run={run.data} />
+            <SimulationSummary run={run.data} onRepeat={repeat} repeating={mutation.isPending} />
             {detail.data && (
               <SimulatedSectorExplanation sector={detail.data} onClose={() => navigate({ ...state, sectorId: null })} />
             )}
@@ -137,6 +162,7 @@ function SimulationPage() {
               <SimulatedSectorTable
                 items={sectors.data.items}
                 total={sectors.data.total}
+                withProbability={run.data.ensemble !== null}
                 selectedId={fromUrl.sectorId}
                 onSelect={(sectorId) => {
                   navigate({ ...state, sectorId });
@@ -146,6 +172,7 @@ function SimulationPage() {
             )}
           </>
         )}
+        <RecentRuns items={recent.data ?? []} currentId={fromUrl.runId} />
         {!fromUrl.runId && (
           <p className="rounded-lg border border-dashed border-surface-border p-4 text-sm text-ink-muted">
             Escolha um cenário pronto ou ajuste os valores e clique em “Simular”. O resultado ganha um link próprio, que

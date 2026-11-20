@@ -174,3 +174,123 @@ def test_subprefecture_centers(client: TestClient) -> None:
     names = {c["name"] for c in centers}
     assert {"SAO MIGUEL PAULISTA", "CAMPO LIMPO"} <= names
     assert all(-24 < c["latitude"] < -23 and c["sectors"] >= 1 for c in centers)
+
+
+# --- Parte B: variações com seed, modo HYBRID e histórico ---------------------------------
+
+ENSEMBLE = {**CITYWIDE_60, "members": 20, "intensity_pct": 30, "shift_km": 0, "seed": 42}
+
+
+def test_ensemble_probabilities_and_repeat(client: TestClient) -> None:
+    """AC-104 pela API e FR-110: repetir com o mesmo seed dá resultado idêntico."""
+    seed_and_compute()
+    first = simulate(client, ENSEMBLE)
+    assert first["seed"] == 42 and first["members"] == 20
+    assert first["ensemble"]["members"] == 20
+    assert first["ensemble"]["p10"] <= first["ensemble"]["mean"] <= first["ensemble"]["p90"]
+    probs = {
+        code: (s["p_high"], s["p_critical"]) for code, s in sectors(client, first["id"]).items()
+    }
+    assert all(p is not None and 0 <= p <= 1 for pair in probs.values() for p in pair)
+    # 60 mm/h ± 30%: R1 (moderado no centro) nunca chega a alto; R4 sempre chega
+    assert probs["HAF-06-02"][0] == 0.0 and probs["HMP-01-03"][0] == 1.0
+    again = simulate(client, {**ENSEMBLE, "repeat_of": first["id"]})
+    check = again["repeat_check"]
+    assert check["original_id"] == first["id"]
+    assert check["identical_results"] is True
+    assert check["same_engine_versions"] and check["same_sectors"]
+    assert check["same_forecast"] is None  # sem previsão no modo SIMULATION
+    other = simulate(client, {**ENSEMBLE, "seed": 43, "repeat_of": first["id"]})
+    assert other["repeat_check"]["identical_results"] is False
+
+
+def test_seed_is_drawn_and_recorded_when_missing(client: TestClient) -> None:
+    seed_and_compute()
+    run = simulate(client, {**ENSEMBLE, "seed": None})
+    assert isinstance(run["seed"], int) and run["seed"] >= 0
+    assert "20 variações" in run["scenario_text"]
+
+
+def test_hybrid_without_change_reproduces_the_real_estimate(client: TestClient) -> None:
+    """Previsão real × 100%, sem chuva extra: as categorias batem com o risco real."""
+    seed_and_compute()
+    run = simulate(client, {"mode": "HYBRID", "multiplier": 1.0})
+    assert run["mode"] == "HYBRID" and run["banner"].startswith("SIMULAÇÃO A PARTIR")
+    assert run["forecast_issued_at"] is not None
+    assert "previsão real × 100%" in run["scenario_text"]
+    items = sectors(client, run["id"])
+    assert {code: s["category"] for code, s in items.items()} == {
+        code: s["real_category"] for code, s in items.items()
+    }
+    assert run["counts"]["UNKNOWN"] == 2  # sem ponto de previsão a até 25 km (BR-103)
+
+
+def test_hybrid_adds_storm_on_top_of_forecast(client: TestClient) -> None:
+    seed_and_compute()
+    run = simulate(client, {**CITYWIDE_60, "mode": "HYBRID", "multiplier": 1.0, "add_storm": True})
+    categories = {code: s["category"] for code, s in sectors(client, run["id"]).items()}
+    assert categories["HMP-01-03"] == "CRITICAL"
+    assert categories["HCL-10-02"] == "UNKNOWN"  # sem previsão, mesmo com a chuva do cenário
+
+
+def test_hybrid_refused_with_stale_forecast(client: TestClient) -> None:
+    """AC-105: previsão vencida → 409; o modo só com o cenário continua."""
+    seed_and_compute(forecast_age=timedelta(hours=12))
+    response = client.post("/api/v1/simulation/runs", json={"mode": "HYBRID", "multiplier": 2})
+    assert response.status_code == 409
+    assert "desatualizada" in response.json()["detail"]
+    assert client.post("/api/v1/simulation/runs", json=CITYWIDE_60).status_code == 201
+
+
+def test_hybrid_limits(client: TestClient) -> None:
+    seed_and_compute()
+    response = client.post("/api/v1/simulation/runs", json={"mode": "HYBRID", "multiplier": 4})
+    assert response.status_code == 422 and "Multiplicador" in response.json()["detail"]
+    response = client.post("/api/v1/simulation/runs", json={**ENSEMBLE, "members": 120})
+    assert response.status_code == 422 and "variações" in response.json()["detail"]
+
+
+def test_history_lists_recent_runs(client: TestClient) -> None:
+    seed_and_compute()
+    first = simulate(client)
+    second = simulate(client, {"mode": "HYBRID", "multiplier": 2.0})
+    history = client.get("/api/v1/simulation/runs?limit=5").json()
+    assert [h["id"] for h in history][:2] == [second["id"], first["id"]] or {
+        h["id"] for h in history
+    } == {first["id"], second["id"]}
+    by_id = {h["id"]: h for h in history}
+    assert by_id[first["id"]]["high_or_above"] == 5
+    assert by_id[second["id"]]["mode"] == "HYBRID"
+
+
+def test_repeat_of_unknown_run_returns_404(client: TestClient) -> None:
+    seed_and_compute()
+    response = client.post(
+        "/api/v1/simulation/runs", json={**CITYWIDE_60, "repeat_of": str(uuid.uuid4())}
+    )
+    assert response.status_code == 404
+
+
+def test_purge_task_logic(client: TestClient) -> None:
+    import asyncio
+
+    from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+    from sqlalchemy.pool import NullPool
+
+    from app.services.simulation import purge_old_runs
+
+    seed_and_compute()
+    simulate(client)
+
+    async def go() -> int:
+        engine = create_async_engine(get_settings().database_url, poolclass=NullPool)
+        try:
+            async with async_sessionmaker(engine)() as session:
+                removed = await purge_old_runs(session, FIXED_NOW + timedelta(days=31))
+                await session.commit()
+                return removed
+        finally:
+            await engine.dispose()
+
+    assert asyncio.run(go()) == 1
+    assert query(select(func.count()).select_from(simulation_runs))[0][0] == 0

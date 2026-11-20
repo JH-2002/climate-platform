@@ -2,12 +2,21 @@
 
 import { titleCase } from "@/features/risk/categories";
 import type { SavedLocation } from "@/features/locations/store";
-import { DEFAULT_CENTER, LIMITS, PATTERN_LABELS, peakHourMm, validateScenario } from "@/features/simulation/scenario";
-import type { Center, Pattern, Preset, ScenarioInput } from "@/features/simulation/types";
+import {
+  DEFAULT_CENTER,
+  DEFAULT_OPTIONS,
+  LIMITS,
+  PATTERN_LABELS,
+  peakHourMm,
+  usesStorm,
+  validateScenario,
+} from "@/features/simulation/scenario";
+import type { Center, Pattern, Preset, RunOptions, ScenarioInput } from "@/features/simulation/types";
 import { formatNumber } from "@/lib/format";
 
 interface Props {
   scenario: ScenarioInput;
+  options?: RunOptions;
   preset: string | null;
   presets: Preset[];
   centers: Center[];
@@ -15,6 +24,7 @@ interface Props {
   pending: boolean;
   error: string | null;
   onChange: (scenario: ScenarioInput, preset: string | null) => void;
+  onOptionsChange?: (options: RunOptions) => void;
   onSubmit: () => void;
 }
 
@@ -36,13 +46,16 @@ function NumberField(props: {
   limits: readonly [number, number];
   step?: number;
   error?: string;
+  hint?: string;
+  placeholder?: string;
   onChange: (value: number) => void;
 }) {
-  const { id, label, unit, value, limits, step = 1, error, onChange } = props;
+  const { id, label, unit, value, limits, step = 1, error, hint, placeholder, onChange } = props;
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={id} className="text-xs text-ink-muted">
-        {label} ({unit})
+        {label}
+        {unit && ` (${unit})`}
       </label>
       <input
         id={id}
@@ -53,13 +66,19 @@ function NumberField(props: {
         step={step}
         className={field}
         value={shown(value)}
+        placeholder={placeholder}
         aria-invalid={error ? true : undefined}
-        aria-describedby={error ? `${id}-erro` : undefined}
+        aria-describedby={error ? `${id}-erro` : hint ? `${id}-dica` : undefined}
         onChange={(e) => onChange(toNumber(e.target.value))}
       />
       {error && (
         <p id={`${id}-erro`} className="text-xs text-red-800">
           {error}
+        </p>
+      )}
+      {!error && hint && (
+        <p id={`${id}-dica`} className="text-xs text-ink-muted">
+          {hint}
         </p>
       )}
     </div>
@@ -69,9 +88,13 @@ function NumberField(props: {
 /** Formulário do cenário (FR-100, FR-103). Funciona sem o mapa (NFR-103). */
 export function ScenarioForm(props: Props) {
   const { scenario, preset, presets, centers, locations, pending, error, onChange, onSubmit } = props;
-  const errors = validateScenario(scenario);
+  const options = props.options ?? DEFAULT_OPTIONS;
+  const errors = validateScenario(scenario, options);
   const invalid = Object.keys(errors).length > 0;
   const set = (patch: Partial<ScenarioInput>) => onChange({ ...scenario, ...patch }, null);
+  const setOptions = (patch: Partial<RunOptions>) => props.onOptionsChange?.({ ...options, ...patch });
+  const hybrid = options.mode === "HYBRID";
+  const storm = usesStorm(options);
   const selectedPreset = presets.find((p) => p.code === preset) ?? null;
 
   function chooseCenter(value: string) {
@@ -102,6 +125,48 @@ export function ScenarioForm(props: Props) {
         Cenário de chuva
       </h2>
 
+      {props.onOptionsChange && (
+        <fieldset className="space-y-2">
+          <legend className="text-sm font-medium">Ponto de partida</legend>
+          <div className="flex flex-col gap-1 text-sm">
+            <label className="flex items-center gap-2">
+              <input type="radio" name="sim-modo" checked={!hybrid} onChange={() => setOptions({ mode: "SIMULATION" })} />
+              Só o cenário (chuva toda escolhida por você)
+            </label>
+            <label className="flex items-center gap-2">
+              <input type="radio" name="sim-modo" checked={hybrid} onChange={() => setOptions({ mode: "HYBRID" })} />
+              A partir da previsão real das próximas 24 h
+            </label>
+          </div>
+          {hybrid && (
+            <div className="space-y-2 rounded-md bg-surface-muted p-2">
+              <NumberField
+                id="sim-multiplicador"
+                label="Chuva prevista multiplicada por"
+                unit="%"
+                value={Math.round(options.multiplier * 100)}
+                limits={LIMITS.multiplier_pct}
+                step={10}
+                error={errors.multiplier}
+                hint="100% = a previsão como está; 200% = o dobro."
+                onChange={(pct) => setOptions({ multiplier: pct / 100 })}
+              />
+              <label className="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked={options.add_storm} onChange={(e) => setOptions({ add_storm: e.target.checked })} />
+                Somar uma chuva do cenário (abaixo) à previsão
+              </label>
+              <p className="text-xs text-ink-muted">
+                A chuva das 72 h anteriores é a real. Somar a hora mais forte do cenário à da previsão é o caso mais
+                desfavorável.
+              </p>
+            </div>
+          )}
+        </fieldset>
+      )}
+
+      {storm && (
+      <>
+      {!hybrid && (
       <fieldset className="space-y-2">
         <legend className="text-sm font-medium">Cenários prontos</legend>
         <div className="flex flex-wrap gap-2">
@@ -124,6 +189,7 @@ export function ScenarioForm(props: Props) {
           </div>
         )}
       </fieldset>
+      )}
 
       <div className="grid gap-3 sm:grid-cols-2">
         <NumberField
@@ -161,20 +227,22 @@ export function ScenarioForm(props: Props) {
             ))}
           </select>
         </div>
-        <NumberField
-          id="sim-antecedente"
-          label="Chuva das 72 h anteriores"
-          unit="mm"
-          value={scenario.antecedent_mm}
-          limits={LIMITS.antecedent_mm}
-          error={errors.antecedent}
-          onChange={(antecedent_mm) => set({ antecedent_mm })}
-        />
+        {!hybrid && (
+          <NumberField
+            id="sim-antecedente"
+            label="Chuva das 72 h anteriores"
+            unit="mm"
+            value={scenario.antecedent_mm}
+            limits={LIMITS.antecedent_mm}
+            error={errors.antecedent}
+            onChange={(antecedent_mm) => set({ antecedent_mm })}
+          />
+        )}
       </div>
       {!invalid && (
         <p className="text-xs text-ink-muted">
-          Hora mais forte: {formatNumber(peakHourMm(scenario))} mm. A chuva das 72 h anteriores
-          descreve o solo na cidade inteira.
+          Hora mais forte: {formatNumber(peakHourMm(scenario))} mm.
+          {!hybrid && " A chuva das 72 h anteriores descreve o solo na cidade inteira."}
         </p>
       )}
 
@@ -240,6 +308,61 @@ export function ScenarioForm(props: Props) {
           </div>
         )}
       </fieldset>
+
+      </>
+      )}
+
+      {props.onOptionsChange && (
+        <fieldset className="space-y-2">
+          <legend className="text-sm font-medium">Incerteza (opcional)</legend>
+          <NumberField
+            id="sim-variacoes"
+            label="Número de variações"
+            unit=""
+            value={options.members}
+            limits={LIMITS.members}
+            error={errors.members}
+            hint="1 = só o cenário central. Com mais, cada variação muda a intensidade e a posição da chuva."
+            onChange={(members) => setOptions({ members })}
+          />
+          {options.members > 1 && (
+            <div className="grid gap-3 sm:grid-cols-2">
+              <NumberField
+                id="sim-intensidade"
+                label="Intensidade varia até ±"
+                unit="%"
+                value={options.intensity_pct}
+                limits={LIMITS.intensity_pct}
+                error={errors.intensity}
+                onChange={(intensity_pct) => setOptions({ intensity_pct })}
+              />
+              {storm && scenario.cell && (
+                <NumberField
+                  id="sim-deslocamento"
+                  label="Centro se desloca até"
+                  unit="km"
+                  value={options.shift_km}
+                  limits={LIMITS.shift_km}
+                  step={0.5}
+                  error={errors.shift}
+                  onChange={(shift_km) => setOptions({ shift_km })}
+                />
+              )}
+              <NumberField
+                id="sim-seed"
+                label="Seed"
+                unit=""
+                value={options.seed ?? Number.NaN}
+                limits={LIMITS.seed}
+                error={errors.seed}
+                placeholder="sorteado"
+                hint="Mesmo seed, mesmo resultado. Em branco, o sistema sorteia e grava."
+                onChange={(seed) => setOptions({ seed: Number.isFinite(seed) ? seed : null })}
+              />
+            </div>
+          )}
+        </fieldset>
+      )}
 
       {error && (
         <p role="alert" className="rounded-md border border-red-300 bg-red-50 p-2 text-sm text-red-900">

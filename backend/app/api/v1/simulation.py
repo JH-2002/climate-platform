@@ -25,7 +25,15 @@ from app.services.simulation import (
     sector_detail,
     subprefecture_centers,
 )
-from app.simulation.scenario import PRESETS, Cell, Pattern, Scenario, ScenarioError
+from app.simulation.scenario import (
+    PRESETS,
+    Cell,
+    Hybrid,
+    Pattern,
+    Scenario,
+    ScenarioError,
+    Uncertainty,
+)
 
 router = APIRouter(prefix="/simulation", tags=["simulação"])
 
@@ -41,12 +49,22 @@ class CellIn(BaseModel):
 class ScenarioIn(BaseModel):
     """Os limites são conferidos pelo motor (BR-104), com mensagem em português."""
 
-    total_mm: float
-    duration_h: int
+    mode: Literal["SIMULATION", "HYBRID"] = "SIMULATION"
+    total_mm: float = 0.0
+    duration_h: int = 1
     pattern: Pattern = Pattern.CONSTANT
     antecedent_mm: float = 0.0
     cell: CellIn | None = None
+    # HYBRID (FR-109): previsão real × multiplicador, com ou sem a chuva do cenário.
+    multiplier: float = 1.0
+    add_storm: bool = False
+    # Variações com seed (FR-108).
+    members: int = 1
+    intensity_pct: float = 0.0
+    shift_km: float = 0.0
+    seed: int | None = None
     preset: str | None = Field(default=None, max_length=60)
+    repeat_of: uuid.UUID | None = None
 
     def to_scenario(self) -> Scenario:
         cell = None if self.cell is None else Cell(**self.cell.model_dump())
@@ -56,6 +74,16 @@ class ScenarioIn(BaseModel):
             pattern=self.pattern,
             antecedent_mm=self.antecedent_mm,
             cell=cell,
+        )
+
+    def to_hybrid(self) -> Hybrid | None:
+        if self.mode != "HYBRID":
+            return None
+        return Hybrid(multiplier=self.multiplier, add_storm=self.add_storm)
+
+    def to_uncertainty(self) -> Uncertainty:
+        return Uncertainty(
+            members=self.members, intensity_pct=self.intensity_pct, shift_km=self.shift_km
         )
 
 

@@ -26,6 +26,11 @@ TOTAL_MM = (1.0, 300.0)
 DURATION_H = (1, 24)
 RADIUS_KM = (2.0, 30.0)
 ANTECEDENT_MM = (0.0, 300.0)
+MULTIPLIER = (0.5, 3.0)
+MEMBERS = (1, 100)
+INTENSITY_PCT = (0.0, 50.0)
+SHIFT_KM = (0.0, 10.0)
+SEED = (0, 2**31 - 1)
 # Região de interesse (ADR-002), com folga: o centro da célula precisa estar na cidade.
 LAT_RANGE = (-24.1, -23.3)
 LON_RANGE = (-46.9, -46.3)
@@ -68,18 +73,55 @@ class Scenario:
         }
 
 
+@dataclass(frozen=True)
+class Hybrid:
+    """Modo HYBRID (FR-109): previsão real × multiplicador, com ou sem a chuva do cenário."""
+
+    multiplier: float = 1.0
+    add_storm: bool = False
+
+
+@dataclass(frozen=True)
+class Uncertainty:
+    """Variações com seed (FR-108): intensidade ±%, deslocamento do centro até X km."""
+
+    members: int = 1
+    intensity_pct: float = 0.0
+    shift_km: float = 0.0
+
+
 def _check(name: str, value: float, limits: tuple[float, float], unit: str) -> None:
     low, high = limits
     if not low <= value <= high:
+        u = f" {unit}" if unit else ""
         raise ScenarioError(
-            f"{name} deve ficar entre {low:g} e {high:g} {unit} (recebido: {value:g} {unit})"
+            f"{name} deve ficar entre {low:g} e {high:g}{u} (recebido: {value:g}{u})"
         )
 
 
-def validate(scenario: Scenario) -> None:
+def validate(
+    scenario: Scenario,
+    *,
+    hybrid: Hybrid | None = None,
+    uncertainty: Uncertainty | None = None,
+    seed: int | None = None,
+) -> None:
+    if hybrid is not None:
+        _check("Multiplicador da previsão", hybrid.multiplier * 100, (50.0, 300.0), "%")
+    if uncertainty is not None:
+        _check("Número de variações", uncertainty.members, (1.0, 100.0), "")
+        if uncertainty.members != int(uncertainty.members):
+            raise ScenarioError("Número de variações deve ser inteiro")
+        _check("Variação de intensidade", uncertainty.intensity_pct, INTENSITY_PCT, "%")
+        _check("Deslocamento do centro", uncertainty.shift_km, SHIFT_KM, "km")
+    if seed is not None:
+        _check("Seed", seed, (float(SEED[0]), float(SEED[1])), "")
+    if hybrid is not None and not hybrid.add_storm:
+        return  # só a previsão real multiplicada: os campos da chuva do cenário não valem
     _check("Chuva total", scenario.total_mm, TOTAL_MM, "mm")
     _check("Duração", scenario.duration_h, (float(DURATION_H[0]), float(DURATION_H[1])), "h")
-    _check("Chuva das 72 h anteriores", scenario.antecedent_mm, ANTECEDENT_MM, "mm")
+    if hybrid is None:  # no HYBRID a chuva das 72 h anteriores é a real
+        _check("Chuva das 72 h anteriores", scenario.antecedent_mm, ANTECEDENT_MM, "mm")
     if scenario.cell is not None:
         _check("Raio da célula", scenario.cell.radius_km, RADIUS_KM, "km")
         _check("Latitude do centro", scenario.cell.latitude, LAT_RANGE, "°")

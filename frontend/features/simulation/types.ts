@@ -16,6 +16,53 @@ export interface ScenarioInput {
   cell: CellInput | null;
 }
 
+export type SimulationMode = "SIMULATION" | "HYBRID";
+
+/** Modo, variações e seed (Parte B). Fica junto do cenário no formulário e na URL. */
+export interface RunOptions {
+  mode: SimulationMode;
+  multiplier: number;
+  add_storm: boolean;
+  members: number;
+  intensity_pct: number;
+  shift_km: number;
+  seed: number | null;
+}
+
+export interface StoredScenario extends ScenarioInput {
+  hybrid: { multiplier: number; add_storm: boolean } | null;
+  uncertainty: { members: number; intensity_pct: number; shift_km: number } | null;
+}
+
+export interface EnsembleSummary {
+  members: number;
+  mean: number;
+  p10: number;
+  p90: number;
+  minimum: number;
+  maximum: number;
+}
+
+export interface RepeatCheck {
+  original_id: string;
+  same_engine_versions: boolean;
+  same_sectors: boolean;
+  same_forecast: boolean | null;
+  identical_results: boolean;
+}
+
+export interface RunListItem {
+  id: string;
+  created_at: string;
+  mode: SimulationMode;
+  scenario_text: string;
+  preset: string | null;
+  seed: number | null;
+  members: number;
+  high_or_above: number;
+  unknown: number;
+}
+
 export interface Preset {
   code: string;
   name: string;
@@ -53,8 +100,8 @@ export interface SimulationRun {
   id: string;
   created_at: string;
   kind: "SIMULATED";
-  mode: "SIMULATION" | "HYBRID";
-  scenario: ScenarioInput;
+  mode: SimulationMode;
+  scenario: StoredScenario;
   scenario_text: string;
   preset: string | null;
   seed: number | null;
@@ -67,6 +114,10 @@ export interface SimulationRun {
   counts: Record<RiskCategory, number>;
   comparison: Comparison;
   duration_ms: number;
+  forecast_issued_at: string | null;
+  ensemble: EnsembleSummary | null;
+  repeat_of: string | null;
+  repeat_check: RepeatCheck | null;
   banner: string;
   disclaimer: string;
 }
@@ -87,6 +138,8 @@ export interface SimulatedSector {
   a72_mm: number | null;
   rain_factor: number;
   distance_km: number | null;
+  p_high: number | null;
+  p_critical: number | null;
   factors: RiskFactor[];
 }
 

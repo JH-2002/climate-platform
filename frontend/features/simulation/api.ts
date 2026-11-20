@@ -3,7 +3,7 @@ import type { FeatureCollection } from "@/features/map/types";
 import type {
   Center,
   Preset,
-  ScenarioInput,
+  RunListItem,
   SimulatedSector,
   SimulatedSectorPage,
   SimulationLayerProps,
@@ -18,8 +18,12 @@ export async function fetchCenters(signal?: AbortSignal): Promise<Center[]> {
   return (await apiGet<Center[]>("/api/v1/simulation/centers", { signal })).data;
 }
 
-export async function createSimulation(scenario: ScenarioInput, preset: string | null): Promise<SimulationRun> {
-  return (await apiPost<SimulationRun>("/api/v1/simulation/runs", { ...scenario, preset })).data;
+export async function createSimulation(body: Record<string, unknown>): Promise<SimulationRun> {
+  return (await apiPost<SimulationRun>("/api/v1/simulation/runs", body)).data;
+}
+
+export async function fetchRecentRuns(signal?: AbortSignal): Promise<RunListItem[]> {
+  return (await apiGet<RunListItem[]>("/api/v1/simulation/runs?limit=10", { signal })).data;
 }
 
 export async function fetchSimulation(id: string, signal?: AbortSignal): Promise<SimulationRun> {
