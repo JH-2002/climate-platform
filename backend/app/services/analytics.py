@@ -136,6 +136,11 @@ def _base_info(ds: Dataset, status: dict[str, SourceStatus], **extra: Any) -> Da
     )
 
 
+def year_month(year: Any, month: Any) -> Any:
+    """AAAAMM como inteiro (as colunas são smallint: a conta estouraria o tipo)."""
+    return cast(year, Integer) * 100 + cast(month, Integer)
+
+
 def _iso(value: Any) -> str | None:
     return value.isoformat() if value is not None else None
 
@@ -177,8 +182,8 @@ async def list_datasets(
         await session.execute(
             select(
                 func.count(),
-                func.min(m.c.year * 100 + m.c.month),
-                func.max(m.c.year * 100 + m.c.month),
+                func.min(year_month(m.c.year, m.c.month)),
+                func.max(year_month(m.c.year, m.c.month)),
                 func.max(m.c.station_code),
             )
         )
@@ -377,8 +382,8 @@ async def describe_dataset(
         m = rain_monthly_observed
         rows = await session.execute(
             select(m.c.year, m.c.month, m.c.value_mm).where(
-                (m.c.year * 100 + m.c.month) >= start.year * 100 + start.month,
-                (m.c.year * 100 + m.c.month) <= end.year * 100 + end.month,
+                year_month(m.c.year, m.c.month) >= start.year * 100 + start.month,
+                year_month(m.c.year, m.c.month) <= end.year * 100 + end.month,
             )
         )
         found = {(r.year, r.month): float(r.value_mm) for r in rows}
