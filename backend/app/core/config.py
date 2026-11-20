@@ -13,6 +13,12 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.core.geo import BoundingBox, parse_points
 
+DEFAULT_FORECAST_GRID = ";".join(
+    f"{lat},{lon}"
+    for lat in ("-23.45", "-23.57", "-23.69", "-23.83")
+    for lon in ("-46.75", "-46.62", "-46.49")
+)
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(extra="ignore", case_sensitive=False)
@@ -33,8 +39,9 @@ class Settings(BaseSettings):
     # Região de interesse: "lon_min,lat_min,lon_max,lat_max" (WGS84). Padrão: município de SP.
     region_name: str = "Município de São Paulo"
     region_bbox: str = "-46.83,-24.01,-46.36,-23.35"
-    # Pontos de previsão: "lat,lon;lat,lon". Padrão: centro de São Paulo.
-    forecast_points: str = "-23.55,-46.63"
+    # Pontos de previsão: "lat,lon;lat,lon". Padrão: grade 4x3 sobre a capital (spec 005, FR-062).
+    forecast_points: str = DEFAULT_FORECAST_GRID
+    geosampa_wfs_url: str = "http://wfs.geosampa.prefeitura.sp.gov.br/geoserver/geoportal/wfs"
     http_timeout_s: float = Field(default=15.0, gt=0, le=60)
 
     @property

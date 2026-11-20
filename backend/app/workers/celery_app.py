@@ -14,13 +14,18 @@ HEARTBEAT_KEY = "climate:beat:last_heartbeat"
 HEARTBEAT_INTERVAL_S = 30
 STATIONS_SYNC_INTERVAL_S = 24 * 3600
 FORECAST_INTERVAL_S = 3600
+GEOSAMPA_SYNC_INTERVAL_S = 24 * 3600
 
 _settings = get_settings()
 
 celery_app = Celery(
     "climate",
     broker=_settings.redis_url,
-    include=["app.workers.tasks.system", "app.workers.tasks.ingestion"],
+    include=[
+        "app.workers.tasks.system",
+        "app.workers.tasks.ingestion",
+        "app.workers.tasks.risk",
+    ],
 )
 
 celery_app.conf.update(
@@ -48,6 +53,10 @@ celery_app.conf.update(
             "task": "ingestion.open_meteo_forecast",
             "schedule": float(FORECAST_INTERVAL_S),
         },
+        "geosampa-sync": {
+            "task": "ingestion.sync_geosampa",
+            "schedule": float(GEOSAMPA_SYNC_INTERVAL_S),
+        },
     },
 )
 
@@ -58,7 +67,11 @@ def _configure_celery_logging(**_kwargs: Any) -> None:
     configure_logging(_settings.log_level, service="worker")
 
 
-STARTUP_TASKS = ("ingestion.sync_inmet_stations", "ingestion.open_meteo_forecast")
+STARTUP_TASKS = (
+    "ingestion.sync_inmet_stations",
+    "ingestion.open_meteo_forecast",
+    "ingestion.sync_geosampa",
+)
 
 
 @beat_init.connect

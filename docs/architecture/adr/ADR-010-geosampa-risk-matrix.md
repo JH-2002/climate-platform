@@ -1,6 +1,6 @@
 # ADR-010 — GeoSampa como base de suscetibilidade e motor de risco em matriz
 
-**Status:** Proposta · **Data:** 2026-11-19
+**Status:** Aceita · **Data:** 2026-11-19
 
 ## Contexto
 O roteiro previa ANA e CGE como dependências da Fase 5. A ANA exige cadastro e mede níveis de rio, não alagamento urbano. O CGE não tem API pública. Sem dados de suscetibilidade, um "risco de alagamento" seria só chuva prevista com outro nome.

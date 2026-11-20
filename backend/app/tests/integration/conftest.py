@@ -17,7 +17,10 @@ from sqlalchemy.pool import NullPool
 
 from app.core.config import get_settings
 
-_TABLES = "weather_forecasts, weather_observations, raw_payloads, ingestion_runs, weather_stations"
+_TABLES = (
+    "risk_assessments, risk_runs, flood_occurrences, flood_extent_areas, hydro_risk_sectors, "
+    "weather_forecasts, weather_observations, raw_payloads, ingestion_runs, weather_stations"
+)
 
 
 async def _reset() -> None:

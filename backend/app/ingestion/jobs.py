@@ -21,6 +21,9 @@ from app.models.tables import weather_forecasts, weather_stations
 # Recebe URL e parâmetros; devolve o JSON decodificado (ou None se a fonte não trouxe nada).
 Fetcher = Callable[[str, dict[str, str] | None], Awaitable[Any]]
 
+# Linhas por comando de upsert da previsão (12 parâmetros por linha; limite do asyncpg: 32767).
+FORECAST_BATCH = 500
+
 
 def _point(lon: float, lat: float) -> Any:
     return func.ST_SetSRID(func.ST_MakePoint(lon, lat), 4326)
@@ -100,8 +103,8 @@ def make_forecast_job(fetcher: Fetcher, points: Sequence[tuple[float, float]]) -
             result.rejected += parsed.missing_values
             if parsed.missing_values:
                 result.notes.append(f"{parsed.point_key}: {parsed.missing_values} valores ausentes")
-            for item in parsed.points:
-                values = {
+            rows = [
+                {
                     "source_id": ctx.source_id,
                     "point": _point(parsed.longitude, parsed.latitude),
                     "point_key": parsed.point_key,
@@ -115,7 +118,11 @@ def make_forecast_job(fetcher: Fetcher, points: Sequence[tuple[float, float]]) -
                     "mode": "REAL",
                     "raw_payload_id": raw_id,
                 }
-                base = insert(weather_forecasts).values(values)
+                for item in parsed.points
+            ]
+            # Um comando por ponto (em lotes): com a grade de 12 pontos, são ~12 mil linhas/h.
+            for start in range(0, len(rows), FORECAST_BATCH):
+                base = insert(weather_forecasts).values(rows[start : start + FORECAST_BATCH])
                 stmt = base.on_conflict_do_update(
                     index_elements=["source_id", "point_key", "resolution", "variable", "valid_at"],
                     set_={
@@ -125,10 +132,11 @@ def make_forecast_job(fetcher: Fetcher, points: Sequence[tuple[float, float]]) -
                         "raw_payload_id": base.excluded.raw_payload_id,
                     },
                 ).returning(_inserted_flag())
-                if bool((await ctx.session.execute(stmt)).scalar_one()):
-                    result.inserted += 1
-                else:
-                    result.updated += 1
+                for inserted in (await ctx.session.execute(stmt)).scalars():
+                    if inserted:
+                        result.inserted += 1
+                    else:
+                        result.updated += 1
         await ctx.session.commit()
         return result
 

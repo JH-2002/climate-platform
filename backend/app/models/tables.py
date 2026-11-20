@@ -4,21 +4,23 @@ estas definições espelham o esquema para consultas tipadas.
 
 from __future__ import annotations
 
-from geoalchemy2 import Geography
+from geoalchemy2 import Geography, Geometry
 from sqlalchemy import (
     BigInteger,
     Boolean,
     Column,
+    Date,
     DateTime,
     Float,
     ForeignKey,
     Integer,
     MetaData,
+    SmallInteger,
     Table,
     Text,
     UniqueConstraint,
 )
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 
 metadata = MetaData()
 
@@ -126,4 +128,94 @@ weather_forecasts = Table(
     Column("mode", Text, nullable=False),
     Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
     UniqueConstraint("source_id", "point_key", "resolution", "variable", "valid_at"),
+)
+
+# --- spec 005: risco de alagamento ----------------------------------------------------------
+
+hydro_risk_sectors = Table(
+    "hydro_risk_sectors",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("source_code", Text, nullable=False),
+    Column("area_code", Text),
+    Column("area_name", Text),
+    Column("grade", SmallInteger, nullable=False),
+    Column("processes", ARRAY(Text), nullable=False),
+    Column("households", Integer),
+    Column("subprefecture", Text),
+    Column("basin", Text),
+    Column("inspected_on", Date),
+    Column("geom", Geometry("MULTIPOLYGON", srid=4326, spatial_index=False), nullable=False),
+    Column("active", Boolean, nullable=False),
+    Column("first_seen_at", DateTime(timezone=True), nullable=False),
+    Column("last_seen_at", DateTime(timezone=True), nullable=False),
+    Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
+    UniqueConstraint("source_id", "source_code"),
+)
+
+flood_extent_areas = Table(
+    "flood_extent_areas",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("source_code", Text, nullable=False),
+    Column("return_period_years", SmallInteger, nullable=False),
+    Column("geom", Geometry("MULTIPOLYGON", srid=4326, spatial_index=False), nullable=False),
+    Column("active", Boolean, nullable=False),
+    Column("last_seen_at", DateTime(timezone=True), nullable=False),
+    Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
+    UniqueConstraint("source_id", "source_code"),
+)
+
+flood_occurrences = Table(
+    "flood_occurrences",
+    metadata,
+    Column("id", BigInteger, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("layer", Text, nullable=False),
+    Column("source_code", Text, nullable=False),
+    Column("occurrence_type", Text, nullable=False),
+    Column("occurred_on", Date, nullable=False),
+    Column("subprefecture", Text),
+    Column("geom", Geometry("POINT", srid=4326, spatial_index=False), nullable=False),
+    Column("last_seen_at", DateTime(timezone=True), nullable=False),
+    Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
+    UniqueConstraint("source_id", "layer", "source_code"),
+)
+
+risk_runs = Table(
+    "risk_runs",
+    metadata,
+    Column("id", BigInteger, primary_key=True),
+    Column("engine_version", Text, nullable=False),
+    Column("computed_at", DateTime(timezone=True), nullable=False),
+    Column("valid_until", DateTime(timezone=True), nullable=False),
+    Column("forecast_issued_at", DateTime(timezone=True)),
+    Column("forecast_freshness", Text, nullable=False),
+    Column("status", Text, nullable=False),
+    Column("sector_count", Integer, nullable=False),
+    Column("params", JSONB, nullable=False),
+    Column("error_summary", Text),
+)
+
+risk_assessments = Table(
+    "risk_assessments",
+    metadata,
+    Column("id", BigInteger, primary_key=True),
+    Column("run_id", BigInteger, ForeignKey("risk_runs.id", ondelete="CASCADE"), nullable=False),
+    Column("sector_id", Integer, ForeignKey("hydro_risk_sectors.id"), nullable=False),
+    Column("category", Text, nullable=False),
+    Column("rain_level", SmallInteger),
+    Column("susceptibility", SmallInteger, nullable=False),
+    Column("p1h_max_mm", Float),
+    Column("p24_mm", Float),
+    Column("a72_mm", Float),
+    Column("forecast_point_key", Text),
+    Column("forecast_distance_km", Float),
+    Column("in_flood_extent_100y", Boolean, nullable=False),
+    Column("nearby_occurrences_12m", Integer, nullable=False),
+    Column("factors", JSONB, nullable=False),
+    Column("unknown_reason", Text),
+    UniqueConstraint("run_id", "sector_id"),
 )

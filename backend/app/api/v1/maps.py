@@ -10,6 +10,7 @@ from app.api.v1.deps import ClockDep, SessionDep, SettingsDep
 from app.core.geo import BoundingBox
 from app.services.geojson import bbox_polygon, feature_collection, polygon_feature
 from app.services.map_layers import forecast_point_features, station_features
+from app.services.risk import ATTRIBUTION, DISCLAIMER, occurrence_features, risk_area_features
 
 router = APIRouter(prefix="/map", tags=["mapa"])
 
@@ -44,3 +45,18 @@ async def forecast_points_layer(session: SessionDep, clock: ClockDep) -> dict[st
     """Valores de modelo (`kind = FORECAST`), nunca medições."""
     features = await forecast_point_features(session, clock())
     return feature_collection(features, attribution="Dados de previsão: Open-Meteo.com (CC BY 4.0)")
+
+
+@router.get("/layers/risk", summary="Setores com risco estimado (polígonos)")
+async def risk_layer(session: SessionDep) -> dict[str, Any]:
+    """Estimativa experimental do sistema (`kind = DERIVED`), não alerta oficial."""
+    features = await risk_area_features(session)
+    return feature_collection(features, attribution=ATTRIBUTION, disclaimer=DISCLAIMER)
+
+
+@router.get("/layers/flood-occurrences", summary="Ocorrências registradas nos últimos 12 meses")
+async def flood_occurrences_layer(session: SessionDep, clock: ClockDep) -> dict[str, Any]:
+    features = await occurrence_features(session, clock())
+    return feature_collection(
+        features, attribution="Ocorrências: GeoSampa — Prefeitura de São Paulo (Defesa Civil)"
+    )

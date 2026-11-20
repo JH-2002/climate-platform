@@ -1,6 +1,6 @@
 # Spec 005 — Motor de risco de alagamento v0 (experimental)
 
-> Status: **Em revisão** (2026-11-19) · Fase: 5 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md)
+> Status: **Aprovada** (2026-11-19) · Fase: 5 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md)
 
 ## Contexto
 As fases 2–4 entregam previsão de chuva e um mapa. Falta responder **"onde a chuva prevista pode causar alagamento"**. O roteiro previa ANA e CGE como dependências, mas:
@@ -80,7 +80,7 @@ Para cada setor de risco hidrológico da capital, estimar a condição de alagam
 - **NFR-063** Atribuição "GeoSampa — Prefeitura de São Paulo" na legenda, no rodapé do mapa e na página `/risk`.
 
 ## Regras de negócio (coeficientes `experimental`, configuráveis)
-- **BR-060 Nível de chuva:** maior entre os níveis de `P1h_max` e de `P24`, mais 1 se `A72 ≥ 50 mm` (solo encharcado e galerias cheias), com teto 3.
+- **BR-060 Nível de chuva:** maior entre os níveis de `P1h_max` e de `P24`, mais 1 se `A72 ≥ 50 mm` (solo encharcado e galerias cheias), com teto 3. O acréscimo só vale quando já há gatilho (nível ≥ 1): solo encharcado sem chuva prevista não cria risco.
 
   | Nível | `P1h_max` (mm/h) | `P24` (mm) |
   |---|---|---|
