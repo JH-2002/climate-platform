@@ -47,11 +47,11 @@ from app.models.tables import (
     risk_runs,
     weather_forecasts,
 )
+from app.risk.geo import haversine_km
 from app.services.forecast import FORECAST_SOURCE, current_hour
 from app.services.risk import (
     ForecastPoint,
     forecast_points,
-    haversine_km,
     hourly_precipitation_by_point,
     rain_inputs,
 )

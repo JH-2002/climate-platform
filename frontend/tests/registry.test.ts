@@ -5,7 +5,7 @@ describe("registro de navegação (FR-010)", () => {
   it("mostra apenas módulos implementados", () => {
     const primary = visibleNavItems("primary");
     const secondary = visibleNavItems("secondary");
-    expect(primary.map((i) => i.href)).toEqual(["/", "/weather", "/map", "/risk", "/analytics"]);
+    expect(primary.map((i) => i.href)).toEqual(["/", "/weather", "/map", "/risk", "/analytics", "/simulation"]);
     expect(secondary.map((i) => i.href)).toEqual(["/analytics/datasets", "/status"]);
   });
 

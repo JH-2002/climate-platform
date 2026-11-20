@@ -33,7 +33,8 @@ def client() -> Iterator[TestClient]:
 def simulate(client: TestClient, body: dict[str, Any] = CITYWIDE_60) -> dict[str, Any]:
     response = client.post("/api/v1/simulation/runs", json=body)
     assert response.status_code == 201, response.text
-    return response.json()
+    body: dict[str, Any] = response.json()
+    return body
 
 
 def sectors(client: TestClient, run_id: str) -> dict[str, dict[str, Any]]:

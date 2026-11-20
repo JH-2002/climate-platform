@@ -6,7 +6,8 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from app.services.risk import ForecastPoint, haversine_km, nearest_point, rain_inputs
+from app.risk.geo import haversine_km
+from app.services.risk import ForecastPoint, nearest_point, rain_inputs
 
 START = datetime(2026, 11, 19, 15, tzinfo=UTC)
 ISSUED = datetime(2026, 11, 19, 15, 5, tzinfo=UTC)
