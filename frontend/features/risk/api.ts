@@ -14,7 +14,7 @@ export async function fetchRiskSummary(signal?: AbortSignal): Promise<RiskSummar
   return (await apiGet<RiskSummary>("/api/v1/risk/summary", { signal })).data;
 }
 
-export function riskAreasQuery(filters: RiskFilters, limit = 200): string {
+export function riskAreasQuery(filters: RiskFilters, limit = 1000): string {
   const params = new URLSearchParams({ limit: String(limit) });
   if (filters.category) params.set("category", filters.category);
   if (filters.subprefecture) params.set("subprefecture", filters.subprefecture);

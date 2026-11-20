@@ -374,7 +374,7 @@ export default function MapView(props: MapViewProps) {
           popup
             .setLngLat([lon, lat])
             .setDOMContent(
-              popupContent(`${OCCURRENCE_TYPE_LABELS[p.type] ?? p.type} registrado`, [
+              popupContent(`Ocorrência registrada: ${OCCURRENCE_TYPE_LABELS[p.type] ?? p.type}`, [
                 `Data: ${formatDate(String(p.occurred_on))}`,
                 `Subprefeitura: ${titleCase(p.subprefecture ?? null)}`,
                 "Fonte: GeoSampa (Defesa Civil). Registro de atendimento; pode não incluir todos os eventos.",
@@ -451,11 +451,13 @@ export default function MapView(props: MapViewProps) {
         let visible = layers.includes(group);
         if (id === "chuva-2d") visible &&= !is3d;
         if (id === "chuva-3d") visible &&= is3d;
-        if (id === "risco-2d") visible &&= !is3d;
         if (id === "risco-3d") visible &&= is3d;
         map.setLayoutProperty(id, "visibility", visible ? "visible" : "none");
       }
     }
+    // Em 3D a extrusão não recebe cliques sobre o relevo; o preenchimento fica quase
+    // transparente por baixo dos blocos e continua respondendo ao clique.
+    map.setPaintProperty("risco-2d", "fill-opacity", is3d ? 0.01 : 0.55);
     const camera = { pitch: is3d ? PITCH_3D : 0, bearing: is3d ? -20 : 0 };
     if (reducedMotion) map.jumpTo(camera);
     else map.easeTo({ ...camera, duration: 900 });

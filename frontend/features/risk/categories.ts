@@ -74,13 +74,15 @@ export const OCCURRENCE_TYPE_LABELS: Record<string, string> = {
   INUNDACAO: "Inundação",
 };
 
-/** Nomes da fonte vêm em maiúsculas e sem acento: só capitaliza ("SAO MIGUEL" -> "Sao Miguel"). */
+/** Nomes da fonte vêm em maiúsculas e sem acento: só capitaliza ("VILA MARIA/VILA GUILHERME"). */
 export function titleCase(text: string | null): string {
   if (!text) return "—";
   const small = new Set(["da", "de", "do", "das", "dos", "e"]);
   return text
     .toLowerCase()
-    .split(/\s+/)
-    .map((word, i) => (i > 0 && small.has(word) ? word : word.charAt(0).toUpperCase() + word.slice(1)))
-    .join(" ");
+    .split(/(\s+|-|\/)/)
+    .map((part, i) =>
+      i > 0 && small.has(part) ? part : part.charAt(0).toUpperCase() + part.slice(1),
+    )
+    .join("");
 }

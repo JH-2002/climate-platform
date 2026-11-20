@@ -31,7 +31,7 @@ export function RiskSummaryView({ summary, selected, onSelect }: RiskSummaryView
       <h2 id="resumo-titulo" className="sr-only">
         Resumo por categoria
       </h2>
-      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {CATEGORY_ORDER.map((category) => {
           const info = CATEGORIES[category];
           const active = selected === category;

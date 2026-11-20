@@ -92,7 +92,7 @@ describe("filtros da página de risco na URL", () => {
     });
     expect(riskHref(12)).toBe("/risk?setor=12");
     expect(riskAreasQuery({ category: "LOW", subprefecture: null, sectorId: 3 })).toBe(
-      "/api/v1/risk/areas?limit=200&category=LOW",
+      "/api/v1/risk/areas?limit=1000&category=LOW",
     );
   });
 });
@@ -122,6 +122,8 @@ describe("categorias (BR-062, BR-065, Constituição §11)", () => {
     expect(titleCase("SAO MIGUEL PAULISTA")).toBe("Sao Miguel Paulista");
     expect(titleCase("JARDIM DA PAZ")).toBe("Jardim da Paz");
     expect(titleCase(null)).toBe("—");
+    expect(titleCase("ARICANDUVA-FORMOSA-CARRAO")).toBe("Aricanduva-Formosa-Carrao");
+    expect(titleCase("VILA MARIA/VILA GUILHERME")).toBe("Vila Maria/Vila Guilherme");
   });
 });
 
