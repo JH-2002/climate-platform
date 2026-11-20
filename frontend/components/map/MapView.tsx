@@ -19,6 +19,8 @@ const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL ?? "https://tiles.openfr
 const TERRAIN_URL =
   process.env.NEXT_PUBLIC_TERRAIN_TILES_URL ??
   "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
+// Copiado por scripts/copy-maplibre-worker.mjs (pré-dev/pré-build).
+const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? "/vendor/maplibre-gl-worker.mjs";
 const TERRAIN_ATTRIBUTION =
   '<a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md" target="_blank" rel="noopener">Relevo: Terrain Tiles (Mapzen/AWS)</a>';
 const DATA_ATTRIBUTION = "Previsão: Open-Meteo.com (CC BY 4.0) · Estações: INMET";
@@ -132,6 +134,7 @@ export default function MapView(props: MapViewProps) {
     void (async () => {
       const maplibre = await import("maplibre-gl");
       if (cancelled || !container.current) return;
+      maplibre.setWorkerUrl(WORKER_URL);
       map = new maplibre.Map({
         container: container.current,
         style: STYLE_URL,
