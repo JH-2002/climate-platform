@@ -10,7 +10,7 @@ Cada fase tem spec, plan, tasks e critérios de conclusão próprios. Uma fase s
 | 3 ✅* | Weather Dashboard | 003 | Clima atual, histórico, acumulados, previsão, locais | — |
 | 4 ✅ | Geospatial Map | 004 | Mapa 2D/3D (MapLibre) com relevo, estações, chuva prevista e camadas | — |
 | 5 ✅ | Flood Risk Engine | 005 | Modelo heurístico v0 experimental, explicável (setores do GeoSampa × chuva prevista) | — (ANA e CGE viram melhorias) |
-| 6 | Analytics | 006 | KPIs e painel executivo, chuva, tendências (IAG/USP 1933–2025), risco, fontes, Studio, Data Explorer, insights por regra | — |
+| 6 ✅ | Analytics | 006 | KPIs e painel executivo, chuva, tendências (IAG/USP 1933–2025), risco, fontes, Studio, Data Explorer, insights por regra | — |
 | 7 | Simulation Lab | 007 | Motor com seed, modos SIMULATION/HYBRID | — |
 | 8 | Geo Intelligence 3D | 008 | Terreno Copernicus DEM, camadas 3D, fallback 2D | — |
 | 9 | Alerts | 009 | Regras, alertas oficiais × internos, notificações | Fonte de alertas oficiais |

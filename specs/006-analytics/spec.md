@@ -1,6 +1,6 @@
 # Spec 006 — Análises (Analytics)
 
-> Status: **Aprovada** (2026-11-19) · Fase: 6 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md)
+> Status: **Concluída** (2026-11-20) · Fase: 6 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md)
 
 ## Contexto
 O documento mestre (§13) pede, para esta fase:

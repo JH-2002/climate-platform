@@ -168,3 +168,12 @@ async function seriousViolations(container: HTMLElement) {
   const results = await axe.run(container, { rules: { region: { enabled: false } } });
   return results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
 }
+
+describe("intervalLabel", () => {
+  it("mostra intervalos longos em dias", async () => {
+    const { intervalLabel } = await import("@/components/analytics/SourcesTab");
+    expect(intervalLabel(1)).toBe("1 h");
+    expect(intervalLabel(24)).toBe("24 h");
+    expect(intervalLabel(9600)).toBe("400 dias");
+  });
+});

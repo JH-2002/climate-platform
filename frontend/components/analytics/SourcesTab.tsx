@@ -16,6 +16,12 @@ const TONES: Record<string, BadgeTone> = {
 };
 
 /** Aba Fontes e dados (FR-093): disponibilidade, atraso, falhas, rejeições e cobertura. */
+/** Intervalos longos ficam legíveis em dias (ex.: 9.600 h → 400 dias). */
+export function intervalLabel(hours: number): string {
+  if (hours >= 48) return `${num(Math.round(hours / 24), 0)} dias`;
+  return `${num(hours, 0)} h`;
+}
+
 export function SourcesTab() {
   const health = useQuery({
     queryKey: ["analytics", "sources-health"],
@@ -62,7 +68,7 @@ export function SourcesTab() {
                 </td>
                 <td className="px-3 py-2 text-xs">
                   {s.last_success_at ? formatDateTime(s.last_success_at) : "—"}
-                  <span className="block text-ink-muted">esperado a cada {num(s.expected_interval_h, 0)} h</span>
+                  <span className="block text-ink-muted">esperado a cada {intervalLabel(s.expected_interval_h)}</span>
                 </td>
                 <td className="px-3 py-2 tabular-nums">
                   {pct(s.availability_7d)} / {pct(s.availability_30d)}
