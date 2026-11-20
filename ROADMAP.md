@@ -8,7 +8,7 @@ Cada fase tem spec, plan, tasks e critérios de conclusão próprios. Uma fase s
 | 1 ✅ | Foundation | 001 | Ambiente Docker, API com health, frontend shell, CI | Docker Desktop |
 | 2 ✅* | Data Ingestion | 002, 002b | INMET + Open-Meteo + importador CEMADEN | **Token INMET** |
 | 3 ✅* | Weather Dashboard | 003 | Clima atual, histórico, acumulados, previsão, locais | — |
-| 4 | Geospatial Map | 004 | Mapa 2D/3D (MapLibre) com relevo, estações, chuva prevista e camadas | — |
+| 4 ✅ | Geospatial Map | 004 | Mapa 2D/3D (MapLibre) com relevo, estações, chuva prevista e camadas | — |
 | 5 | Flood Risk Engine | 005 | Modelo heurístico v0 experimental, explicável | Cadastro ANA; dados GeoSampa/CGE |
 | 6 | Analytics | 006 | KPIs, Analytics Studio, Data Explorer, insights por regra | — |
 | 7 | Simulation Lab | 007 | Motor com seed, modos SIMULATION/HYBRID | — |

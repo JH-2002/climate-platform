@@ -1,6 +1,6 @@
 # Spec 004 — Mapa geoespacial 2D/3D
 
-> Status: **Aprovada** (2026-11-19) · Fase: 4 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md)
+> Status: **Concluída** (2026-11-19) · Fase: 4 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md)
 
 ## Contexto
 O painel (spec 003) responde "como está o tempo aqui". Falta responder **onde**: ver estações, pontos de previsão e a chuva prevista distribuídos no território. A pedido do responsável, o mapa é **2D e 3D no mesmo componente** (ADR-009), em vez de um mapa 2D agora e 3D só na Fase 8.
