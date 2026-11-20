@@ -587,8 +587,13 @@ async def occurrences_by_subprefecture(
     return {str(name): int(n) for name, n in rows}
 
 
+# Ponto "central" da reanálise: até esta distância da Sé. Sem ele (carga inicial em
+# andamento), os indicadores e regras do centro ficam indisponíveis em vez de usar outro ponto.
+CENTER_MAX_KM = 10.0
+
+
 def central_point(points: Sequence[LocationInfo]) -> LocationInfo | None:
-    return nearest_archive_point(CITY_CENTER[0], CITY_CENTER[1], points, max_km=30.0)
+    return nearest_archive_point(CITY_CENTER[0], CITY_CENTER[1], points, max_km=CENTER_MAX_KM)
 
 
 # --- insights (FR-085) -----------------------------------------------------------------------
@@ -638,6 +643,8 @@ async def compute_insights(
         notes.append(
             "Reanálise ainda não carregada: IN-01, IN-02 e IN-03 aguardam a carga inicial."
         )
+    elif center is None:
+        notes.append("Ponto central da reanálise ainda em carga: IN-02 e IN-03 aguardam.")
 
     # IN-01 — chuva prevista nas próximas 24 h × p95 do mês no mesmo ponto.
     if archive:
@@ -795,14 +802,14 @@ async def compute_kpis(
     items.append(
         Kpi(
             code="month_to_date_rain",
-            label="Chuva do mês até ontem (centro)",
+            label="Chuva do mês até ontem (Centro)",
             value=round(comparison.current, 1) if comparison else None,
             unit="mm",
             detail=(
                 f"{fmt(comparison.ratio * 100, 0)}% da média dos mesmos {comparison.days} dias "
                 "(1991–2020, reanálise)"
                 if comparison and comparison.ratio is not None
-                else "aguardando a carga da reanálise"
+                else "aguardando a carga da reanálise no ponto central"
             ),
             period_start=yesterday.replace(day=1).isoformat(),
             period_end=yesterday.isoformat(),
