@@ -19,7 +19,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/weather", label: "Clima", section: "primary", phase: 3, implemented: true },
   { href: "/map", label: "Mapa", section: "primary", phase: 4, implemented: true },
   { href: "/risk", label: "Risco de alagamento", section: "primary", phase: 5, implemented: true },
-  { href: "/analytics", label: "Análises", section: "primary", phase: 6, implemented: false },
+  { href: "/analytics", label: "Análises", section: "primary", phase: 6, implemented: true },
   { href: "/geo-3d", label: "Geointeligência 3D", section: "primary", phase: 8, implemented: false },
   { href: "/reports", label: "Relatórios", section: "primary", phase: 10, implemented: false },
   {
@@ -31,11 +31,11 @@ export const NAV_ITEMS: readonly NavItem[] = [
   },
   { href: "/locations", label: "Meus locais", section: "secondary", phase: 3, implemented: false },
   {
-    href: "/explorer",
+    href: "/analytics/datasets",
     label: "Explorador de dados",
     section: "secondary",
     phase: 6,
-    implemented: false,
+    implemented: true,
   },
   { href: "/status", label: "Estado do sistema", section: "secondary", phase: 1, implemented: true },
 ];

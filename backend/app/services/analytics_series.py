@@ -94,13 +94,15 @@ class SeriesResponse(BaseModel):
 
 
 def _agg(name: str, column: Any) -> Any:
-    return {
-        "sum": func.sum,
-        "mean": func.avg,
-        "min": func.min,
-        "max": func.max,
-        "count": func.count,
-    }[name](column)
+    if name == "sum":
+        return func.sum(column)
+    if name == "mean":
+        return func.avg(column)
+    if name == "min":
+        return func.min(column)
+    if name == "max":
+        return func.max(column)
+    return func.count(column)
 
 
 def _validate(ds_id: str, variable: str, grain: str, agg: str) -> tuple[Dataset, Variable]:
@@ -939,7 +941,11 @@ async def get_sources_health(
                 success_30d=s30,
                 availability_30d=round(s30 / t30, 4) if t30 else None,
                 mean_duration_s=round(float(row[1]), 2) if row is not None and row[1] else None,
-                rejected_rate=round(float(row[2] or 0) / received, 4) if received else None,
+                rejected_rate=(
+                    round(float(row[2] or 0) / received, 4)
+                    if row is not None and received
+                    else None
+                ),
                 last_failure_at=failure[0] if failure else None,
                 last_failure=failure[1] if failure else None,
                 coverage=coverage.get(s.code),

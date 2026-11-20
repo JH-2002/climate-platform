@@ -63,6 +63,13 @@ IAG_SOURCE = "iag-usp-rain-monthly"
 RAIN = "precipitation_sum"
 # Ponto da reanálise usado para um ponto de previsão: o mais próximo até esta distância.
 MATCH_KM = 15.0
+RISK_CATEGORY_LABELS = {
+    "CRITICAL": "Crítico",
+    "HIGH": "Alto",
+    "MODERATE": "Moderado",
+    "LOW": "Baixo",
+    "UNKNOWN": "Desconhecido",
+}
 
 
 def local_today(now: datetime) -> date:
@@ -267,7 +274,17 @@ async def list_datasets(
             records=int(occ[0]),
             period_start=_iso(occ[1]),
             period_end=_iso(occ[2]),
-            locations=[LocationInfo(key="subprefeituras", label=f"{occ[3]} subprefeituras")],
+            locations=[
+                LocationInfo(key=name, label=name.title())
+                for (name,) in (
+                    await session.execute(
+                        select(o.c.subprefecture)
+                        .where(o.c.subprefecture.is_not(None))
+                        .distinct()
+                        .order_by(o.c.subprefecture)
+                    )
+                ).tuples()
+            ],
         )
     )
 
@@ -293,7 +310,10 @@ async def list_datasets(
             records=int(runs[0]),
             period_start=_iso(runs[1]),
             period_end=_iso(runs[2]),
-            locations=[LocationInfo(key="setores", label=f"{sectors} setores ativos")],
+            locations=[
+                LocationInfo(key=code, label=label, detail=f"{sectors} setores ativos")
+                for code, label in RISK_CATEGORY_LABELS.items()
+            ],
         )
     )
 
