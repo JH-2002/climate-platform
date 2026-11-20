@@ -180,3 +180,43 @@ Camadas testadas:
 - `tx_tipo_processo` vem com variações ("INUNDACAO"/"INUNDAÇÃO", quebras de linha, ordem diferente); o adaptador normaliza em um conjunto de processos.
 - As ocorrências são registros de atendimento e podem ter subnotificação. Elas servem para ajuste de suscetibilidade, não como verdade de campo.
 - Atribuição exibida: "GeoSampa — Prefeitura de São Paulo".
+
+---
+
+## 11. Chuva mensal do IAG/USP — Água Funda (Fase 6)
+
+| Campo | Valor |
+|---|---|
+| Responsável | Instituto de Astronomia, Geofísica e Ciências Atmosféricas da USP (estação de Água Funda); publicação e elaboração: Prefeitura de São Paulo (SMUL/Geoinfo) |
+| URL | https://prefeitura.sp.gov.br/documents/d/licenciamento/precipitacao_pluviometrica_1933_2025 |
+| Formato | Página web com tabela em texto (vírgula decimal, ponto de milhar): ano, 12 meses e total anual, mais normais 1933–1960, 1961–1990 e 1991–2020 |
+| Período | 1933–2025, sem falhas |
+| Tipo | `OBSERVED` (pluviômetro) |
+| Revisão | Nota da página: revisão completa dos dados de 2024 e anteriores feita em 2025 com o IAG-USP |
+| Referência publicada | Normal 1991–2020: 1.559,2 mm/ano |
+| API | Não há. Atualização anual assistida por script, com conferência mês × total |
+| Licença | Dado público municipal; termos não informados → atribuição "IAG/USP — Estação Água Funda; publicação: Prefeitura de São Paulo (SMUL/Geoinfo)" |
+| Status | **VIÁVEL** (lida em 2026-11-19) |
+
+Representa a zona sul da capital (Água Funda), não a cidade inteira.
+
+## 12. Open-Meteo Historical API — reanálise ERA5/ERA5-Land (Fase 6)
+
+| Campo | Valor |
+|---|---|
+| Responsável | Open-Meteo, com dados do Copernicus/ECMWF (ERA5, ERA5-Land) |
+| URL | `https://archive-api.open-meteo.com/v1/archive` |
+| Autenticação | Nenhuma (uso não comercial) |
+| Licença | CC BY 4.0 (atribuição obrigatória); dados ERA5 sob a licença Copernicus |
+| Variáveis usadas | `precipitation_sum`, `temperature_2m_max`, `temperature_2m_min`, `temperature_2m_mean` (diárias, fuso `America/Sao_Paulo`) |
+| Período | 1991-01-01 até ontem (dias recentes revisados pela fonte) |
+| Tipo | `MODELED` |
+| Teste (2026-11-19, rede do responsável) | HTTP 200; 13.106 dias sem falhas para 1991–2026; ~11 s e ~490 KB por ponto; vários pontos por chamada aceitos |
+| Limites | Uma consulta de 35 anos conta como várias chamadas no limite gratuito (10 mil/dia): carga inicial um ponto por vez |
+| Status | **VIÁVEL** |
+
+Características medidas na grade de 12 pontos (1991–2020):
+- **Células de chuva:** cerca de 4 séries distintas de chuva entre os 12 pontos, com o mesmo máximo diário em grupos de pontos.
+- **Total anual:** de ~1.290 mm (oeste e norte) a ~2.120 mm (extremo sul).
+- **Viés:** no centro, ~1.366 mm/ano, ~12% abaixo da normal medida (1.559 mm, IAG/USP).
+- **Uso:** comparações de um período com ele mesmo no mesmo ponto (anomalias e percentis). Não serve para valores absolutos de chuva extrema.

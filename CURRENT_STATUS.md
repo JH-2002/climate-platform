@@ -8,7 +8,7 @@
 - **Fase 3 — Weather Dashboard: concluída** com previsão de modelo; medições das estações entram com o token.
 - **Fase 4 — Mapa geoespacial: concluída** (MapLibre 2D/3D com relevo, estações, chuva prevista em 24 h, locais e região de interesse).
 - **Fase 5 — Motor de risco de alagamento v0: concluída** (setores de risco do GeoSampa × chuva prevista, matriz explicável, ADR-010). Estimativa experimental, não alerta oficial.
-- Próxima: **Fase 6 — Analytics** (spec 006 a escrever).
+- **Fase 6 — Analytics: spec 006 em revisão** (séries de referência IAG/USP e reanálise; ADR-011 proposta).
 
 ## Repositório
 - GitHub: https://github.com/JH-2002/climate-platform (público), branch `main`, CI verde.
@@ -34,4 +34,4 @@
 - Branches temporários `feat/fase-3`, `feat/fase-4`, `feat/fase-5` e `chore/lockfiles` (o proxy desta sessão não permite apagar branches; podem ser removidos pela interface do GitHub).
 
 ## Próxima tarefa
-Escrever a spec 006 (Analytics). Melhorias da Fase 5 em aberto: calibrar as faixas de chuva com ocorrências de anos anteriores (download do GeoSampa) e usar observações do INMET no gatilho quando o token chegar.
+Aprovar a spec 006 e implementar a Parte A (T070–T079). Melhorias da Fase 5 em aberto: calibrar as faixas de chuva com ocorrências de anos anteriores (download do GeoSampa) e usar observações do INMET no gatilho quando o token chegar.
