@@ -118,6 +118,20 @@ forbidden_modules = [
 ]
 
 [[tool.importlinter.contracts]]
+name = "motor de simulação é puro: só usa o motor de risco"
+type = "forbidden"
+source_modules = ["app.simulation"]
+forbidden_modules = [
+    "app.models",
+    "app.services",
+    "app.ingestion",
+    "app.integrations",
+    "app.api",
+    "app.workers",
+    "app.analytics",
+]
+
+[[tool.importlinter.contracts]]
 name = "motor analítico é puro: sem modelos, serviços, ingestão, integrações, api ou workers"
 type = "forbidden"
 source_modules = ["app.analytics"]

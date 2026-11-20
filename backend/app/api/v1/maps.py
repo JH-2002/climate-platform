@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from typing import Annotated, Any
 
 from fastapi import APIRouter, HTTPException, Query
@@ -11,6 +12,8 @@ from app.core.geo import BoundingBox
 from app.services.geojson import bbox_polygon, feature_collection, polygon_feature
 from app.services.map_layers import forecast_point_features, station_features
 from app.services.risk import ATTRIBUTION, DISCLAIMER, occurrence_features, risk_area_features
+from app.services.simulation import BANNER, simulation_features
+from app.services.simulation import DISCLAIMER as SIMULATION_DISCLAIMER
 
 router = APIRouter(prefix="/map", tags=["mapa"])
 
@@ -59,4 +62,17 @@ async def flood_occurrences_layer(session: SessionDep, clock: ClockDep) -> dict[
     features = await occurrence_features(session, clock())
     return feature_collection(
         features, attribution="Ocorrências: GeoSampa — Prefeitura de São Paulo (Defesa Civil)"
+    )
+
+
+@router.get("/layers/simulation/{run_id}", summary="Setores de uma simulação (polígonos)")
+async def simulation_layer(run_id: uuid.UUID, session: SessionDep) -> dict[str, Any]:
+    """Cenário hipotético (`kind = SIMULATED`): não é previsão nem alerta (BR-100)."""
+    features = await simulation_features(session, run_id)
+    if not features:
+        raise HTTPException(status_code=404, detail="Simulação não encontrada.")
+    return feature_collection(
+        features,
+        attribution=f"{BANNER}. Setores: GeoSampa — Prefeitura de São Paulo",
+        disclaimer=SIMULATION_DISCLAIMER,
     )

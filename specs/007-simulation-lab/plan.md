@@ -13,7 +13,7 @@
 | `simulation_runs` | `id` (uuid) · `created_at` · `mode` (`SIMULATION`/`HYBRID`) · `kind` = `SIMULATED` · `scenario` (jsonb) · `seed` · `members` · `simulation_engine_version` · `risk_engine_version` · `sectors_fingerprint` · `forecast_issued_at` (HYBRID) · `counts` (jsonb) · `comparison` (jsonb) · `duration_ms` |
 | `simulation_results` | `run_id` (FK, cascade) · `sector_id` · `category` · `p_high` · `p_critical` · `p1h_max` · `p24` · `a72` · `rain_level` · `susceptibility` · `factors` (jsonb) — PK `(run_id, sector_id)` |
 
-Mais uma fonte em `data_sources`: `simulation-engine`, com tipo `SIMULATED` e sem frescor. Ela aparece em Fontes e dados como "motor", e não como coleta.
+A simulação não entra em `data_sources`: ela não é uma fonte de dados, e uma linha ali apareceria na contagem de fontes e nos insights da Visão geral (BR-101).
 
 ## Backend
 | Arquivo | Conteúdo |

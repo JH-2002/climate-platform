@@ -7,7 +7,6 @@ consultas. O motor em `app.risk` não conhece o banco (NFR-060).
 from __future__ import annotations
 
 import json
-import math
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
@@ -31,6 +30,7 @@ from app.models.tables import (
 )
 from app.risk.coefficients import DEFAULT_COEFFICIENTS, ENGINE_VERSION, Category, Coefficients
 from app.risk.engine import RainInput, RunResult, SectorInput, assess
+from app.risk.geo import haversine_km
 from app.services.forecast import FORECAST_SOURCE, active_point_keys, current_hour
 from app.services.freshness import classify_freshness
 
@@ -64,14 +64,6 @@ class ForecastPoint:
     latitude: float
     longitude: float
     issued_at: datetime
-
-
-def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-    r = 6371.0088
-    p1, p2 = math.radians(lat1), math.radians(lat2)
-    dp, dl = p2 - p1, math.radians(lon2 - lon1)
-    a = math.sin(dp / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
-    return 2 * r * math.asin(math.sqrt(a))
 
 
 def nearest_point(
@@ -188,7 +180,7 @@ def _nearby_occurrences_condition(c: Coefficients, since: date, until: date) -> 
     )
 
 
-async def _sector_rows(session: AsyncSession, now: datetime, c: Coefficients) -> list[Any]:
+async def sector_rows(session: AsyncSession, now: datetime, c: Coefficients) -> list[Any]:
     s, f, o = hydro_risk_sectors, flood_extent_areas, flood_occurrences
     since, until = _occurrence_window(now, c)
     in_flood = exists().where(
@@ -234,7 +226,7 @@ async def compute_flood_risk(
     points = await forecast_points(session)
     issued_at = max((p.issued_at for p in points), default=None)
     try:
-        rows = await _sector_rows(session, now, c)
+        rows = await sector_rows(session, now, c)
         if not rows:
             raise ValueError("nenhum setor de risco sincronizado do GeoSampa")
         hourly = await hourly_precipitation_by_point(

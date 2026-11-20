@@ -1,6 +1,6 @@
 # Spec 007 — Laboratório de simulação (Simulation Lab)
 
-> Status: **Em revisão** (2026-11-20) · Fase: 7 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md) · ADR: [ADR-012](../../docs/architecture/adr/ADR-012-simulation-reuses-risk-engine.md)
+> Status: **Aprovada** (2026-11-20) · Fase: 7 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md) · ADR: [ADR-012](../../docs/architecture/adr/ADR-012-simulation-reuses-risk-engine.md)
 
 ## Contexto
 O documento mestre prevê um laboratório de cenários com seed e os modos `SIMULATION` e `HYBRID` (Constituição §7). A pergunta que ele responde é **"e se?"**: o que o motor de risco estimaria se chovesse X mm em Y horas sobre tal região, com o solo assim ou assado.

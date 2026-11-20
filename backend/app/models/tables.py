@@ -20,7 +20,7 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
 )
-from sqlalchemy.dialects.postgresql import ARRAY, JSONB
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB, UUID
 
 metadata = MetaData()
 
@@ -276,4 +276,48 @@ backfill_progress = Table(
     Column("loaded_until", Date),
     Column("completed", Boolean, nullable=False),
     Column("updated_at", DateTime(timezone=True), nullable=False),
+)
+
+simulation_runs = Table(
+    "simulation_runs",
+    metadata,
+    Column("id", UUID(as_uuid=True), primary_key=True),
+    Column("created_at", DateTime(timezone=True), nullable=False),
+    Column("kind", Text, nullable=False),
+    Column("mode", Text, nullable=False),
+    Column("scenario", JSONB, nullable=False),
+    Column("preset", Text),
+    Column("seed", BigInteger),
+    Column("members", Integer, nullable=False),
+    Column("simulation_engine_version", Text, nullable=False),
+    Column("risk_engine_version", Text, nullable=False),
+    Column("sectors_fingerprint", Text, nullable=False),
+    Column("sector_count", Integer, nullable=False),
+    Column("forecast_issued_at", DateTime(timezone=True)),
+    Column("counts", JSONB, nullable=False),
+    Column("comparison", JSONB, nullable=False),
+    Column("duration_ms", Integer, nullable=False),
+)
+
+simulation_results = Table(
+    "simulation_results",
+    metadata,
+    Column(
+        "run_id",
+        UUID(as_uuid=True),
+        ForeignKey("simulation_runs.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column("sector_id", Integer, ForeignKey("hydro_risk_sectors.id"), primary_key=True),
+    Column("category", Text, nullable=False),
+    Column("p_high", Float),
+    Column("p_critical", Float),
+    Column("rain_level", SmallInteger),
+    Column("susceptibility", SmallInteger, nullable=False),
+    Column("p1h_max_mm", Float),
+    Column("p24_mm", Float),
+    Column("a72_mm", Float),
+    Column("rain_factor", Float, nullable=False),
+    Column("distance_km", Float),
+    Column("factors", JSONB, nullable=False),
 )

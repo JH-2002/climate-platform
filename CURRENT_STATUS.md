@@ -9,7 +9,7 @@
 - **Fase 4 — Mapa geoespacial: concluída** (MapLibre 2D/3D com relevo, estações, chuva prevista em 24 h, locais e região de interesse).
 - **Fase 5 — Motor de risco de alagamento v0: concluída** (setores de risco do GeoSampa × chuva prevista, matriz explicável, ADR-010). Estimativa experimental, não alerta oficial.
 - **Fase 6 — Analytics: concluída** (painel executivo na Visão geral; abas Chuva, Tendências 1933–2025, Risco, Fontes e dados e Studio; Explorador de dados; séries de referência IAG/USP e reanálise ERA5, ADR-011).
-- **Fase 7 — Laboratório de simulação: spec 007 em revisão** (cenários sobre o motor de risco, na resolução de setor; ADR-012 proposta).
+- **Fase 7 — Laboratório de simulação: spec 007 aprovada, Parte A em implementação** (cenários sobre o motor de risco, na resolução de setor; ADR-012).
 
 ## Repositório
 - GitHub: https://github.com/JH-2002/climate-platform (público), branch `main`, CI verde.

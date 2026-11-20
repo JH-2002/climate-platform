@@ -1,6 +1,6 @@
 # ADR-012 — Simulação reaproveita o motor de risco, na resolução de setor
 
-**Status:** Proposta · **Data:** 2026-11-20
+**Status:** Aceita · **Data:** 2026-11-20
 
 ## Contexto
 A Fase 7 pede cenários "e se?" com seed e os modos `SIMULATION` e `HYBRID`. O motor de risco v0 (ADR-010) é puro e determinístico. Ele recebe, por ponto de previsão, a chuva máxima em 1 h, o total em 24 h e o acumulado de 72 h, e devolve a categoria de cada setor com a explicação.

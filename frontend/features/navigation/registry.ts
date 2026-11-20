@@ -27,7 +27,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
     label: "Laboratório de simulação",
     section: "primary",
     phase: 7,
-    implemented: false,
+    implemented: true,
   },
   { href: "/locations", label: "Meus locais", section: "secondary", phase: 3, implemented: false },
   {
