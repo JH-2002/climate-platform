@@ -87,11 +87,11 @@ def upgrade() -> None:
            'Reanálise: Open-Meteo.com (CC BY 4.0), dados ERA5/ERA5-Land (Copernicus)',
            'API REST (JSON), sem token', 86400, false),
           ('iag-usp-rain-monthly', 'IAG/USP — chuva mensal medida (Água Funda), 1933–2025',
-           'IAG/USP; publicação: Prefeitura de São Paulo (SMUL/Geoinfo)',
+           'IAG/USP — publicação: Prefeitura de São Paulo (SMUL/Geoinfo)',
            'https://prefeitura.sp.gov.br/documents/d/licenciamento/precipitacao_pluviometrica_1933_2025',
            'Dado público municipal (termos não informados)',
-           'Chuva medida: IAG/USP — Estação Água Funda; publicação: Prefeitura de São Paulo',
-           'PDF anual; CSV de referência no repositório', 34560000, false)
+           'Chuva medida: IAG/USP (Estação Água Funda) — publicação: Prefeitura de São Paulo',
+           'PDF anual, CSV de referência no repositório', 34560000, false)
         """
     )
 
