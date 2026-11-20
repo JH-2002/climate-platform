@@ -123,12 +123,33 @@ async def list_centers(session: SessionDep) -> list[Center]:
 async def create_run(body: ScenarioIn, session: SessionDep, clock: ClockDep) -> SimulationRun:
     if body.preset is not None and body.preset not in {p.code for p in PRESETS}:
         raise HTTPException(status_code=422, detail=f"Cenário pronto desconhecido: {body.preset}")
+    now = clock()
+    if body.repeat_of is not None and await get_run(session, body.repeat_of, now=now) is None:
+        raise HTTPException(status_code=404, detail="Simulação original não encontrada.")
     try:
-        return await run_simulation(session, body.to_scenario(), now=clock(), preset=body.preset)
+        return await run_simulation(
+            session,
+            body.to_scenario(),
+            now=now,
+            preset=body.preset,
+            hybrid=body.to_hybrid(),
+            uncertainty=body.to_uncertainty(),
+            seed=body.seed,
+            repeat_of=body.repeat_of,
+        )
     except ScenarioError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from None
+    except HybridUnavailableError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from None
     except SimulationUnavailableError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from None
+
+
+@router.get("/runs", response_model=list[RunListItem], summary="Simulações recentes")
+async def recent_runs(
+    session: SessionDep, limit: Annotated[int, Query(ge=1, le=100)] = 20
+) -> list[RunListItem]:
+    return await list_runs(session, limit)
 
 
 @router.get("/runs/{run_id}", response_model=SimulationRun, summary="Resultado de uma simulação")
