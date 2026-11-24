@@ -20,8 +20,6 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/map", label: "Mapa", section: "primary", phase: 4, implemented: true },
   { href: "/risk", label: "Risco de alagamento", section: "primary", phase: 5, implemented: true },
   { href: "/analytics", label: "Análises", section: "primary", phase: 6, implemented: true },
-  { href: "/geo-3d", label: "Geointeligência 3D", section: "primary", phase: 8, implemented: true },
-  { href: "/reports", label: "Relatórios", section: "primary", phase: 10, implemented: false },
   {
     href: "/simulation",
     label: "Laboratório de simulação",
@@ -29,6 +27,8 @@ export const NAV_ITEMS: readonly NavItem[] = [
     phase: 7,
     implemented: true,
   },
+  { href: "/geo-3d", label: "Geointeligência 3D", section: "primary", phase: 8, implemented: true },
+  { href: "/reports", label: "Relatórios", section: "primary", phase: 10, implemented: false },
   { href: "/locations", label: "Meus locais", section: "secondary", phase: 3, implemented: false },
   {
     href: "/analytics/datasets",

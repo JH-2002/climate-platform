@@ -25,9 +25,11 @@ export function parsePoints(raw: string | null): [number, number][] {
   if (!raw) return [];
   const points: [number, number][] = [];
   for (const part of raw.split(";")) {
-    const [lon, lat] = part.split(",").map(Number);
-    if (Number.isFinite(lon) && Number.isFinite(lat) && Math.abs(lat!) <= 90 && Math.abs(lon!) <= 180) {
-      points.push([lon!, lat!]);
+    const values = part.split(",").map(Number);
+    if (values.length !== 2) continue;
+    const [lon, lat] = values as [number, number];
+    if (Number.isFinite(lon) && Number.isFinite(lat) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180) {
+      points.push([lon, lat]);
     }
   }
   return points.slice(0, MAX_PROFILE_POINTS);
