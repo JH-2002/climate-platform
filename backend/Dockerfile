@@ -17,7 +17,8 @@ print('\n'.join(d['project']['dependencies'] + d['project']['optional-dependenci
 COPY . .
 
 # Usuário sem privilégios de root
-RUN useradd --create-home --uid 1000 app && chown -R app:app /app
+RUN useradd --create-home --uid 1000 app && chown -R app:app /app \
+    && mkdir -p /data/dem && chown app:app /data/dem
 USER app
 
 EXPOSE 8000

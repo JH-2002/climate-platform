@@ -9,6 +9,12 @@ from fastapi import APIRouter, HTTPException, Query
 
 from app.api.v1.deps import ClockDep, SessionDep, SettingsDep
 from app.core.geo import BoundingBox
+from app.services.geo import (
+    HYDRO_ATTRIBUTION,
+    basin_features,
+    drainage_features,
+    reservoir_features,
+)
 from app.services.geojson import bbox_polygon, feature_collection, polygon_feature
 from app.services.map_layers import forecast_point_features, station_features
 from app.services.risk import ATTRIBUTION, DISCLAIMER, occurrence_features, risk_area_features
@@ -76,3 +82,41 @@ async def simulation_layer(run_id: uuid.UUID, session: SessionDep) -> dict[str, 
         attribution=f"{BANNER}. Setores: GeoSampa — Prefeitura de São Paulo",
         disclaimer=SIMULATION_DISCLAIMER,
     )
+
+
+@router.get("/layers/basins", summary="Bacias hidrográficas com setores e risco atual")
+async def basins_layer(session: SessionDep, clock: ClockDep) -> dict[str, Any]:
+    return feature_collection(await basin_features(session, clock()), attribution=HYDRO_ATTRIBUTION)
+
+
+@router.get("/layers/drainage", summary="Rios e córregos na área visível")
+async def drainage_layer(
+    session: SessionDep,
+    bbox: Annotated[str, Query(description="lon_min,lat_min,lon_max,lat_max")],
+    zoom: Annotated[float, Query(ge=0, le=22)] = 12,
+) -> dict[str, Any]:
+    try:
+        west, south, east, north = (float(v) for v in bbox.split(","))
+    except ValueError:
+        raise HTTPException(
+            status_code=422, detail="bbox: use lon_min,lat_min,lon_max,lat_max"
+        ) from None
+    if not (west < east and south < north) or (east - west) * (north - south) > 1.0:
+        raise HTTPException(
+            status_code=422, detail="bbox inválida ou grande demais (máx. 1 grau²)."
+        )
+    features, truncated = await drainage_features(session, (west, south, east, north), zoom)
+    return feature_collection(
+        features,
+        attribution=HYDRO_ATTRIBUTION,
+        truncated=truncated,
+        note=(
+            "Abaixo do zoom 12, só os trechos a céu aberto. Aproxime para ver os canalizados "
+            "subterrâneos."
+        ),
+    )
+
+
+@router.get("/layers/reservoirs", summary="Piscinões (reservatórios de amortecimento)")
+async def reservoirs_layer(session: SessionDep) -> dict[str, Any]:
+    return feature_collection(await reservoir_features(session), attribution=HYDRO_ATTRIBUTION)

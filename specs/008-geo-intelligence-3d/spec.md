@@ -1,6 +1,6 @@
 # Spec 008 — Geointeligência 3D
 
-> Status: **Em revisão** (2026-11-20) · Fase: 8 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md) · ADR: [ADR-013](../../docs/architecture/adr/ADR-013-terrain-and-hydrography.md)
+> Status: **Aprovada** (2026-11-20) · Fase: 8 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md) · ADR: [ADR-013](../../docs/architecture/adr/ADR-013-terrain-and-hydrography.md)
 
 ## Contexto
 O mapa da Fase 4 já mostra relevo em 3D, mas o relevo é **só visual** (Terrain Tiles, ADR-009). O motor de risco da Fase 5 não sabe em que **bacia** um setor está, nem se ele fica num **fundo de vale** ou numa encosta. O roadmap pede para esta fase: terreno do Copernicus DEM, camadas 3D e alternativa em 2D.
@@ -9,7 +9,7 @@ O mapa da Fase 4 já mostra relevo em 3D, mas o relevo é **só visual** (Terrai
 
 | Fonte | O que é | Acesso | Observação |
 |---|---|---|---|
-| **Copernicus DEM GLO-30** (ESA) | Elevação em grade de ~30 m | HTTPS público no bucket da AWS, sem conta; 2 blocos de 1° cobrem a cidade (S24 W047 com 42 MB e uma faixa de S25 W047) | Modelo de **superfície**: inclui prédios e árvores. Bom para a escala de bairro e de bacia, não para a de rua (Constituição §13) |
+| **Copernicus DEM GLO-30** (ESA) | Elevação em grade de ~30 m | HTTPS público no bucket da AWS, sem conta; 2 blocos de 1° cobrem a cidade (S24 W047 com 42 MB e S25 W047 com 4,8 MB, quase todo mar) | Modelo de **superfície**: inclui prédios e árvores. Bom para a escala de bairro e de bacia, não para a de rua (Constituição §13) |
 | **GeoSampa — `bacia_hidrografica`** | 269 bacias e sub-bacias, com a bacia principal (Tietê, Pinheiros, Tamanduateí…) | WFS, como as camadas da Fase 5 | Atualizada em 08/2026 |
 | **GeoSampa — `drenagem`** | 28.366 trechos de rios e córregos, inclusive canalizados e subterrâneos | WFS | O tipo do trecho (aberto, canalizado, subterrâneo) vem na fonte |
 | **GeoSampa — `reservatorio_amortecimento`** | 72 piscinões, com volume, bacia e tipo | WFS | Volume ausente em parte deles |
@@ -144,5 +144,5 @@ Dividido em duas partes, entregues e validadas em sequência.
 ## Riscos e limitações
 - **Modelo de superfície de 30 m.** Em área densa, um setor pequeno pode ter a elevação de telhados. A elevação relativa usa medianas para reduzir esse efeito, mas não o elimina.
 - **Setores pequenos.** Muitos setores têm menos de 1 ha, ou seja, poucas células de 30 m. Setores com menos de 4 células são marcados como "pouca amostra".
-- **Download de 85 MB na primeira vez.** Se a rede falhar, a tarefa tenta de novo no ciclo seguinte. As outras funções da plataforma não dependem disso.
+- **Download de ~47 MB na primeira vez.** Se a rede falhar, a tarefa tenta de novo no ciclo seguinte. As outras funções da plataforma não dependem disso.
 - **Licença do Copernicus.** Uso livre com atribuição. Ela fica registrada no SOURCES e aparece na tela.

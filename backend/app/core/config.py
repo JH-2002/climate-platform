@@ -42,6 +42,9 @@ class Settings(BaseSettings):
     # Pontos de previsão: "lat,lon;lat,lon". Padrão: grade 4x3 sobre a capital (spec 005, FR-062).
     forecast_points: str = DEFAULT_FORECAST_GRID
     geosampa_wfs_url: str = "http://wfs.geosampa.prefeitura.sp.gov.br/geoserver/geoportal/wfs"
+    # Copernicus DEM GLO-30 (spec 008): blocos públicos na AWS, recorte gravado em `dem_dir`.
+    copernicus_dem_url: str = "https://copernicus-dem-30m.s3.amazonaws.com"
+    dem_dir: str = "/data/dem"
     http_timeout_s: float = Field(default=15.0, gt=0, le=60)
 
     @property

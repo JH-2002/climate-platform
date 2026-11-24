@@ -7,6 +7,8 @@ x-backend-common: &backend-common
   env_file: .env
   volumes:
     - ./backend:/app
+    # Recorte do Copernicus DEM (spec 008): baixado uma vez, fora do código.
+    - dem-data:/data/dem
   depends_on:
     db:
       condition: service_healthy
@@ -102,5 +104,6 @@ services:
 
 volumes:
   db-data:
+  dem-data:
   frontend-node-modules:
   frontend-next:

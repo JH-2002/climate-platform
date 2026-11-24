@@ -18,6 +18,7 @@ from sqlalchemy.pool import NullPool
 from app.core.config import get_settings
 
 _TABLES = (
+    "basin_terrain, sector_terrain, dem_assets, detention_reservoirs, drainage_segments, basins, "
     "simulation_results, simulation_runs, "
     "climate_daily, rain_monthly_observed, published_normals, backfill_progress, "
     "risk_assessments, risk_runs, flood_occurrences, flood_extent_areas, hydro_risk_sectors, "

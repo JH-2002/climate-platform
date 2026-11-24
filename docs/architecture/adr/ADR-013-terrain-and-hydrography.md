@@ -1,10 +1,10 @@
 # ADR-013 — Terreno do Copernicus DEM em arquivo e hidrografia oficial do GeoSampa
 
-**Status:** Proposta · **Data:** 2026-11-20
+**Status:** Aceita · **Data:** 2026-11-20
 
 ## Contexto
 A Fase 8 precisa de terreno para métricas por setor, perfil e bloco 3D, e de bacias e drenagem para organizar o risco por bacia. Testado em 2026-11-20:
-- **Copernicus DEM GLO-30:** público por HTTPS (2 blocos de 1°, ~85 MB). É um modelo de superfície de 30 m.
+- **Copernicus DEM GLO-30:** público por HTTPS (2 blocos de 1°, ~47 MB). É um modelo de superfície de 30 m.
 - **GeoSampa:** publica por WFS 269 bacias, 28.366 trechos de drenagem e 72 piscinões.
 - **LiDAR da Prefeitura (2020):** existe, mas em nuvens de pontos por folha (5.401 folhas), baixadas uma a uma no portal.
 

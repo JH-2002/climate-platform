@@ -20,6 +20,7 @@ ARCHIVE_UPDATE_INTERVAL_S = 24 * 3600
 ARCHIVE_BACKFILL_INTERVAL_S = 120
 REFERENCE_IMPORT_INTERVAL_S = 7 * 24 * 3600
 SIMULATION_PURGE_INTERVAL_S = 24 * 3600
+GEO_REFRESH_INTERVAL_S = 24 * 3600
 
 _settings = get_settings()
 
@@ -32,6 +33,7 @@ celery_app = Celery(
         "app.workers.tasks.risk",
         "app.workers.tasks.analytics",
         "app.workers.tasks.simulation",
+        "app.workers.tasks.geo",
     ],
 )
 
@@ -76,6 +78,10 @@ celery_app.conf.update(
             "task": "ingestion.import_reference",
             "schedule": float(REFERENCE_IMPORT_INTERVAL_S),
         },
+        "geo-refresh": {
+            "task": "geo.refresh",
+            "schedule": float(GEO_REFRESH_INTERVAL_S),
+        },
         "simulation-purge": {
             "task": "simulation.purge_old_runs",
             "schedule": float(SIMULATION_PURGE_INTERVAL_S),
@@ -99,6 +105,8 @@ STARTUP_TASKS = (
     # A atualização diária também roda ao iniciar: reinícios frequentes do agendador
     # adiariam o ciclo de 24 h indefinidamente.
     "ingestion.open_meteo_archive",
+    # Hidrografia, DEM e terreno: cada etapa se pula quando já está em dia (spec 008).
+    "geo.refresh",
 )
 
 
