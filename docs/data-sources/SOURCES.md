@@ -220,3 +220,35 @@ Características medidas na grade de 12 pontos (1991–2020):
 - **Total anual:** de ~1.290 mm (oeste e norte) a ~2.120 mm (extremo sul).
 - **Viés:** no centro, ~1.366 mm/ano, ~12% abaixo da normal medida (1.559 mm, IAG/USP).
 - **Uso:** comparações de um período com ele mesmo no mesmo ponto (anomalias e percentis). Não serve para valores absolutos de chuva extrema.
+
+## 13. GeoSampa — hidrografia (Fase 8)
+
+| Campo | Valor |
+|---|---|
+| Responsável | Prefeitura de São Paulo (SMUL/Geoinfo) |
+| URL | `http://wfs.geosampa.prefeitura.sp.gov.br/geoserver/geoportal/wfs` (mesmo WFS da §10) |
+| Camadas | `bacia_hidrografica` (269 bacias e sub-bacias), `drenagem` (28.366 trechos, com o tipo: estado natural, canalizado a céu aberto, canalizado subterrâneo, lago), `reservatorio_amortecimento` (72 piscinões, com volume em parte deles) |
+| Formato | GeoJSON com `srsName=EPSG:4326`; uma requisição por camada |
+| Teste (2026-11-20) | Bacias 5,4 MB em 0,6 s; drenagem 28,5 MB em 2,8 s; piscinões 0,3 MB em 0,1 s |
+| Frequência no sistema | A cada 30 dias (`geo.refresh` pula se a última coleta tem menos de 30 dias) |
+| Tipo | `OBSERVED` (cadastro oficial) |
+| Licença | Dado público municipal → atribuição "GeoSampa — Prefeitura de São Paulo" |
+| Status | **VIÁVEL**; carga real em 2026-11-24: os 793 setores de risco ficaram dentro de alguma bacia |
+
+Também existem no WFS curvas de nível, pontos cotados, declividade (2015) e a grade das folhas do LiDAR 2020. O LiDAR (MDT/MDS 1:1000) é baixado folha a folha no portal, em nuvens de pontos (5.401 folhas): não dá para automatizar para a cidade inteira.
+
+## 14. Copernicus DEM GLO-30 — elevação (Fase 8)
+
+| Campo | Valor |
+|---|---|
+| Responsável | ESA / Copernicus (dados DLR e Airbus) |
+| URL | `https://copernicus-dem-30m.s3.amazonaws.com/<bloco>/<bloco>.tif` |
+| Blocos usados | `Copernicus_DSM_COG_10_S24_00_W047_00_DEM` (42 MB) e `…_S25_00_W047_00_DEM` (4,8 MB, quase todo mar) |
+| Autenticação | Nenhuma |
+| Formato | GeoTIFF otimizado (COG), float32, grade de 1" (~28 m em longitude e ~31 m em latitude na cidade) |
+| Tipo | `DERIVED` nas métricas; modelo de **superfície** (prédios e árvores entram na elevação) |
+| Licença | Uso livre com atribuição: "Produced using Copernicus DEM GLO-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA, all rights reserved" |
+| Uso no sistema | Download único e recorte da região com 0,02° de folga (`/data/dem`); terreno por setor e bacia, perfil e elevação de um ponto |
+| Status | **VIÁVEL**; recorte real em 2026-11-24 com ~28 m de resolução |
+
+Limitação medida: 351 dos 793 setores de risco (44%) têm menos de 4 células de 30 m (mediana: 4 células). Para esses setores, a elevação é marcada como "pouca amostra".

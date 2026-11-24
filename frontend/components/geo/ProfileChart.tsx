@@ -11,6 +11,15 @@ const km = (m: number) => `${formatNumber(m / 1000, 1)} km`;
 export function ProfileChart({ profile }: { profile: Profile }) {
   const drainage = profile.crossings.filter((c) => c.kind === "drainage");
   const sectors = profile.crossings.filter((c) => c.kind === "sector");
+  // Rótulo só para cursos com nome e afastados do anterior (≥ 12% da extensão): sem sobreposição.
+  const labelled = new Set<number>();
+  let lastLabel = -Infinity;
+  drainage.forEach((c, i) => {
+    if (c.name && c.distance_m - lastLabel >= profile.length_m * 0.12) {
+      labelled.add(i);
+      lastLabel = c.distance_m;
+    }
+  });
   const lowest = profile.samples.reduce<(typeof profile.samples)[number] | null>(
     (min, s) => (s.elevation_m !== null && (min === null || s.elevation_m < (min.elevation_m ?? Infinity)) ? s : min),
     null,
@@ -42,7 +51,7 @@ export function ProfileChart({ profile }: { profile: Profile }) {
         ]}
       >
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={profile.samples} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
+          <ComposedChart data={profile.samples} margin={{ top: 24, right: 16, bottom: 8, left: 8 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#d6dde3" />
             <XAxis
               dataKey="distance_m"
@@ -63,13 +72,17 @@ export function ProfileChart({ profile }: { profile: Profile }) {
               labelFormatter={(v) => km(v as number)}
             />
             <Area dataKey="elevation_m" type="linear" stroke="#0b5c7a" fill="#0b5c7a" fillOpacity={0.15} isAnimationActive={false} />
-            {drainage.map((c) => (
+            {drainage.map((c, i) => (
               <ReferenceLine
                 key={`d-${c.id}-${c.distance_m}`}
                 x={c.distance_m}
                 stroke="#1d6fd6"
                 strokeDasharray="4 3"
-                label={{ value: c.name ?? "córrego", position: "top", fontSize: 11, fill: "#1d4f91" }}
+                label={
+                  labelled.has(i)
+                    ? { value: c.name ?? "córrego", position: "top", fontSize: 11, fill: "#1d4f91" }
+                    : undefined
+                }
               />
             ))}
             {sectors.map((c) => (

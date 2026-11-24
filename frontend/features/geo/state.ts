@@ -59,6 +59,6 @@ export function serializeGeoState(state: GeoState): string {
 /** Perfis prontos: atravessam vales conhecidos e funcionam sem o mapa (NFR-124). */
 export const PROFILE_EXAMPLES: { label: string; points: [number, number][] }[] = [
   { label: "Travessia do Rio Tietê na Penha", points: [[-46.55, -23.535], [-46.55, -23.495]] },
-  { label: "Do Rio Pinheiros à Avenida Paulista", points: [[-46.695, -23.575], [-46.656, -23.5615]] },
+  { label: "Do Butantã à Avenida Paulista, pelo Rio Pinheiros", points: [[-46.71, -23.58], [-46.656, -23.5615]] },
   { label: "Vale do Aricanduva", points: [[-46.53, -23.578], [-46.5, -23.54]] },
 ];
