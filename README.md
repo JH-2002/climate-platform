@@ -82,7 +82,7 @@ python scripts/smoke_sources.py
 Spec-Driven Development: Constituição → Spec → Plan → Tasks → Implementação → Testes → Revisão.
 
 ## Fontes e atribuições
-Previsão: Open-Meteo.com (CC BY 4.0). Observações: INMET. Elevação: Copernicus DEM (ESA) — texto de atribuição exato a confirmar na licença antes da Fase 8.
+Previsão: Open-Meteo.com (CC BY 4.0). Observações: INMET. Elevação: Produced using Copernicus DEM GLO-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA, all rights reserved. Bacias, drenagem e piscinões: GeoSampa — Prefeitura de São Paulo.
 
 ## Configuração da região
 `REGION_BBOX` (lon_min,lat_min,lon_max,lat_max) define quais estações são sincronizadas e `FORECAST_POINTS` (lat,lon;lat,lon) define os pontos de previsão. Padrão: município de São Paulo.
