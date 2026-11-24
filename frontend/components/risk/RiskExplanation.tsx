@@ -9,6 +9,7 @@ import {
 } from "@/features/risk/categories";
 import type { RiskAreaDetail, RiskFactor } from "@/features/risk/types";
 import { formatDateTime, formatNumber } from "@/lib/format";
+import { TerrainSection } from "@/components/geo/TerrainSection";
 import { RiskBadge } from "./RiskBadge";
 
 const EFFECT_SYMBOL: Record<RiskFactor["effect"], string> = { raises: "↑", info: "i", unknown: "?" };
@@ -137,6 +138,8 @@ export function RiskExplanation({ detail, onClose }: { detail: RiskAreaDetail; o
           Registros de atendimento da Defesa Civil: podem não incluir todos os eventos.
         </p>
       </div>
+
+      <TerrainSection sectorId={detail.id} />
 
       <p className="text-xs text-ink-muted">
         Estimativa {detail.run.id} calculada em {formatDateTime(detail.run.computed_at)} pelo motor{" "}

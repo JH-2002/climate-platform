@@ -5,6 +5,8 @@ import { MapLegend } from "@/components/map/MapLegend";
 import { RiskBadge } from "@/components/risk/RiskBadge";
 import { RiskDisclaimer } from "@/components/risk/RiskDisclaimer";
 import { RiskExplanation } from "@/components/risk/RiskExplanation";
+import { terrainFixture } from "./geoFixtures";
+import { renderWithQuery } from "./query";
 import { RiskSummaryView } from "@/components/risk/RiskSummaryView";
 import { RiskTable } from "@/components/risk/RiskTable";
 import { NearbyRisk } from "@/components/weather/NearbyRisk";
@@ -174,7 +176,9 @@ describe("componentes de risco", () => {
   });
 
   it("AC-065: explicação mostra fatores, tipo de cada dado e fontes", async () => {
-    const { container } = render(<RiskExplanation detail={detail} onClose={() => {}} />);
+    const { container } = renderWithQuery(<RiskExplanation detail={detail} onClose={() => {}} />, [
+      [["geo", "sector", detail.id], terrainFixture(detail.id)],
+    ]);
     expect(screen.getByRole("heading", { name: "Setor HMP-01-03 — Favela da Paz" })).toBeInTheDocument();
     expect(screen.getByText("Chuva forte prevista (30 mm em 1 h)")).toBeInTheDocument();
     expect(screen.getByText("Previsão (modelo)")).toBeInTheDocument();

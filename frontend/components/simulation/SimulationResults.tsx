@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { TerrainSection } from "@/components/geo/TerrainSection";
 import { RiskBadge } from "@/components/risk/RiskBadge";
 import { CATEGORIES, CATEGORY_ORDER, RAIN_LEVEL_LABELS, SUSCEPTIBILITY_LABELS, titleCase } from "@/features/risk/categories";
 import type { RiskCategory } from "@/features/risk/types";
@@ -296,6 +297,7 @@ export function SimulatedSectorExplanation({ sector, onClose }: { sector: Simula
           </li>
         ))}
       </ul>
+      <TerrainSection sectorId={sector.id} />
     </section>
   );
 }
