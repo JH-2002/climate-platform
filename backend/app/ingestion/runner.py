@@ -192,13 +192,14 @@ def make_http_downloader(client: httpx.AsyncClient) -> Any:
 
 
 async def _last_success(session: AsyncSession, code: str) -> datetime | None:
-    return (
+    last: datetime | None = (
         await session.execute(
             select(func.max(ingestion_runs.c.finished_at))
             .join(data_sources, data_sources.c.id == ingestion_runs.c.source_id)
             .where(data_sources.c.code == code, ingestion_runs.c.status == "SUCCESS")
         )
     ).scalar_one_or_none()
+    return last
 
 
 async def _terrain_due(session: AsyncSession, now: datetime) -> bool:

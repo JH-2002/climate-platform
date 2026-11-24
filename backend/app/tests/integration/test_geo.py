@@ -52,7 +52,8 @@ STEP = 0.001
 
 
 def synthetic_elevation(lon: np.ndarray, lat: np.ndarray) -> np.ndarray:
-    return (700 + 2000 * np.abs(lat - VALLEY_LAT) + 0 * lon).astype("float32")
+    grid: np.ndarray = (700 + 2000 * np.abs(lat - VALLEY_LAT) + 0 * lon).astype("float32")
+    return grid
 
 
 def write_tile(code: str, path: Path) -> int:
@@ -100,7 +101,12 @@ def sync_hydro() -> None:
         ("geosampa-drainage", make_drainage_sync_job),
         ("geosampa-reservoirs", make_reservoir_sync_job),
     ):
-        outcome = run(lambda s, c=code, f=factory: run_ingestion(s, c, f(hydro_fetcher, URL)))
+        job = factory(hydro_fetcher, URL)
+
+        def go(s: Any, c: str = code, j: Any = job) -> Any:
+            return run_ingestion(s, c, j)
+
+        outcome = run(go)
         assert outcome.status == "SUCCESS", outcome.error
 
 
