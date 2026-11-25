@@ -42,3 +42,14 @@ describe("cabeçalhos de segurança (FR-170, BR-171)", () => {
     expect(csp(false)).toContain("connect-src 'self' https://tiles.openfreemap.org");
   });
 });
+
+describe("mapSourceUrls", () => {
+  it("usa os provedores padrão quando as variáveis não foram definidas", async () => {
+    const { mapSourceUrls } = await import("@/lib/map-sources.mjs");
+    const policy = securityHeaders({ dev: false, mapUrls: mapSourceUrls({}) }).find(
+      (h) => h.key === "Content-Security-Policy",
+    )!.value;
+    expect(policy).toContain("https://tiles.openfreemap.org");
+    expect(policy).toContain("https://s3.amazonaws.com");
+  });
+});

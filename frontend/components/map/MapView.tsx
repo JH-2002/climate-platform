@@ -20,11 +20,11 @@ import { CATEGORIES, OCCURRENCE_TYPE_LABELS, categoryLabel, titleCase } from "@/
 import { riskHref } from "@/features/risk/state";
 import type { OccurrenceProps, RiskCategory, RiskLayer, RiskLayerProps } from "@/features/risk/types";
 import { formatDateTime, formatNumber } from "@/lib/format";
+import { DEFAULT_MAP_STYLE_URL, DEFAULT_TERRAIN_TILES_URL } from "@/lib/map-sources.mjs";
 
-const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL ?? "https://tiles.openfreemap.org/styles/liberty";
+const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL || DEFAULT_MAP_STYLE_URL;
 const TERRAIN_URL =
-  process.env.NEXT_PUBLIC_TERRAIN_TILES_URL ??
-  "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
+  process.env.NEXT_PUBLIC_TERRAIN_TILES_URL || DEFAULT_TERRAIN_TILES_URL;
 // Copiado por scripts/copy-maplibre-worker.mjs (pré-dev/pré-build).
 const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? "/vendor/maplibre-gl-worker.mjs";
 const TERRAIN_ATTRIBUTION =

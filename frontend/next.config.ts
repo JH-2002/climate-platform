@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { mapSourceUrls } from "./lib/map-sources.mjs";
 import { securityHeaders } from "./lib/security-headers.mjs";
 
 // O navegador fala só com a origem do frontend; o Next encaminha /api/* para o backend.
@@ -19,7 +20,10 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: securityHeaders({
           dev: process.env.NODE_ENV !== "production",
-          mapUrls: [process.env.NEXT_PUBLIC_MAP_STYLE_URL ?? "https://tiles.openfreemap.org/styles/liberty", process.env.NEXT_PUBLIC_TERRAIN_TILES_URL],
+          mapUrls: mapSourceUrls({
+            style: process.env.NEXT_PUBLIC_MAP_STYLE_URL,
+            terrain: process.env.NEXT_PUBLIC_TERRAIN_TILES_URL,
+          }),
         }),
       },
     ];

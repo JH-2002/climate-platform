@@ -17,8 +17,9 @@ import { CATEGORIES } from "@/features/risk/categories";
 import type { RiskCategory } from "@/features/risk/types";
 import { apiGet } from "@/lib/api-client";
 import { formatNumber } from "@/lib/format";
+import { DEFAULT_MAP_STYLE_URL } from "@/lib/map-sources.mjs";
 
-const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL ?? "https://tiles.openfreemap.org/styles/liberty";
+const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL || DEFAULT_MAP_STYLE_URL;
 const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? "/vendor/maplibre-gl-worker.mjs";
 const PITCH = 62;
 // Grade de 30 m ≈ zoom 12: acima disso o MapLibre reaproveita os blocos (sem pedir mais).
