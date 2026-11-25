@@ -22,7 +22,7 @@ BUDGETS: dict[str, float] = {
     "/api/v1/alerts/active": 200,
     "/api/v1/risk/summary": 300,
     "/api/v1/map/layers/risk": 800,
-    "/api/v1/weather/current": 300,
+    "/api/v1/weather/forecast?lat=-23.5505&lon=-46.6333": 300,
     "/api/v1/geo/basins": 500,
 }
 
@@ -60,7 +60,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.base.startswith(("http://", "https://")):
         parser.error("--base precisa começar com http:// ou https://")
     ok = True
-    print(f"{'rota':32} {'p50 (ms)':>9} {'p95 (ms)':>9} {'meta':>7}  resultado")
+    print(f"{'rota':52} {'p50 (ms)':>9} {'p95 (ms)':>9} {'meta':>7}  resultado")
     for path, budget in BUDGETS.items():
         # a primeira chamada aquece conexões e caches; não entra na conta
         measure(args.base + path, 1)
@@ -69,7 +69,7 @@ def main(argv: list[str] | None = None) -> int:
         passed = errors == 0 and p95 <= budget
         ok &= passed
         verdict = "ok" if passed else ("FALHOU" if errors == 0 else f"FALHOU ({errors} erros)")
-        print(f"{path:32} {p50:9.1f} {p95:9.1f} {budget:7.0f}  {verdict}")
+        print(f"{path:52} {p50:9.1f} {p95:9.1f} {budget:7.0f}  {verdict}")
     return 0 if ok else 1
 
 

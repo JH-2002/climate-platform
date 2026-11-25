@@ -33,7 +33,7 @@
 - API: `/api/v1/health`, `/health/ready`, `/sources/status`, `/stations`, `/stations/nearby`, `/stations/{id}/observations`, `/weather/forecast`, `/map/region`, `/map/layers/stations`, `/map/layers/forecast-points`, `/map/layers/risk`, `/map/layers/flood-occurrences`, `/risk/summary`, `/risk/areas`, `/risk/areas/{id}`, `/risk/nearest`, `/simulation/*` (presets, centers, runs, histórico), `/map/layers/simulation/{id}`, `/geo/*` (dem, basins, sectors/{id}/terrain, elevation, profile, terrain/{z}/{x}/{y}.png, basins/{id}/block, basins/{id}/relief.png), `/map/layers/basins|drainage|reservoirs`, `/alerts` (active, histórico, official/{id}, at, rules), `/map/layers/alerts`, `/reports` (types, pedido, lista, andamento, download), `/analytics/*` (datasets, describe, kpis, insights, series, series.csv, climatology, distribution, ranking, trends, risk-history, sources-health) (documentação em http://localhost:8000/api/docs).
 
 ## Bloqueios externos
-- **Token do INMET**: e-mail enviado em 2026-11-19 para cadastro.act@inmet.gov.br. Quando chegar: colocar em `INMET_TOKEN` no `.env` e implementar a T020 com uma resposta real gravada.
+- **Token do INMET**: pedido por e-mail em 2026-11-19. A resposta de 2026-11-23 não concede token: indica o portal, o BDMEP (dados históricos, pedido manual por e-mail) e, para acesso por API, um Acordo de Cooperação Técnica (ACT) entre instituições. Sem token, as observações das estações do INMET continuam indisponíveis (FR-028), e a T020 fica fora do escopo enquanto não houver ACT. Cadastro de estações, avisos meteorológicos e previsão não dependem do token.
 
 ## Pendências técnicas
 - Migrar Vitest 2 → versão principal atual (alertas restritos à ferramenta de teste).

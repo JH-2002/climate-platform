@@ -90,7 +90,7 @@ testada, testes ponta a ponta no CI e metas de desempenho medidas.
   - `/alerts/active` < 200 ms;
   - `/risk/summary` < 300 ms;
   - `/map/layers/risk` < 800 ms;
-  - `/weather/current` < 300 ms;
+  - `/weather/forecast` (centro de São Paulo) < 300 ms;
   - `/geo/basins` < 500 ms.
   
   O resultado vai para o manual com a data.
