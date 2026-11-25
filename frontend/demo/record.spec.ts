@@ -142,7 +142,7 @@ test("alertas: detalhes dos alertas oficiais", async ({ page }) => {
 });
 
 test("análises: todas as abas", async ({ page }) => {
-  for (const aba of ["chuva", "tendencias", "risco", "fontes", "studio"]) {
+  for (const aba of ["chuva", "tendencias", "risco", "avaliacao", "fontes", "studio"]) {
     await visit(page, `/analytics?aba=${aba}`, 2500);
   }
   await visit(page, "/analytics/datasets", 2500);

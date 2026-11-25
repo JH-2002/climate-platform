@@ -79,6 +79,9 @@ async def collect(backfill_minutes: float) -> dict[str, str]:
 
     await step("relevo e hidrografia", lambda: runner.run_geo_refresh(settings), summary)
     await step("risco", lambda: runner.run_flood_risk(settings), summary)
+    # Avaliação retrospectiva do motor (spec 015): arquivo de previsões e retroteste.
+    await step("previsões arquivadas", lambda: runner.run_forecast_archive(settings), summary)
+    await step("avaliação do motor", lambda: runner.run_risk_evaluation(settings), summary)
     await step("Defesa Civil", lambda: runner.run_idap(settings), summary)
     await step("avisos INMET", lambda: runner.run_inmet_warnings(settings), summary)
     await step("alertas do sistema", lambda: runner.run_alert_evaluation(settings), summary)

@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { RainTab } from "@/components/analytics/RainTab";
+import { RiskEvaluationTab } from "@/components/analytics/RiskEvaluationTab";
 import { RiskHistoryTab } from "@/components/analytics/RiskHistoryTab";
 import { SourcesTab } from "@/components/analytics/SourcesTab";
 import { StudioTab } from "@/components/analytics/StudioTab";
@@ -18,6 +19,7 @@ const TABS = [
   { id: "chuva", label: "Chuva" },
   { id: "tendencias", label: "Tendências (1933–2025)" },
   { id: "risco", label: "Risco" },
+  { id: "avaliacao", label: "Avaliação do risco" },
   { id: "fontes", label: "Fontes e dados" },
   { id: "studio", label: "Studio" },
 ] as const;
@@ -65,6 +67,7 @@ function AnalyticsPage() {
       {tab === "chuva" && (datasets.data ? <RainTab center={center} yesterday={yesterday} /> : <p className="text-sm text-ink-muted">Carregando…</p>)}
       {tab === "tendencias" && <TrendsTab />}
       {tab === "risco" && <RiskHistoryTab />}
+      {tab === "avaliacao" && <RiskEvaluationTab />}
       {tab === "fontes" && <SourcesTab />}
       {tab === "studio" &&
         (studio && datasets.data ? (

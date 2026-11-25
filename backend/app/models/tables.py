@@ -551,3 +551,28 @@ report_files = Table(
     ),
     Column("content", LargeBinary, nullable=False),
 )
+
+# --- Avaliação retrospectiva do motor de risco (spec 015) ------------------------------------
+
+forecast_archive_hourly = Table(
+    "forecast_archive_hourly",
+    metadata,
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("point_key", Text, primary_key=True),
+    Column("valid_at", DateTime(timezone=True), primary_key=True),
+    Column("precipitation_mm", Float, nullable=False),
+    Column("ingested_at", DateTime(timezone=True), nullable=False),
+)
+
+risk_evaluations = Table(
+    "risk_evaluations",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("computed_at", DateTime(timezone=True), nullable=False),
+    Column("engine_version", Text, nullable=False),
+    Column("period_start", Date),
+    Column("period_end", Date),
+    Column("status", Text, nullable=False),
+    Column("result", JSONB),
+    Column("error", Text),
+)
