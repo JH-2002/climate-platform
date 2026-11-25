@@ -29,14 +29,14 @@ function Texto($saida) {
   # Linha a linha, sem o preenchimento com espaços que o PowerShell 5 faz ao converter em texto.
   return (($saida | ForEach-Object { "$_".TrimEnd() }) -join "`r`n").Trim()
 }
-function Docker([string[]]$argumentos) {
+function Compor([string[]]$argumentos) {
   $env:COMPOSE_ANSI = "never"
   $env:BUILDKIT_PROGRESS = "plain"
-  $saida = Texto (& docker @Compose @argumentos 2>&1)
+  $saida = Texto (& docker.exe @Compose @argumentos 2>&1)
   if ($saida) { Gravar $saida }
   return $saida
 }
-function Curl([string[]]$argumentos) {
+function Baixar([string[]]$argumentos) {
   return Texto (& curl.exe --max-time 10 @argumentos 2>&1)
 }
 function Senha {
@@ -46,7 +46,7 @@ function Senha {
 }
 
 if ($Parar) {
-  Docker @("down") | Out-Null
+  Compor @("down") | Out-Null
   Write-Host "Pilha de produção parada (os volumes continuam)."
   exit 0
 }
@@ -70,44 +70,44 @@ if (-not (Test-Path ".env.prod")) {
 }
 
 Registrar "Conferindo a configuração do Compose..."
-Docker @("config", "--quiet") | Out-Null
+Compor @("config", "--quiet") | Out-Null
 if ($LASTEXITCODE -ne 0) { Registrar "Configuração inválida (detalhes acima). Parando."; exit 1 }
 
 Registrar "Construindo as imagens (a primeira vez leva alguns minutos)..."
-Docker @("build") | Out-Null
+Compor @("build") | Out-Null
 if ($LASTEXITCODE -ne 0) { Registrar "O build falhou (detalhes acima). Parando."; exit 1 }
 
 Registrar "Subindo a pilha..."
-Docker @("up", "-d") | Out-Null
+Compor @("up", "-d") | Out-Null
 if ($LASTEXITCODE -ne 0) { Registrar "A pilha não subiu (detalhes acima)." }
 
 Registrar "Esperando a API ficar pronta (até 10 min)..."
 $pronta = $false
 for ($i = 0; $i -lt 60; $i++) {
-  $codigo = Curl @("-sk", "-o", "NUL", "-w", "%{http_code}", "$Base/api/v1/health/ready")
+  $codigo = Baixar @("-sk", "-o", "NUL", "-w", "%{http_code}", "$Base/api/v1/health/ready")
   if ($codigo -eq "200") { $pronta = $true; break }
   Start-Sleep -Seconds 10
 }
 Registrar "Prontidão: $(if ($pronta) { 'OK' } else { 'FALHOU' })"
-Docker @("ps", "--format", "table {{.Service}}\t{{.Status}}") | Out-Null
+Compor @("ps", "--format", "table {{.Service}}\t{{.Status}}") | Out-Null
 if (-not $pronta) {
   Registrar "Últimas linhas dos serviços:"
-  Docker @("logs", "--no-color", "--tail=40", "migrate", "api", "frontend", "caddy") | Out-Null
+  Compor @("logs", "--no-color", "--tail=40", "migrate", "api", "frontend", "caddy") | Out-Null
   exit 1
 }
 
 Registrar "Cabeçalhos do site:"
-Gravar (Curl @("-skI", "$Base/"))
+Gravar (Baixar @("-skI", "$Base/"))
 Registrar "Cabeçalhos da API:"
-Gravar (Curl @("-skI", "$Base/api/v1/health"))
+Gravar (Baixar @("-skI", "$Base/api/v1/health"))
 Registrar "Redirecionamento de http para https:"
-Gravar (Curl @("-sI", "http://localhost:8080/"))
+Gravar (Baixar @("-sI", "http://localhost:8080/"))
 Registrar "Portas publicadas (só o Caddy deve aparecer):"
-Docker @("ps", "--format", "table {{.Service}}\t{{.Ports}}") | Out-Null
+Compor @("ps", "--format", "table {{.Service}}\t{{.Ports}}") | Out-Null
 
 Registrar "Esperando a primeira carga dos setores de risco (até 10 min)..."
 for ($i = 0; $i -lt 60; $i++) {
-  $n = (Docker @("exec", "-T", "backup", "psql", "-tAc", "SELECT count(*) FROM hydro_risk_sectors")).Trim()
+  $n = (Compor @("exec", "-T", "backup", "psql", "-tAc", "SELECT count(*) FROM hydro_risk_sectors")).Trim()
   if ($n -match "^\d+$" -and [int]$n -gt 0) { break }
   Start-Sleep -Seconds 10
 }
@@ -115,26 +115,26 @@ Registrar "Setores carregados: $n"
 
 Registrar "Backup manual:"
 $arquivo = "climate_validacao_$(Get-Date -Format yyyy-MM-dd_HHmm).dump"
-Docker @("exec", "-T", "backup", "pg_dump", "--format=custom", "--no-owner", "--file=/backups/$arquivo") | Out-Null
-Docker @("exec", "-T", "backup", "ls", "-l", "/backups") | Out-Null
+Compor @("exec", "-T", "backup", "pg_dump", "--format=custom", "--no-owner", "--file=/backups/$arquivo") | Out-Null
+Compor @("exec", "-T", "backup", "ls", "-l", "/backups") | Out-Null
 
 Registrar "Restaurando $arquivo no banco climate_restore:"
 $restaurar = "set -e; dropdb --if-exists climate_restore; createdb climate_restore; " +
   "psql -d climate_restore -q -c 'CREATE EXTENSION IF NOT EXISTS postgis'; " +
   "pg_restore --no-owner --dbname=climate_restore /backups/$arquivo && echo RESTAURADO"
-Docker @("exec", "-T", "backup", "bash", "-c", $restaurar) | Out-Null
+Compor @("exec", "-T", "backup", "bash", "-c", $restaurar) | Out-Null
 
 Registrar "Contagens (restaurado x em uso):"
 foreach ($tabela in @("data_sources", "hydro_risk_sectors", "subprefectures", "weather_forecasts", "risk_assessments", "official_alerts")) {
-  $r = (Docker @("exec", "-T", "backup", "psql", "-d", "climate_restore", "-tAc", "SELECT count(*) FROM $tabela")).Trim()
-  $v = (Docker @("exec", "-T", "backup", "psql", "-tAc", "SELECT count(*) FROM $tabela")).Trim()
+  $r = (Compor @("exec", "-T", "backup", "psql", "-d", "climate_restore", "-tAc", "SELECT count(*) FROM $tabela")).Trim()
+  $v = (Compor @("exec", "-T", "backup", "psql", "-tAc", "SELECT count(*) FROM $tabela")).Trim()
   Registrar ("  {0,-20} restaurado: {1,-8} em uso: {2}" -f $tabela, $r, $v)
 }
 
 Registrar "Log do serviço de backup:"
-Docker @("logs", "--no-color", "--tail=10", "backup") | Out-Null
+Compor @("logs", "--no-color", "--tail=10", "backup") | Out-Null
 Registrar "Uso de memória:"
-Gravar (Texto (& docker stats --no-stream --format "table {{.Name}}\t{{.MemUsage}}" 2>&1))
+Gravar (Texto (& docker.exe stats --no-stream --format "table {{.Name}}\t{{.MemUsage}}" 2>&1))
 
 Registrar "Concluído. A pilha continua no ar em $Base (o navegador vai pedir para aceitar o certificado local)."
 Registrar "Para parar: powershell -ExecutionPolicy Bypass -File scripts\validar-producao.ps1 -Parar"
