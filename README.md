@@ -2,7 +2,7 @@
 
 Plataforma web de monitoramento meteorológico, análise geoespacial, estimativa de condições favoráveis a alagamentos, simulação de cenários e relatórios — construída com dados reais, rastreáveis e com limitações declaradas.
 
-> **Estado:** Fase 1 (Foundation) implementada, aguardando validação local. Nenhum dado meteorológico integrado ainda. Veja [CURRENT_STATUS.md](CURRENT_STATUS.md).
+> **Estado:** Fases 0–10 concluídas. Coleta automática de estações do INMET, previsão da Open-Meteo e camadas de risco do GeoSampa; painel do clima em http://localhost:3000/weather, mapa 2D/3D em http://localhost:3000/map e risco de alagamento estimado (experimental, não é alerta oficial) em http://localhost:3000/risk; análises e painel executivo em http://localhost:3000/analytics e na Visão geral; laboratório de simulação em http://localhost:3000/simulation; geointeligência (bacias, perfil do relevo e bloco 3D da bacia) em http://localhost:3000/geo-3d; alertas oficiais da Defesa Civil e do INMET, separados da estimativa do sistema, em http://localhost:3000/alerts; relatórios em PDF, CSV e JSON em http://localhost:3000/reports. Observações medidas do INMET aguardam token. Veja [CURRENT_STATUS.md](CURRENT_STATUS.md).
 
 ## Região piloto
 Município de São Paulo, com expansão para a RMSP ([ADR-002](docs/architecture/adr/ADR-002-pilot-region-sao-paulo.md)).
@@ -32,10 +32,7 @@ docker compose ps             # todos os serviços devem ficar "healthy" (até ~
 - Frontend: http://localhost:3000 — página de estado: http://localhost:3000/status
 - API: http://localhost:8000/api/v1/health/ready — OpenAPI: http://localhost:8000/api/docs
 
-Na primeira execução o container do frontend roda `npm install`. Depois, gere e versione o lockfile:
-```bash
-docker compose cp frontend:/app/package-lock.json frontend/package-lock.json
-```
+O `frontend/package-lock.json` é versionado e gerado pelo workflow **Gerar lockfiles** (Actions), com o mesmo Node da imagem. Ao mudar dependências do frontend, rode o workflow de novo ou, localmente, `docker compose run --rm frontend npm install` (grava o lock na pasta montada).
 
 ## Testes
 ```bash
@@ -85,8 +82,11 @@ python scripts/smoke_sources.py
 Spec-Driven Development: Constituição → Spec → Plan → Tasks → Implementação → Testes → Revisão.
 
 ## Fontes e atribuições
-Previsão: Open-Meteo.com (CC BY 4.0). Observações: INMET. Elevação: Copernicus DEM (ESA) — texto de atribuição exato a confirmar na licença antes da Fase 8.
+Previsão: Open-Meteo.com (CC BY 4.0). Observações: INMET. Elevação: Produced using Copernicus DEM GLO-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA, all rights reserved. Bacias, drenagem, piscinões e subprefeituras: GeoSampa — Prefeitura de São Paulo. Alertas: Defesa Civil (IDAP/MIDR) e INMET (Alert-AS).
+
+## Configuração da região
+`REGION_BBOX` (lon_min,lat_min,lon_max,lat_max) define quais estações são sincronizadas e `FORECAST_POINTS` (lat,lon;lat,lon) define os pontos de previsão. Padrão: município de São Paulo.
 
 ## Limitações atuais
-- Nenhuma fonte de dados integrada (Fase 2).
-- Sem autenticação: a API é somente leitura e expõe apenas estado do sistema.
+- Observações horárias do INMET dependem de token (pedido em andamento).
+- Sem autenticação: a API é somente leitura e os locais salvos ficam no navegador (ADR-008).

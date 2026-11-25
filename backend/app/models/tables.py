@@ -1,0 +1,553 @@
+"""Tabelas do banco (SQLAlchemy Core). A fonte de verdade do DDL são as migrações Alembic;
+estas definições espelham o esquema para consultas tipadas.
+"""
+
+from __future__ import annotations
+
+from geoalchemy2 import Geography, Geometry
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    Column,
+    Date,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    LargeBinary,
+    MetaData,
+    SmallInteger,
+    Table,
+    Text,
+    UniqueConstraint,
+)
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB, UUID
+
+metadata = MetaData()
+
+data_sources = Table(
+    "data_sources",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("code", Text, nullable=False, unique=True),
+    Column("name", Text, nullable=False),
+    Column("owner", Text, nullable=False),
+    Column("url", Text, nullable=False),
+    Column("license", Text, nullable=False),
+    Column("attribution", Text, nullable=False),
+    Column("access_method", Text, nullable=False),
+    Column("expected_interval_s", Integer, nullable=False),
+    Column("requires_credentials", Boolean, nullable=False),
+    Column("enabled", Boolean, nullable=False),
+    Column("last_attempt_at", DateTime(timezone=True)),
+    Column("last_success_at", DateTime(timezone=True)),
+    Column("last_status", Text),
+    Column("last_error", Text),
+    Column("created_at", DateTime(timezone=True), nullable=False),
+)
+
+weather_stations = Table(
+    "weather_stations",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("external_code", Text, nullable=False),
+    Column("name", Text, nullable=False),
+    Column("state", Text),
+    Column("location", Geography("POINT", srid=4326, spatial_index=False), nullable=False),
+    Column("altitude_m", Float),
+    Column("status", Text, nullable=False),
+    Column("source_status", Text),
+    Column("started_at", DateTime(timezone=True)),
+    Column("ended_at", DateTime(timezone=True)),
+    Column("first_seen_at", DateTime(timezone=True), nullable=False),
+    Column("last_seen_at", DateTime(timezone=True), nullable=False),
+    UniqueConstraint("source_id", "external_code"),
+)
+
+ingestion_runs = Table(
+    "ingestion_runs",
+    metadata,
+    Column("id", BigInteger, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("started_at", DateTime(timezone=True), nullable=False),
+    Column("finished_at", DateTime(timezone=True)),
+    Column("status", Text, nullable=False),
+    Column("records_received", Integer, nullable=False),
+    Column("records_inserted", Integer, nullable=False),
+    Column("records_updated", Integer, nullable=False),
+    Column("records_rejected", Integer, nullable=False),
+    Column("error_summary", Text),
+)
+
+raw_payloads = Table(
+    "raw_payloads",
+    metadata,
+    Column("id", BigInteger, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("run_id", BigInteger, ForeignKey("ingestion_runs.id"), nullable=False),
+    Column("content_hash", Text, nullable=False),
+    Column("request_url", Text, nullable=False),
+    Column("payload", JSONB, nullable=False),
+    Column("fetched_at", DateTime(timezone=True), nullable=False),
+    UniqueConstraint("source_id", "content_hash"),
+)
+
+weather_observations = Table(
+    "weather_observations",
+    metadata,
+    Column("id", BigInteger, primary_key=True),
+    Column("station_id", Integer, ForeignKey("weather_stations.id"), nullable=False),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("observed_at", DateTime(timezone=True), nullable=False),
+    Column("variable", Text, nullable=False),
+    Column("value", Float),
+    Column("unit", Text, nullable=False),
+    Column("kind", Text, nullable=False),
+    Column("mode", Text, nullable=False),
+    Column("quality_flag", Text, nullable=False),
+    Column("quality_reason", Text),
+    Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
+    Column("ingested_at", DateTime(timezone=True), nullable=False),
+    UniqueConstraint("station_id", "variable", "observed_at"),
+)
+
+weather_forecasts = Table(
+    "weather_forecasts",
+    metadata,
+    Column("id", BigInteger, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("point", Geography("POINT", srid=4326, spatial_index=False), nullable=False),
+    Column("point_key", Text, nullable=False),
+    Column("resolution", Text, nullable=False),
+    Column("valid_at", DateTime(timezone=True), nullable=False),
+    Column("variable", Text, nullable=False),
+    Column("value", Float, nullable=False),
+    Column("unit", Text, nullable=False),
+    Column("issued_at", DateTime(timezone=True), nullable=False),
+    Column("kind", Text, nullable=False),
+    Column("mode", Text, nullable=False),
+    Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
+    UniqueConstraint("source_id", "point_key", "resolution", "variable", "valid_at"),
+)
+
+# --- spec 005: risco de alagamento ----------------------------------------------------------
+
+hydro_risk_sectors = Table(
+    "hydro_risk_sectors",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("source_code", Text, nullable=False),
+    Column("area_code", Text),
+    Column("area_name", Text),
+    Column("grade", SmallInteger, nullable=False),
+    Column("processes", ARRAY(Text), nullable=False),
+    Column("households", Integer),
+    Column("subprefecture", Text),
+    Column("basin", Text),
+    Column("inspected_on", Date),
+    Column("geom", Geometry("MULTIPOLYGON", srid=4326, spatial_index=False), nullable=False),
+    Column("active", Boolean, nullable=False),
+    Column("first_seen_at", DateTime(timezone=True), nullable=False),
+    Column("last_seen_at", DateTime(timezone=True), nullable=False),
+    Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
+    UniqueConstraint("source_id", "source_code"),
+)
+
+flood_extent_areas = Table(
+    "flood_extent_areas",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("source_code", Text, nullable=False),
+    Column("return_period_years", SmallInteger, nullable=False),
+    Column("geom", Geometry("MULTIPOLYGON", srid=4326, spatial_index=False), nullable=False),
+    Column("active", Boolean, nullable=False),
+    Column("last_seen_at", DateTime(timezone=True), nullable=False),
+    Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
+    UniqueConstraint("source_id", "source_code"),
+)
+
+flood_occurrences = Table(
+    "flood_occurrences",
+    metadata,
+    Column("id", BigInteger, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("layer", Text, nullable=False),
+    Column("source_code", Text, nullable=False),
+    Column("occurrence_type", Text, nullable=False),
+    Column("occurred_on", Date, nullable=False),
+    Column("subprefecture", Text),
+    Column("geom", Geometry("POINT", srid=4326, spatial_index=False), nullable=False),
+    Column("last_seen_at", DateTime(timezone=True), nullable=False),
+    Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
+    UniqueConstraint("source_id", "layer", "source_code"),
+)
+
+risk_runs = Table(
+    "risk_runs",
+    metadata,
+    Column("id", BigInteger, primary_key=True),
+    Column("engine_version", Text, nullable=False),
+    Column("computed_at", DateTime(timezone=True), nullable=False),
+    Column("valid_until", DateTime(timezone=True), nullable=False),
+    Column("forecast_issued_at", DateTime(timezone=True)),
+    Column("forecast_freshness", Text, nullable=False),
+    Column("status", Text, nullable=False),
+    Column("sector_count", Integer, nullable=False),
+    Column("params", JSONB, nullable=False),
+    Column("error_summary", Text),
+)
+
+risk_assessments = Table(
+    "risk_assessments",
+    metadata,
+    Column("id", BigInteger, primary_key=True),
+    Column("run_id", BigInteger, ForeignKey("risk_runs.id", ondelete="CASCADE"), nullable=False),
+    Column("sector_id", Integer, ForeignKey("hydro_risk_sectors.id"), nullable=False),
+    Column("category", Text, nullable=False),
+    Column("rain_level", SmallInteger),
+    Column("susceptibility", SmallInteger, nullable=False),
+    Column("p1h_max_mm", Float),
+    Column("p24_mm", Float),
+    Column("a72_mm", Float),
+    Column("forecast_point_key", Text),
+    Column("forecast_distance_km", Float),
+    Column("in_flood_extent_100y", Boolean, nullable=False),
+    Column("nearby_occurrences_12m", Integer, nullable=False),
+    Column("factors", JSONB, nullable=False),
+    Column("unknown_reason", Text),
+    UniqueConstraint("run_id", "sector_id"),
+)
+
+# --- spec 006: análises -----------------------------------------------------------------------
+
+climate_daily = Table(
+    "climate_daily",
+    metadata,
+    Column("id", BigInteger, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("point_key", Text, nullable=False),
+    Column("point", Geography("POINT", srid=4326, spatial_index=False), nullable=False),
+    Column("cell_key", Text, nullable=False),
+    Column("day", Date, nullable=False),
+    Column("variable", Text, nullable=False),
+    Column("value", Float, nullable=False),
+    Column("unit", Text, nullable=False),
+    Column("kind", Text, nullable=False),
+    Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
+    Column("ingested_at", DateTime(timezone=True), nullable=False),
+    UniqueConstraint("source_id", "point_key", "day", "variable"),
+)
+
+rain_monthly_observed = Table(
+    "rain_monthly_observed",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("station_code", Text, nullable=False),
+    Column("year", SmallInteger, nullable=False),
+    Column("month", SmallInteger, nullable=False),
+    Column("value_mm", Float, nullable=False),
+    Column("kind", Text, nullable=False),
+    Column("source_file", Text, nullable=False),
+    Column("file_hash", Text, nullable=False),
+    Column("imported_at", DateTime(timezone=True), nullable=False),
+    UniqueConstraint("source_id", "station_code", "year", "month"),
+)
+
+published_normals = Table(
+    "published_normals",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("station_code", Text, nullable=False),
+    Column("period", Text, nullable=False),
+    Column("month", SmallInteger, nullable=False),
+    Column("value_mm", Float, nullable=False),
+    UniqueConstraint("source_id", "station_code", "period", "month"),
+)
+
+backfill_progress = Table(
+    "backfill_progress",
+    metadata,
+    Column("source_id", Integer, ForeignKey("data_sources.id"), primary_key=True),
+    Column("point_key", Text, primary_key=True),
+    Column("loaded_until", Date),
+    Column("completed", Boolean, nullable=False),
+    Column("updated_at", DateTime(timezone=True), nullable=False),
+)
+
+simulation_runs = Table(
+    "simulation_runs",
+    metadata,
+    Column("id", UUID(as_uuid=True), primary_key=True),
+    Column("created_at", DateTime(timezone=True), nullable=False),
+    Column("kind", Text, nullable=False),
+    Column("mode", Text, nullable=False),
+    Column("scenario", JSONB, nullable=False),
+    Column("preset", Text),
+    Column("seed", BigInteger),
+    Column("members", Integer, nullable=False),
+    Column("simulation_engine_version", Text, nullable=False),
+    Column("risk_engine_version", Text, nullable=False),
+    Column("sectors_fingerprint", Text, nullable=False),
+    Column("sector_count", Integer, nullable=False),
+    Column("forecast_issued_at", DateTime(timezone=True)),
+    Column("counts", JSONB, nullable=False),
+    Column("comparison", JSONB, nullable=False),
+    Column("duration_ms", Integer, nullable=False),
+    Column("ensemble", JSONB),
+    Column("repeat_of", UUID(as_uuid=True), ForeignKey("simulation_runs.id", ondelete="SET NULL")),
+)
+
+simulation_results = Table(
+    "simulation_results",
+    metadata,
+    Column(
+        "run_id",
+        UUID(as_uuid=True),
+        ForeignKey("simulation_runs.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column("sector_id", Integer, ForeignKey("hydro_risk_sectors.id"), primary_key=True),
+    Column("category", Text, nullable=False),
+    Column("p_high", Float),
+    Column("p_critical", Float),
+    Column("rain_level", SmallInteger),
+    Column("susceptibility", SmallInteger, nullable=False),
+    Column("p1h_max_mm", Float),
+    Column("p24_mm", Float),
+    Column("a72_mm", Float),
+    Column("rain_factor", Float, nullable=False),
+    Column("distance_km", Float),
+    Column("factors", JSONB, nullable=False),
+)
+
+basins = Table(
+    "basins",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("source_code", Text, nullable=False),
+    Column("original_code", Text),
+    Column("name", Text, nullable=False),
+    Column("main_basin", Text),
+    Column("area_km2", Float),
+    Column("coverage", Text),
+    Column("geom", Geometry("MULTIPOLYGON", srid=4326, spatial_index=False), nullable=False),
+    Column("active", Boolean, nullable=False),
+    Column("last_seen_at", DateTime(timezone=True), nullable=False),
+    Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
+    UniqueConstraint("source_id", "source_code"),
+)
+
+drainage_segments = Table(
+    "drainage_segments",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("source_code", Text, nullable=False),
+    Column("name", Text),
+    Column("feature_kind", Text),
+    Column("course_type", Text, nullable=False),
+    Column("open_channel", Boolean, nullable=False),
+    Column("length_m", Float),
+    Column("geom", Geometry("MULTILINESTRING", srid=4326, spatial_index=False), nullable=False),
+    Column("active", Boolean, nullable=False),
+    Column("last_seen_at", DateTime(timezone=True), nullable=False),
+    Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
+    UniqueConstraint("source_id", "source_code"),
+)
+
+detention_reservoirs = Table(
+    "detention_reservoirs",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("source_code", Text, nullable=False),
+    Column("reservoir_code", Text),
+    Column("name", Text, nullable=False),
+    Column("local_basin", Text),
+    Column("main_basin", Text),
+    Column("stream", Text),
+    Column("volume_m3", Float),
+    Column("kind", Text),
+    Column("emptying", Text),
+    Column("manager", Text),
+    Column("realtime_monitoring", Boolean),
+    Column("subprefecture", Text),
+    Column("built", Text),
+    Column("geom", Geometry("MULTIPOLYGON", srid=4326, spatial_index=False), nullable=False),
+    Column("active", Boolean, nullable=False),
+    Column("last_seen_at", DateTime(timezone=True), nullable=False),
+    Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
+    UniqueConstraint("source_id", "source_code"),
+)
+
+dem_assets = Table(
+    "dem_assets",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("kind", Text, nullable=False),
+    Column("code", Text, nullable=False),
+    Column("etag", Text),
+    Column("bytes", BigInteger, nullable=False),
+    Column("sha256", Text),
+    Column("path", Text, nullable=False),
+    Column("resolution_m", Float),
+    Column("bounds", JSONB),
+    Column("created_at", DateTime(timezone=True), nullable=False),
+    UniqueConstraint("kind", "code"),
+)
+
+sector_terrain = Table(
+    "sector_terrain",
+    metadata,
+    Column(
+        "sector_id",
+        Integer,
+        ForeignKey("hydro_risk_sectors.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column("computed_at", DateTime(timezone=True), nullable=False),
+    Column("dem_sha256", Text),
+    Column("elev_median_m", Float),
+    Column("elev_min_m", Float),
+    Column("slope_mean_pct", Float),
+    Column("relative_elev_m", Float),
+    Column("cells", Integer, nullable=False),
+    Column("low_sample", Boolean, nullable=False),
+    Column("basin_id", Integer, ForeignKey("basins.id", ondelete="SET NULL")),
+    Column("nearest_drainage_id", Integer, ForeignKey("drainage_segments.id", ondelete="SET NULL")),
+    Column("nearest_drainage_m", Float),
+)
+
+basin_terrain = Table(
+    "basin_terrain",
+    metadata,
+    Column("basin_id", Integer, ForeignKey("basins.id", ondelete="CASCADE"), primary_key=True),
+    Column("computed_at", DateTime(timezone=True), nullable=False),
+    Column("elev_min_m", Float),
+    Column("elev_median_m", Float),
+    Column("elev_max_m", Float),
+    Column("cells", Integer, nullable=False),
+)
+
+# --- alertas (spec 009) -----------------------------------------------------------------------
+
+subprefectures = Table(
+    "subprefectures",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("source_code", Text, nullable=False),
+    Column("name", Text, nullable=False),
+    Column("acronym", Text),
+    Column("region5", Text),
+    Column("geom", Geometry("MULTIPOLYGON", srid=4326, spatial_index=False), nullable=False),
+    Column("active", Boolean, nullable=False),
+    Column("last_seen_at", DateTime(timezone=True), nullable=False),
+    Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
+    UniqueConstraint("source_id", "source_code"),
+)
+
+official_alerts = Table(
+    "official_alerts",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("source_id", Integer, ForeignKey("data_sources.id"), nullable=False),
+    Column("category", Text, nullable=False),
+    Column("external_id", Text, nullable=False),
+    Column("item_ref", Text),
+    Column("sender_name", Text),
+    Column("msg_type", Text, nullable=False),
+    Column("refs", ARRAY(Text), nullable=False),
+    Column("event", Text),
+    Column("severity", Text),
+    Column("urgency", Text),
+    Column("certainty", Text),
+    Column("headline", Text),
+    Column("description", Text),
+    Column("instruction", Text),
+    Column("web", Text),
+    Column("area_desc", Text),
+    Column("color", Text),
+    Column("sent_at", DateTime(timezone=True), nullable=False),
+    Column("onset_at", DateTime(timezone=True)),
+    Column("expires_at", DateTime(timezone=True)),
+    Column("ended_at", DateTime(timezone=True)),
+    Column("ended_reason", Text),
+    Column("geom", Geometry("MULTIPOLYGON", srid=4326, spatial_index=False)),
+    Column("area_approximate", Boolean, nullable=False),
+    Column("city_fraction", Float),
+    Column("subprefectures", ARRAY(Text), nullable=False),
+    Column("raw_payload_id", BigInteger, ForeignKey("raw_payloads.id")),
+    Column("first_seen_at", DateTime(timezone=True), nullable=False),
+    Column("last_seen_at", DateTime(timezone=True), nullable=False),
+    UniqueConstraint("source_id", "external_id"),
+)
+
+ignored_alert_items = Table(
+    "ignored_alert_items",
+    metadata,
+    Column("source_id", Integer, ForeignKey("data_sources.id"), primary_key=True),
+    Column("item_ref", Text, primary_key=True),
+    Column("seen_at", DateTime(timezone=True), nullable=False),
+)
+
+system_alerts = Table(
+    "system_alerts",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("rule_code", Text, nullable=False),
+    Column("rules_version", Text, nullable=False),
+    Column("scope_key", Text, nullable=False),
+    Column("scope_label", Text, nullable=False),
+    Column("category", Text, nullable=False),
+    Column("level", Text, nullable=False),
+    Column("title", Text, nullable=False),
+    Column("message", Text, nullable=False),
+    Column("details", JSONB, nullable=False),
+    Column("opened_at", DateTime(timezone=True), nullable=False),
+    Column("updated_at", DateTime(timezone=True), nullable=False),
+    Column("closed_at", DateTime(timezone=True)),
+    Column("clear_count", Integer, nullable=False),
+)
+
+# --- relatórios (spec 010) --------------------------------------------------------------------
+
+report_requests = Table(
+    "report_requests",
+    metadata,
+    Column("id", UUID(as_uuid=True), primary_key=True),
+    Column("report_type", Text, nullable=False),
+    Column("format", Text, nullable=False),
+    Column("params", JSONB, nullable=False),
+    Column("title", Text, nullable=False),
+    Column("mode", Text, nullable=False),
+    Column("status", Text, nullable=False),
+    Column("error", Text),
+    Column("created_at", DateTime(timezone=True), nullable=False),
+    Column("started_at", DateTime(timezone=True)),
+    Column("finished_at", DateTime(timezone=True)),
+    Column("expires_at", DateTime(timezone=True)),
+    Column("bytes", Integer),
+    Column("sha256", Text),
+    Column("filename", Text),
+    Column("media_type", Text),
+)
+
+report_files = Table(
+    "report_files",
+    metadata,
+    Column(
+        "request_id",
+        UUID(as_uuid=True),
+        ForeignKey("report_requests.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column("content", LargeBinary, nullable=False),
+)

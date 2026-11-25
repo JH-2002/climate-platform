@@ -50,7 +50,7 @@ describe("fetchReadiness", () => {
     const result = await fetchReadiness(undefined, fetchImpl);
     expect(result.status).toBe("degraded");
     expect(fetchImpl).toHaveBeenCalledWith(
-      "http://localhost:8000/api/v1/health/ready",
+      "/api/v1/health/ready",
       expect.objectContaining({ method: "GET" }),
     );
   });

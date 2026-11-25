@@ -1,6 +1,6 @@
 # Spec 002 — Weather Data Ingestion (INMET + Open-Meteo)
 
-> Status: **Rascunho** (detalhar plan/tasks após aprovação da spec 001 e resultado da T014) · Fase: 2
+> Status: **Concluída, exceto observações horárias do INMET (aguardando token)** (2026-11-19) · Fase: 2 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md)
 
 ## Contexto
 A plataforma precisa de observações reais e previsão para alimentar dashboard, mapa e risco. As fontes foram avaliadas em `docs/data-sources/SOURCES.md`.
@@ -31,6 +31,7 @@ Coletar, validar, normalizar e persistir observações horárias de estações a
 - **FR-029** A previsão Open-Meteo é coletada por célula de grade com cache de 60 min e gravada com `kind = FORECAST`.
 - **FR-030** `/sources/status` retorna para cada fonte: `freshness` (`FRESH`/`DELAYED`/`STALE`/`UNAVAILABLE`/`UNKNOWN`), `last_success_at`, `last_run_status`, licença/atribuição.
 - **FR-031** `/stations/nearby` usa PostGIS (`ST_DWithin` em `geography`) e retorna distância em km.
+- **FR-032** A página `/status` do frontend mostra, para cada fonte, frescor, motivo, última coleta bem-sucedida e atribuição/licença. *(Adicionada em 2026-11-19 — ver plan.md.)*
 
 ## Requisitos não funcionais
 - **NFR-020** Timeout de 15 s por requisição; até 3 tentativas com backoff exponencial + jitter; circuit breaker abre após 5 falhas consecutivas por 10 min.

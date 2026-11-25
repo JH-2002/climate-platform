@@ -17,9 +17,10 @@ def make_worker_ping(timeout_s: float) -> CheckFn:
     async def ping_workers() -> dict[str, str]:
         from app.workers.celery_app import celery_app
 
-        replies = await asyncio.to_thread(celery_app.control.ping, timeout=timeout_s)
+        # limit=1: retorna assim que o primeiro worker responde, sem esperar o timeout todo.
+        replies = await asyncio.to_thread(celery_app.control.ping, timeout=timeout_s, limit=1)
         if not replies:
             raise WorkerUnavailableError
-        return {"workers ativos": str(len(replies))}
+        return {"worker": next(iter(replies[0]))}
 
     return ping_workers

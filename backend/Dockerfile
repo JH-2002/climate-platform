@@ -7,6 +7,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+# Bibliotecas de sistema que a wheel do rasterio (GDAL) usa e a imagem slim não traz (spec 008).
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libexpat1 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Instala as dependências a partir do pyproject (camada em cache, sem copiar o código)
 COPY pyproject.toml ./
 RUN python -c "import tomllib; d = tomllib.load(open('pyproject.toml', 'rb')); \
@@ -17,7 +22,8 @@ print('\n'.join(d['project']['dependencies'] + d['project']['optional-dependenci
 COPY . .
 
 # Usuário sem privilégios de root
-RUN useradd --create-home --uid 1000 app && chown -R app:app /app
+RUN useradd --create-home --uid 1000 app && chown -R app:app /app \
+    && mkdir -p /data/dem && chown app:app /data/dem
 USER app
 
 EXPOSE 8000

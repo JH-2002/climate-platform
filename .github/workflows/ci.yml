@@ -57,13 +57,22 @@ jobs:
         run: alembic upgrade head
       - name: Iniciar worker Celery (para o teste de integração de prontidão)
         run: |
-          celery -A app.workers.celery_app worker --loglevel=WARNING --detach \
+          celery -A app.workers.celery_app worker --loglevel=INFO --detach \
             --pidfile=/tmp/celery.pid --logfile=/tmp/celery.log
-          sleep 5
+          for i in $(seq 1 20); do
+            if celery -A app.workers.celery_app inspect ping --timeout 3 >/dev/null 2>&1; then
+              echo "worker respondeu na tentativa $i"; exit 0
+            fi
+            sleep 2
+          done
+          echo "worker não respondeu"; cat /tmp/celery.log; exit 1
       - name: Testes (unitários + integração)
         env:
           RUN_INTEGRATION: "1"
         run: pytest --cov=app --cov-report=term-missing
+      - name: Log do worker em caso de falha
+        if: failure()
+        run: cat /tmp/celery.log || true
       - name: Testes do script de fontes
         working-directory: .
         run: pytest scripts/tests
@@ -78,9 +87,6 @@ jobs:
         with:
           name: backend-requirements-lock
           path: backend/requirements.lock
-      - name: Log do worker em caso de falha
-        if: failure()
-        run: cat /tmp/celery.log || true
 
   frontend:
     name: Frontend (Next.js)
@@ -103,7 +109,10 @@ jobs:
         run: npm run typecheck
       - name: Testes (Vitest)
         run: npm test
-      - name: Auditoria de dependências (npm audit)
+      - name: Auditoria das dependências de produção (bloqueante)
+        run: npm audit --omit=dev --audit-level=high
+      - name: Auditoria completa, incluindo ferramentas de desenvolvimento (informativa)
+        continue-on-error: true
         run: npm audit --audit-level=high
       - name: Publicar lock do frontend
         if: always()

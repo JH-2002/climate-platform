@@ -7,7 +7,12 @@ from dataclasses import dataclass
 
 from redis.asyncio import Redis
 from sqlalchemy import text
-from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
 from app.core.config import Settings
 from app.core.health import CheckFn
@@ -20,7 +25,7 @@ class PostgisMissingError(RuntimeError):
 @dataclass
 class Resources:
     engine: AsyncEngine
-    session_factory: async_sessionmaker
+    session_factory: async_sessionmaker[AsyncSession]
     redis: Redis
 
     @classmethod

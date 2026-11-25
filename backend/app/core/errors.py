@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import Any
 
 from fastapi import FastAPI, Request
@@ -23,7 +24,7 @@ def problem_response(
     *,
     detail: str | None = None,
     extensions: dict[str, Any] | None = None,
-    headers: dict[str, str] | None = None,
+    headers: Mapping[str, str] | None = None,
 ) -> JSONResponse:
     return JSONResponse(
         status_code=status,
@@ -35,13 +36,13 @@ def problem_response(
             extensions=extensions,
         ),
         media_type=PROBLEM_MEDIA_TYPE,
-        headers=headers,
+        headers=dict(headers) if headers else None,
     )
 
 
 async def _http_exception_handler(request: Request, exc: Exception) -> JSONResponse:
     assert isinstance(exc, StarletteHTTPException)  # noqa: S101
-    detail = exc.detail if isinstance(exc.detail, str) else None
+    detail: str | None = exc.detail if isinstance(exc.detail, str) else None
     if detail in _STARLETTE_DEFAULT_DETAILS:
         detail = None
     return problem_response(request, exc.status_code, detail=detail, headers=exc.headers)

@@ -1,6 +1,6 @@
 # Spec 001 — Foundation
 
-> Status: **Aprovada · implementada (validação local pendente)** · Fase: 1 · Depende de: Constituição v1.0.0
+> Status: **Concluída** (2026-11-19) · Fase: 1 · Depende de: Constituição v1.0.0
 
 ## Contexto
 Nenhum código existe. Todas as fases seguintes precisam de um ambiente reproduzível com banco geoespacial, fila, API, workers, frontend, logs, testes e CI. Sem essa base, cada funcionalidade reinventaria configuração e o projeto perderia consistência.

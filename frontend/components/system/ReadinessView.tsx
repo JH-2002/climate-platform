@@ -99,7 +99,8 @@ export function ReadinessView({
 
       {report && (
         <>
-          <table className="w-full border-collapse overflow-hidden rounded-lg border border-surface-border bg-surface text-left text-sm">
+          <div className="overflow-x-auto rounded-lg border border-surface-border">
+          <table className="w-full border-collapse bg-surface text-left text-sm">
             <caption className="sr-only">Estado de cada componente do sistema</caption>
             <thead className="bg-surface-muted text-ink-muted">
               <tr>
@@ -124,12 +125,15 @@ export function ReadinessView({
                       <StatusBadge tone={tone.tone} label={tone.label} />
                     </td>
                     <td className="px-4 py-3 tabular-nums">{formatLatency(component.latency_ms)}</td>
-                    <td className="px-4 py-3 text-ink-muted">{component.detail ?? (info || "—")}</td>
+                    <td className="break-all px-4 py-3 text-ink-muted">
+                      {component.detail ?? (info || "—")}
+                    </td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
+          </div>
           <p className="text-xs text-ink-muted">
             Verificado em{" "}
             <time dateTime={report.checked_at} title={`${report.checked_at} (UTC)`}>

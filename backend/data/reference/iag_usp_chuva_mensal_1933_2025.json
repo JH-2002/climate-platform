@@ -1,0 +1,22 @@
+{
+  "dataset": "iag-usp-rain-monthly",
+  "titulo": "Precipitação pluviométrica mensal — Município de São Paulo, 1933 a 2025",
+  "estacao": "IAG/USP — Estação Água Funda",
+  "estacao_codigo": "IAG-AGUA-FUNDA",
+  "latitude": -23.6512,
+  "longitude": -46.6224,
+  "publicacao": "Prefeitura de São Paulo — SMUL/Geoinfo",
+  "url": "https://prefeitura.sp.gov.br/documents/d/licenciamento/precipitacao_pluviometrica_1933_2025",
+  "arquivo_original": "Precipitacao_pluviometrica_1933_2025.pdf",
+  "sha256_pdf": "f82bc122641822a72a6fd27e308fd646f968d28a273fe46cce6bbda826b7b49d",
+  "extraido_em": "2026-11-19",
+  "metodo": "Texto do PDF extraído (fluxos FlateDecode), espaços removidos e números lidos com o padrão d.ddd,d; soma dos 12 meses conferida com o total anual em todos os 93 anos (diferença 0,0 mm).",
+  "unidade": "mm",
+  "tipo": "OBSERVED",
+  "notas_da_fonte": [
+    "Média normal climatológica: média de 30 anos consecutivos (OMM).",
+    "Média climatológica: série histórica do registro de chuva, iniciada pelo IAG/USP em 1933.",
+    "Em 2025 foi realizada revisão completa nos dados de 2024 e dos anos anteriores, com o auxílio do IAG-USP."
+  ],
+  "atribuicao": "Chuva medida: IAG/USP — Estação Água Funda; publicação: Prefeitura de São Paulo (SMUL/Geoinfo)"
+}

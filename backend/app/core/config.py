@@ -11,6 +11,14 @@ from typing import Literal
 from pydantic import Field, SecretStr, ValidationError, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from app.core.geo import BoundingBox, parse_points
+
+DEFAULT_FORECAST_GRID = ";".join(
+    f"{lat},{lon}"
+    for lat in ("-23.45", "-23.57", "-23.69", "-23.83")
+    for lon in ("-46.75", "-46.62", "-46.49")
+)
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(extra="ignore", case_sensitive=False)
@@ -23,9 +31,53 @@ class Settings(BaseSettings):
     redis_url: str = Field(min_length=1)
 
     frontend_origin: str = "http://localhost:3000"
-    readiness_timeout_s: float = Field(default=2.0, gt=0, le=10)
+    # O ping do Celery abre conexão com o broker a cada chamada; 5 s evita falsos negativos.
+    readiness_timeout_s: float = Field(default=5.0, gt=0, le=10)
 
     inmet_token: SecretStr | None = None
+
+    # Região de interesse: "lon_min,lat_min,lon_max,lat_max" (WGS84). Padrão: município de SP.
+    region_name: str = "Município de São Paulo"
+    region_bbox: str = "-46.83,-24.01,-46.36,-23.35"
+    # Pontos de previsão: "lat,lon;lat,lon". Padrão: grade 4x3 sobre a capital (spec 005, FR-062).
+    forecast_points: str = DEFAULT_FORECAST_GRID
+    geosampa_wfs_url: str = "http://wfs.geosampa.prefeitura.sp.gov.br/geoserver/geoportal/wfs"
+    # Copernicus DEM GLO-30 (spec 008): blocos públicos na AWS, recorte gravado em `dem_dir`.
+    copernicus_dem_url: str = "https://copernicus-dem-30m.s3.amazonaws.com"
+    dem_dir: str = "/data/dem"
+    # Alertas (spec 009): código IBGE do município e fontes oficiais.
+    region_ibge_code: str = Field(default="3550308", pattern=r"^\d{7}$")
+    idap_feed_url: str = "https://idapfile.mdr.gov.br/idap/api/rss/cap"
+    inmet_warnings_url: str = "https://apiprevmet3.inmet.gov.br/avisos/rss"
+    alert_risk_stale_hours: float = Field(default=3.0, gt=0, le=48)
+    alert_clear_after: int = Field(default=2, ge=1, le=10)
+    http_timeout_s: float = Field(default=15.0, gt=0, le=60)
+
+    @property
+    def inmet_token_value(self) -> str | None:
+        if self.inmet_token is None:
+            return None
+        return self.inmet_token.get_secret_value() or None
+
+    @property
+    def region(self) -> BoundingBox:
+        return BoundingBox.parse(self.region_bbox)
+
+    @property
+    def forecast_point_list(self) -> list[tuple[float, float]]:
+        return parse_points(self.forecast_points)
+
+    @field_validator("region_bbox")
+    @classmethod
+    def _validate_bbox(cls, value: str) -> str:
+        BoundingBox.parse(value)
+        return value
+
+    @field_validator("forecast_points")
+    @classmethod
+    def _validate_points(cls, value: str) -> str:
+        parse_points(value)
+        return value
 
     @field_validator("database_url")
     @classmethod

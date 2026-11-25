@@ -32,5 +32,6 @@ Thumbs.db
 .idea/
 
 # Data and generated artifacts
+frontend/public/vendor/
 data/raw/
 *.log

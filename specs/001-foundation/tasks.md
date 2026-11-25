@@ -2,27 +2,27 @@
 
 Legenda: `[ ]` pendente · `[i]` implementada, validação completa pendente (exige Docker/dependências na máquina local) · `[x]` concluída e validada.
 
-> Contexto da implementação (2026-11-19): o ambiente da IA não tinha acesso à internet para instalar dependências nem Docker daemon. Foi validado ali apenas o que roda com a biblioteca padrão + Pydantic: 30 testes unitários, `docker compose config`, sintaxe YAML/TOML, type-check e verificação comportamental dos módulos TS puros. O restante é validado com o roteiro "Validação da Fase 1" no README.
+> Validação (2026-11-19): CI do GitHub Actions verde no commit `f211a28` — ruff, mypy estrito, import-linter, migração Alembic com PostGIS real, 35 testes de backend (unitários + integração com PostgreSQL/PostGIS, Redis e worker Celery reais), testes do script de fontes, ESLint, `tsc`, testes Vitest com axe e auditorias de dependências. Validação local concluída em 2026-11-19: 6 serviços `healthy` (AC-001), página `/status` verificada no navegador (AC-005) e smoke test das fontes (AC-008, ver `docs/data-sources/smoke-results.md`). A validação local revelou e corrigiu: healthcheck do banco via TCP, chamada da API pela mesma origem e ping do worker sem espera.
 
 | ID | Tarefa | Arquivos | Depende de | Critério de conclusão | Testes | Status |
 |---|---|---|---|---|---|---|
 | T001 | Repositório Git, `.gitignore`, `.editorconfig`, `.gitattributes` | raiz | — | repositório com commit inicial; `.env` ignorado | — | [x] |
-| T002 | `docker-compose.yml` (db PostGIS, redis, backend, worker, beat, frontend) + `.env.example` | raiz | T001 | `docker compose config` válido ✔; 6 serviços `healthy` (AC-001) | manual | [i] |
-| T003 | Esqueleto backend, `create_app()`, `Settings` validado | `backend/app/main.py`, `core/config.py`, `Dockerfile` | T002 | AC-007 | `test_config.py` | [i] |
-| T004 | Logging JSON + correlation ID + redação de segredos | `core/logging.py`, `core/middleware.py`, `core/correlation.py`, `core/redaction.py` | T003 | FR-004/FR-006 | `test_redaction.py` ✔, `test_problem_and_correlation.py` ✔, `test_api_contract.py` | [i] |
-| T005 | Banco async + Alembic + `0001_enable_postgis` | `core/resources.py`, `migrations/` | T003 | `alembic upgrade head` | integration | [i] |
-| T006 | `/health` e `/health/ready` | `api/v1/health.py`, `core/health.py` | T004, T005, T008 | AC-002, AC-003 | `test_health_logic.py` ✔ (7), `test_readiness.py` | [i] |
-| T007 | Problem Details (RFC 9457) | `core/problem.py`, `core/errors.py` | T004 | AC-004 | `test_problem_and_correlation.py` ✔, `test_api_contract.py` | [i] |
-| T008 | Celery app, worker, beat, `system.ping`, `system.heartbeat`, healthchecks | `workers/` | T003 | worker responde ao ping; beat com heartbeat recente | `test_healthcheck.py` ✔ | [i] |
-| T009 | Frontend: Next.js + TS strict + Tailwind + TanStack Query; shell com `registry.ts` | `frontend/` | T002 | FR-010 | `registry.test.ts` (lógica verificada ✔) | [i] |
-| T010 | Página `/status` com estados loading/success/degraded/error/offline | `app/status/`, `components/system/`, `features/system/` | T006, T009 | AC-005; axe sem violações sérias | `ReadinessView.test.tsx`, `system.test.ts` | [i] |
-| T011 | ruff, mypy, import-linter, ESLint, Prettier, pre-commit | configs | T003, T009 | comandos passam | — | [i] |
-| T012 | Infra de testes (pytest + Vitest) | `backend/app/tests/`, `frontend/tests/` | T006, T010 | um comando roda tudo | todos | [i] |
-| T013 | CI GitHub Actions (lint, tipos, testes, integração, gitleaks, audits) | `.github/workflows/ci.yml` | T011, T012 | AC-006 | CI | [i] |
-| T014 | `scripts/smoke_sources.py` (stdlib) + execução na máquina do responsável | `scripts/` | — | AC-008; `SOURCES.md` atualizado com status real | `test_smoke_sources.py` ✔ (5) | [i] |
-| T015 | README, `CURRENT_STATUS.md`, revisão de diff | docs | todas | DoD verificado | — | [i] |
+| T002 | `docker-compose.yml` (db PostGIS, redis, backend, worker, beat, frontend) + `.env.example` | raiz | T001 | `docker compose config` válido ✔; 6 serviços `healthy` (AC-001) | manual | [x] |
+| T003 | Esqueleto backend, `create_app()`, `Settings` validado | `backend/app/main.py`, `core/config.py`, `Dockerfile` | T002 | AC-007 | `test_config.py` | [x] |
+| T004 | Logging JSON + correlation ID + redação de segredos | `core/logging.py`, `core/middleware.py`, `core/correlation.py`, `core/redaction.py` | T003 | FR-004/FR-006 | `test_redaction.py` ✔, `test_problem_and_correlation.py` ✔, `test_api_contract.py` | [x] |
+| T005 | Banco async + Alembic + `0001_enable_postgis` | `core/resources.py`, `migrations/` | T003 | `alembic upgrade head` | integration | [x] |
+| T006 | `/health` e `/health/ready` | `api/v1/health.py`, `core/health.py` | T004, T005, T008 | AC-002, AC-003 | `test_health_logic.py` ✔ (7), `test_readiness.py` | [x] |
+| T007 | Problem Details (RFC 9457) | `core/problem.py`, `core/errors.py` | T004 | AC-004 | `test_problem_and_correlation.py` ✔, `test_api_contract.py` | [x] |
+| T008 | Celery app, worker, beat, `system.ping`, `system.heartbeat`, healthchecks | `workers/` | T003 | worker responde ao ping; beat com heartbeat recente | `test_healthcheck.py` ✔ | [x] |
+| T009 | Frontend: Next.js + TS strict + Tailwind + TanStack Query; shell com `registry.ts` | `frontend/` | T002 | FR-010 | `registry.test.ts` (lógica verificada ✔) | [x] |
+| T010 | Página `/status` com estados loading/success/degraded/error/offline | `app/status/`, `components/system/`, `features/system/` | T006, T009 | AC-005; axe sem violações sérias | `ReadinessView.test.tsx`, `system.test.ts` | [x] |
+| T011 | ruff, mypy, import-linter, ESLint, Prettier, pre-commit | configs | T003, T009 | comandos passam | — | [x] |
+| T012 | Infra de testes (pytest + Vitest) | `backend/app/tests/`, `frontend/tests/` | T006, T010 | um comando roda tudo | todos | [x] |
+| T013 | CI GitHub Actions (lint, tipos, testes, integração, gitleaks, audits) | `.github/workflows/ci.yml` | T011, T012 | AC-006 | CI | [x] |
+| T014 | `scripts/smoke_sources.py` (stdlib) + execução na máquina do responsável | `scripts/` | — | AC-008; `SOURCES.md` atualizado com status real | `test_smoke_sources.py` ✔ (5) | [x] |
+| T015 | README, `CURRENT_STATUS.md`, revisão de diff | docs | todas | DoD verificado | — | [x] |
 
-✔ = executado e passando no ambiente da IA.
+✔ = executado e passando no ambiente da IA; [x] = validado no CI.
 
 ## Desvios do plano (registrados)
 - **MSW não foi adicionado**: os testes de cliente usam `fetchImpl` injetável, o que dispensa a dependência.

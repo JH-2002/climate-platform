@@ -1,11 +1,14 @@
 name: climate-platform
 
 x-backend-common: &backend-common
+  restart: unless-stopped
   build:
     context: ./backend
   env_file: .env
   volumes:
     - ./backend:/app
+    # Recorte do Copernicus DEM (spec 008): baixado uma vez, fora do código.
+    - dem-data:/data/dem
   depends_on:
     db:
       condition: service_healthy
@@ -24,10 +27,13 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      # -h 127.0.0.1 testa via TCP: na primeira inicialização a imagem sobe um servidor
+      # temporário só no socket local, e sem -h o banco pareceria pronto antes da hora.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 30
+      start_period: 20s
 
   redis:
     image: redis:7.4-alpine
@@ -74,6 +80,7 @@ services:
       start_period: 60s
 
   frontend:
+    restart: unless-stopped
     build:
       context: ./frontend
     env_file: .env
@@ -97,5 +104,6 @@ services:
 
 volumes:
   db-data:
+  dem-data:
   frontend-node-modules:
   frontend-next:

@@ -32,7 +32,8 @@ async def readiness(request: Request, response: Response, settings: SettingsDep)
     """Verifica banco, PostGIS, Redis e workers Celery a cada chamada (sem cache)."""
     resources: Resources = request.app.state.resources
     timeout = settings.readiness_timeout_s
-    checks = build_readiness_checks(resources, make_worker_ping(timeout * 0.75))
+    # O ping do worker usa parte do orçamento; o restante cobre a conexão com o broker.
+    checks = build_readiness_checks(resources, make_worker_ping(timeout * 0.6))
     report = await run_readiness(checks, timeout_s=timeout)
     if report.status != "ok":
         response.status_code = 503
