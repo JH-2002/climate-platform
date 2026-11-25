@@ -36,3 +36,7 @@ Thumbs.db
 frontend/public/vendor/
 data/raw/
 *.log
+
+# Playwright (E2E)
+frontend/playwright-report/
+frontend/test-results/
