@@ -57,8 +57,9 @@ services:
       dockerfile: Dockerfile.prod
       args:
         API_INTERNAL_URL: http://api:8000
-        NEXT_PUBLIC_MAP_STYLE_URL: ${NEXT_PUBLIC_MAP_STYLE_URL:-https://tiles.openfreemap.org/styles/liberty}
-        NEXT_PUBLIC_TERRAIN_TILES_URL: ${NEXT_PUBLIC_TERRAIN_TILES_URL:-https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png}
+        # Em branco, o frontend usa os provedores padrão (lib/map-sources.mjs).
+        NEXT_PUBLIC_MAP_STYLE_URL: ${NEXT_PUBLIC_MAP_STYLE_URL:-}
+        NEXT_PUBLIC_TERRAIN_TILES_URL: ${NEXT_PUBLIC_TERRAIN_TILES_URL:-}
     image: climate-platform-frontend:prod
     restart: unless-stopped
     mem_limit: 512m
