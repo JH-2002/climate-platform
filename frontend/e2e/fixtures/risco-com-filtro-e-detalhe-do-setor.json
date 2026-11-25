@@ -1,0 +1,3008 @@
+{
+ "recordedAt": "2026-11-25T17:58:19.106Z",
+ "responses": {
+  "GET /api/v1/alerts/active": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": {
+     "generated_at": "2026-11-25T17:58:16.018335Z",
+     "official": [
+      {
+       "id": 13,
+       "category": "WEATHER_WARNING",
+       "category_label": "Aviso meteorológico oficial — INMET",
+       "source_code": "inmet-warnings",
+       "attribution": "Fonte: INMET — Alert-AS",
+       "sender_name": "Instituto Nacional de Meteorologia",
+       "msg_type": "Alert",
+       "event": "Tempestade",
+       "severity": "Severe",
+       "severity_label": "Severa",
+       "level_name": "Laranja — Perigo",
+       "color": "#F96602",
+       "urgency": "Future",
+       "certainty": "Likely",
+       "headline": "Aviso de Tempestade. Severidade Grau: Severe",
+       "description": "INMET publica aviso iniciando em: 25/11/2026 00:00. Chuva entre 30 e 60 mm/h ou 50 e 100 mm/dia, ventos intensos (60-100 km/h), e queda de granizo. Risco de corte de energia elétrica, estragos em plantações, queda de árvores e de alagamentos.",
+       "instruction": "Em caso de rajadas de vento: (não se abrigue debaixo de árvores, pois há risco de queda e descargas elétricas e não estacione veículos próximos a torres de transmissão e placas de propaganda). Se possível, desligue aparelhos elétricos e quadro geral de energia. Obtenha mais informações junto à Defesa Civil (telefone 199) e ao Corpo de Bombeiros (telefone 193).",
+       "web": "https://avisos.inmet.gov.br/56501",
+       "area_desc": "Aviso para as áreas: Norte Pioneiro Paranaense, Zona da Mata, Presidente Prudente, São José do Rio Preto, Metropolitana de Curitiba, Central Espírito-santense, Campinas, Bauru, Piracicaba, Sul/Sudoeste de Minas, Itapetininga, Sul Espírito-santense, Campo das Vertentes, Centro Ocidental Paranaense, Araçatuba, Noroeste Paranaense, Macro Metropolitana Paulista, Marília, Norte Central Paranaense, Sudoeste de Mato Grosso do Sul, Araraquara, Sudoeste Paranaense, Oeste Paranaense, Leste de Mato Grosso do Sul, Sul Fluminense, Sudeste Paranaense, Vale do Paraíba Paulista, Noroeste Fluminense, Centro Oriental Paranaense, Norte Catarinense, Baixadas, Centro Fluminense, Metropolitana de São Paulo, Assis, Litoral Sul Paulista, Metropolitana do Rio de Janeiro, Centro-Sul Paranaense, Oeste de Minas, Ribeirão Preto, Norte Fluminense, Metropolitana de Belo Horizonte, Oeste Catarinense, Vale do Rio Doce, Vale do Itajaí",
+       "sent_at": "2026-11-24T15:22:32Z",
+       "onset_at": "2026-11-25T03:00:00Z",
+       "expires_at": "2026-11-26T02:59:00Z",
+       "ended_at": null,
+       "status": "ACTIVE",
+       "subprefectures": [
+        "ARICANDUVA-FORMOSA-CARRAO",
+        "BUTANTA",
+        "CAMPO LIMPO",
+        "CAPELA DO SOCORRO",
+        "CASA VERDE-CACHOEIRINHA",
+        "CIDADE ADEMAR",
+        "CIDADE TIRADENTES",
+        "ERMELINO MATARAZZO",
+        "FREGUESIA-BRASILANDIA",
+        "GUAIANASES",
+        "IPIRANGA",
+        "ITAIM PAULISTA",
+        "ITAQUERA",
+        "JABAQUARA",
+        "JACANA-TREMEMBE",
+        "LAPA",
+        "M BOI MIRIM",
+        "MOOCA",
+        "PARELHEIROS",
+        "PENHA",
+        "PERUS",
+        "PINHEIROS",
+        "PIRITUBA-JARAGUA",
+        "SANTANA-TUCURUVI",
+        "SANTO AMARO",
+        "SAO MATEUS",
+        "SAO MIGUEL",
+        "SAPOPEMBA",
+        "SE",
+        "VILA MARIANA",
+        "VILA MARIA-VILA GUILHERME",
+        "VILA PRUDENTE"
+       ],
+       "city_fraction": 1,
+       "area_approximate": false
+      },
+      {
+       "id": 15,
+       "category": "WEATHER_WARNING",
+       "category_label": "Aviso meteorológico oficial — INMET",
+       "source_code": "inmet-warnings",
+       "attribution": "Fonte: INMET — Alert-AS",
+       "sender_name": "Instituto Nacional de Meteorologia",
+       "msg_type": "Alert",
+       "event": "Tempestade",
+       "severity": "Moderate",
+       "severity_label": "Moderada",
+       "level_name": "Amarelo — Perigo potencial",
+       "color": "#FFFE00",
+       "urgency": "Future",
+       "certainty": "Likely",
+       "headline": "Aviso de Tempestade. Severidade Grau: Moderate",
+       "description": "INMET publica aviso iniciando em: 25/11/2026 00:00. Chuva entre 20 e 30 mm/h ou até 50 mm/dia, ventos intensos (40-60 km/h), e queda de granizo. Baixo risco de corte de energia elétrica, estragos em plantações, queda de galhos de árvores e de alagamentos.",
+       "instruction": "Em caso de rajadas de vento: (não se abrigue debaixo de árvores, pois há leve risco de queda e descargas elétricas e não estacione veículos próximos a torres de transmissão e placas de propaganda). Evite usar aparelhos eletrônicos ligados à tomada. Obtenha mais informações junto à Defesa Civil (telefone 199) e ao Corpo de Bombeiros (telefone 193).",
+       "web": "https://avisos.inmet.gov.br/56499",
+       "area_desc": "Aviso para as áreas: Centro Goiano, Triângulo Mineiro/Alto Paranaíba, Leste Goiano, Central Mineira, Norte Pioneiro Paranaense, Serrana, Oeste Catarinense, Zona da Mata, Centro-Sul Mato-grossense, Sul Goiano, Vale do Rio Doce, Presidente Prudente, São José do Rio Preto, Metropolitana de Curitiba, Central Espírito-santense, Vale do Itajaí, Nordeste Mato-grossense, Leste de Mato Grosso do Sul, Noroeste Espírito-santense, Campinas, Oeste de Minas, Noroeste Rio-grandense, Bauru, Piracicaba, Vale do Mucuri, Grande Florianópolis, Norte de Minas, Sul/Sudoeste de Minas, Itapetininga, Centro Norte de Mato Grosso do Sul, Sul Baiano, Sul Espírito-santense, Campo das Vertentes, Ocidental do Tocantins, Oriental do Tocantins, Jequitinhonha, Norte Mato-grossense, Leste Rondoniense, Centro Ocidental Paranaense, Ribeirão Preto, Araçatuba, Sudeste Mato-grossense, Norte Goiano, Noroeste Paranaense, Macro Metropolitana Paulista, Marília, Metropolitana de Belo Horizonte, Norte Central Paranaense, Sudoeste de Mato Grosso do Sul, Araraquara, Sudoeste Paranaense, Oeste Paranaense, Pantanais Sul Mato-grossense, Sul Fluminense, Sudeste Paranaense, Vale do Paraíba Paulista, Noroeste Fluminense, Litoral Norte Espírito-santense, Noroeste Goiano, Centro Oriental Paranaense, Sudoeste Mato-grossense, Norte Catarinense, Baixadas, Centro Fluminense, Noroeste de Minas, Sul Catarinense, Metropolitana de São Paulo, Assis, Litoral Sul Paulista, Extremo Oeste Baiano, Metropolitana do Rio de Janeiro, Centro-Sul Paranaense, Nordeste Rio-grandense, Distrito Federal, Madeira-Guaporé, Norte Fluminense, Vale São-Franciscano da Bahia, Centro Sul Baiano",
+       "sent_at": "2026-11-24T15:12:51Z",
+       "onset_at": "2026-11-25T03:00:00Z",
+       "expires_at": "2026-11-26T02:59:00Z",
+       "ended_at": null,
+       "status": "ACTIVE",
+       "subprefectures": [
+        "ARICANDUVA-FORMOSA-CARRAO",
+        "BUTANTA",
+        "CAMPO LIMPO",
+        "CAPELA DO SOCORRO",
+        "CASA VERDE-CACHOEIRINHA",
+        "CIDADE ADEMAR",
+        "CIDADE TIRADENTES",
+        "ERMELINO MATARAZZO",
+        "FREGUESIA-BRASILANDIA",
+        "GUAIANASES",
+        "IPIRANGA",
+        "ITAIM PAULISTA",
+        "ITAQUERA",
+        "JABAQUARA",
+        "JACANA-TREMEMBE",
+        "LAPA",
+        "M BOI MIRIM",
+        "MOOCA",
+        "PARELHEIROS",
+        "PENHA",
+        "PERUS",
+        "PINHEIROS",
+        "PIRITUBA-JARAGUA",
+        "SANTANA-TUCURUVI",
+        "SANTO AMARO",
+        "SAO MATEUS",
+        "SAO MIGUEL",
+        "SAPOPEMBA",
+        "SE",
+        "VILA MARIANA",
+        "VILA MARIA-VILA GUILHERME",
+        "VILA PRUDENTE"
+       ],
+       "city_fraction": 1,
+       "area_approximate": false
+      },
+      {
+       "id": 10,
+       "category": "WEATHER_WARNING",
+       "category_label": "Aviso meteorológico oficial — INMET",
+       "source_code": "inmet-warnings",
+       "attribution": "Fonte: INMET — Alert-AS",
+       "sender_name": "Instituto Nacional de Meteorologia",
+       "msg_type": "Alert",
+       "event": "Chuvas Intensas",
+       "severity": "Severe",
+       "severity_label": "Severa",
+       "level_name": "Laranja — Perigo",
+       "color": "#F96602",
+       "urgency": "Future",
+       "certainty": "Likely",
+       "headline": "Aviso de Chuvas Intensas. Severidade Grau: Severe",
+       "description": "INMET publica aviso iniciando em: 26/11/2026 00:00. Chuva entre 30 e 60 mm/h ou 50 e 100 mm/dia, ventos intensos (60-100 km/h). Risco de corte de energia elétrica, queda de galhos de árvores, alagamentos e de descargas elétricas.",
+       "instruction": "Em caso de rajadas de vento: (não se abrigue debaixo de árvores, pois há risco de queda e descargas elétricas e não estacione veículos próximos a torres de transmissão e placas de propaganda) Se possível, desligue aparelhos elétricos e quadro geral de energia. Obtenha mais informações junto à Defesa Civil (telefone 199) e ao Corpo de Bombeiros (telefone 193).",
+       "web": "https://avisos.inmet.gov.br/56503",
+       "area_desc": "Aviso para as áreas: Triângulo Mineiro/Alto Paranaíba, Central Mineira, Zona da Mata, Vale do Rio Doce, São José do Rio Preto, Central Espírito-santense, Leste de Mato Grosso do Sul, Campinas, Sul Goiano, Oeste de Minas, Piracicaba, Sul/Sudoeste de Minas, Sul Espírito-santense, Campo das Vertentes, Ribeirão Preto, Macro Metropolitana Paulista, Metropolitana de Belo Horizonte, Araraquara, Araçatuba, Sul Fluminense, Bauru, Vale do Paraíba Paulista, Noroeste Fluminense, Litoral Norte Espírito-santense, Baixadas, Centro Fluminense, Metropolitana de São Paulo, Noroeste Espírito-santense, Metropolitana do Rio de Janeiro, Itapetininga, Centro Norte de Mato Grosso do Sul, Norte Fluminense, Jequitinhonha, Noroeste de Minas",
+       "sent_at": "2026-11-24T15:34:10Z",
+       "onset_at": "2026-11-26T03:00:00Z",
+       "expires_at": "2026-11-27T02:59:00Z",
+       "ended_at": null,
+       "status": "UPCOMING",
+       "subprefectures": [
+        "ARICANDUVA-FORMOSA-CARRAO",
+        "BUTANTA",
+        "CAMPO LIMPO",
+        "CAPELA DO SOCORRO",
+        "CASA VERDE-CACHOEIRINHA",
+        "CIDADE ADEMAR",
+        "CIDADE TIRADENTES",
+        "ERMELINO MATARAZZO",
+        "FREGUESIA-BRASILANDIA",
+        "GUAIANASES",
+        "IPIRANGA",
+        "ITAIM PAULISTA",
+        "ITAQUERA",
+        "JABAQUARA",
+        "JACANA-TREMEMBE",
+        "LAPA",
+        "M BOI MIRIM",
+        "MOOCA",
+        "PARELHEIROS",
+        "PENHA",
+        "PERUS",
+        "PINHEIROS",
+        "PIRITUBA-JARAGUA",
+        "SANTANA-TUCURUVI",
+        "SANTO AMARO",
+        "SAO MATEUS",
+        "SAO MIGUEL",
+        "SAPOPEMBA",
+        "SE",
+        "VILA MARIANA",
+        "VILA MARIA-VILA GUILHERME",
+        "VILA PRUDENTE"
+       ],
+       "city_fraction": 0.9723897806810204,
+       "area_approximate": false
+      },
+      {
+       "id": 12,
+       "category": "WEATHER_WARNING",
+       "category_label": "Aviso meteorológico oficial — INMET",
+       "source_code": "inmet-warnings",
+       "attribution": "Fonte: INMET — Alert-AS",
+       "sender_name": "Instituto Nacional de Meteorologia",
+       "msg_type": "Alert",
+       "event": "Chuvas Intensas",
+       "severity": "Moderate",
+       "severity_label": "Moderada",
+       "level_name": "Amarelo — Perigo potencial",
+       "color": "#FFFE00",
+       "urgency": "Future",
+       "certainty": "Likely",
+       "headline": "Aviso de Chuvas Intensas. Severidade Grau: Moderate",
+       "description": "INMET publica aviso iniciando em: 26/11/2026 00:00. Chuva entre 20 e 30 mm/h ou até 50 mm/dia, ventos intensos (40-60 km/h). Baixo risco de corte de energia elétrica, queda de galhos de árvores, alagamentos e de descargas elétricas.",
+       "instruction": "Em caso de rajadas de vento: (não se abrigue debaixo de árvores, pois há leve risco de queda e descargas elétricas e não estacione veículos próximos a torres de transmissão e placas de propaganda). Evite usar aparelhos eletrônicos ligados à tomada. Obtenha mais informações junto à Defesa Civil (telefone 199) e ao Corpo de Bombeiros (telefone 193).",
+       "web": "https://avisos.inmet.gov.br/56502",
+       "area_desc": "Aviso para as áreas: Centro Goiano, Triângulo Mineiro/Alto Paranaíba, Leste Goiano, Central Mineira, Norte Pioneiro Paranaense, Oeste Catarinense, Zona da Mata, Centro-Sul Mato-grossense, Vale do Acre, Sul Goiano, Vale do Rio Doce, Presidente Prudente, São José do Rio Preto, Metropolitana de Curitiba, Central Espírito-santense, Nordeste Mato-grossense, Leste de Mato Grosso do Sul, Noroeste Espírito-santense, Campinas, Oeste de Minas, Bauru, Piracicaba, Vale do Mucuri, Sul/Sudoeste de Minas, Itapetininga, Centro Norte de Mato Grosso do Sul, Sul Espírito-santense, Campo das Vertentes, Ocidental do Tocantins, Oriental do Tocantins, Norte Mato-grossense, Leste Rondoniense, Sudoeste Paraense, Centro Ocidental Paranaense, Ribeirão Preto, Araçatuba, Sudeste Mato-grossense, Norte Goiano, Noroeste Paranaense, Macro Metropolitana Paulista, Centro Amazonense, Marília, Metropolitana de Belo Horizonte, Norte Central Paranaense, Sudoeste de Mato Grosso do Sul, Sudoeste Amazonense, Araraquara, Sudoeste Paranaense, Oeste Paranaense, Pantanais Sul Mato-grossense, Jequitinhonha, Sul Fluminense, Sudeste Paranaense, Vale do Paraíba Paulista, Noroeste Fluminense, Sul Amazonense, Litoral Norte Espírito-santense, Noroeste Goiano, Centro Oriental Paranaense, Sudoeste Mato-grossense, Norte Catarinense, Baixadas, Centro Fluminense, Noroeste de Minas, Metropolitana de São Paulo, Assis, Vale do Itajaí, Norte Amazonense, Litoral Sul Paulista, Metropolitana do Rio de Janeiro, Centro-Sul Paranaense, Norte de Minas, Distrito Federal, Madeira-Guaporé, Norte Fluminense, Sul Baiano, Extremo Oeste Baiano, Vale do Juruá, Sudeste Paraense, Vale São-Franciscano da Bahia, Serrana",
+       "sent_at": "2026-11-24T15:28:43Z",
+       "onset_at": "2026-11-26T03:00:00Z",
+       "expires_at": "2026-11-27T02:59:00Z",
+       "ended_at": null,
+       "status": "UPCOMING",
+       "subprefectures": [
+        "ARICANDUVA-FORMOSA-CARRAO",
+        "BUTANTA",
+        "CAMPO LIMPO",
+        "CAPELA DO SOCORRO",
+        "CASA VERDE-CACHOEIRINHA",
+        "CIDADE ADEMAR",
+        "CIDADE TIRADENTES",
+        "ERMELINO MATARAZZO",
+        "FREGUESIA-BRASILANDIA",
+        "GUAIANASES",
+        "IPIRANGA",
+        "ITAIM PAULISTA",
+        "ITAQUERA",
+        "JABAQUARA",
+        "JACANA-TREMEMBE",
+        "LAPA",
+        "M BOI MIRIM",
+        "MOOCA",
+        "PARELHEIROS",
+        "PENHA",
+        "PERUS",
+        "PINHEIROS",
+        "PIRITUBA-JARAGUA",
+        "SANTANA-TUCURUVI",
+        "SANTO AMARO",
+        "SAO MATEUS",
+        "SAO MIGUEL",
+        "SAPOPEMBA",
+        "SE",
+        "VILA MARIANA",
+        "VILA MARIA-VILA GUILHERME",
+        "VILA PRUDENTE"
+       ],
+       "city_fraction": 1,
+       "area_approximate": false
+      }
+     ],
+     "system": [],
+     "counts": {
+      "official_active": 2,
+      "official_upcoming": 2,
+      "civil_defense_active": 0,
+      "weather_warning_active": 2,
+      "risk_estimate": 0,
+      "data_quality": 0
+     },
+     "sources": [
+      {
+       "code": "idap-alerts",
+       "name": "Defesa Civil — alertas à população (IDAP)",
+       "attribution": "Fonte: Defesa Civil (IDAP/MIDR)",
+       "freshness": "FRESH",
+       "last_success_at": "2026-11-25T17:56:45.580522Z"
+      },
+      {
+       "code": "inmet-warnings",
+       "name": "INMET — avisos meteorológicos (Alert-AS)",
+       "attribution": "Fonte: INMET — Alert-AS",
+       "freshness": "FRESH",
+       "last_success_at": "2026-11-25T17:56:38.024931Z"
+      }
+     ],
+     "sources_ok": true,
+     "cge_url": "https://www.cgesp.org",
+     "official_channel": "Para receber os alertas oficiais da Defesa Civil no celular, envie um SMS com o seu CEP para 40199. Em emergência, ligue 199 (Defesa Civil) ou 193 (Bombeiros)."
+    }
+   }
+  ],
+  "GET /api/v1/risk/summary": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": {
+     "run": {
+      "id": 40,
+      "engine_version": "0.1.0-experimental",
+      "computed_at": "2026-11-25T17:26:46.943756Z",
+      "valid_until": "2026-11-26T17:26:46.943756Z",
+      "forecast_issued_at": "2026-11-25T17:26:38.274587Z",
+      "forecast_freshness": "FRESH",
+      "stale": false
+     },
+     "counts": {
+      "LOW": 793,
+      "MODERATE": 0,
+      "HIGH": 0,
+      "CRITICAL": 0,
+      "UNKNOWN": 0
+     },
+     "sectors_freshness": "FRESH",
+     "disclaimer": "Estimativa experimental do sistema, heurística e não validada. Não é alerta oficial. Em emergência, ligue 199 (Defesa Civil).",
+     "attribution": "Setores, manchas e ocorrências: GeoSampa — Prefeitura de São Paulo · Previsão: Open-Meteo.com (CC BY 4.0)",
+     "experimental": true
+    }
+   }
+  ],
+  "GET /api/v1/risk/areas?limit=1000": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": {
+     "items": [
+      {
+       "id": 737,
+       "code": "HMP-30-02",
+       "name": "VILA JACUI I",
+       "subprefecture": "SAO MIGUEL PAULISTA",
+       "basin": "CORREGO JACU",
+       "grade": 3,
+       "households": 960,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 0.8,
+       "p24_mm": 7.3,
+       "a72_mm": 45.6,
+       "in_flood_extent_100y": true,
+       "nearby_occurrences_12m": 6,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 0,8 mm em 1 h; 7,3 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 45,6 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "FLOOD_EXTENT",
+         "text": "Setor cruza mancha de inundação de 100 anos (GeoSampa)",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "6 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 289,
+       "code": "HMB-34-01",
+       "name": "JARDIM CAMPO DE FORA",
+       "subprefecture": "M BOI MIRIM",
+       "basin": "CORREGO MORRO DO S",
+       "grade": 3,
+       "households": 680,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2.2,
+       "p24_mm": 8.4,
+       "a72_mm": 31.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 11,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2,2 mm em 1 h; 8,4 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 31,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "11 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 692,
+       "code": "HMP-03-02",
+       "name": "JARDIM NAIR E JARDIM LAPENA",
+       "subprefecture": "SAO MIGUEL PAULISTA",
+       "basin": "CORREGO JACU",
+       "grade": 3,
+       "households": 585,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 0.8,
+       "p24_mm": 7.3,
+       "a72_mm": 45.6,
+       "in_flood_extent_100y": true,
+       "nearby_occurrences_12m": 9,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 0,8 mm em 1 h; 7,3 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 45,6 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "FLOOD_EXTENT",
+         "text": "Setor cruza mancha de inundação de 100 anos (GeoSampa)",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "9 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 277,
+       "code": "HMB-27-02",
+       "name": "JARDIM JANGADEIRO",
+       "subprefecture": "M BOI MIRIM",
+       "basin": "CORREGO MORRO DO S",
+       "grade": 3,
+       "households": 430,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2.2,
+       "p24_mm": 8.4,
+       "a72_mm": 31.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 2,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2,2 mm em 1 h; 8,4 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 31,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "2 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 34,
+       "code": "HCV-05-02",
+       "name": "EUCALIPTOS-CONDESSA",
+       "subprefecture": "CASA VERDE-CACHOEIRINHA",
+       "basin": "CORREGO CABUCU DE BAIXO",
+       "grade": 4,
+       "households": 340,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 0.9,
+       "p24_mm": 8.2,
+       "a72_mm": 44.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 3,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 0,9 mm em 1 h; 8,2 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 44,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "3 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 690,
+       "code": "HMP-03-01",
+       "name": "JARDIM NAIR E JARDIM LAPENA",
+       "subprefecture": "SAO MIGUEL PAULISTA",
+       "basin": "CORREGO JACU",
+       "grade": 4,
+       "households": 300,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 0.8,
+       "p24_mm": 7.3,
+       "a72_mm": 45.6,
+       "in_flood_extent_100y": true,
+       "nearby_occurrences_12m": 8,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 0,8 mm em 1 h; 7,3 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 45,6 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "FLOOD_EXTENT",
+         "text": "Setor cruza mancha de inundação de 100 anos (GeoSampa)",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "8 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 352,
+       "code": "HAD-11-02",
+       "name": "VILA JOANISA-SANTA RITA",
+       "subprefecture": "CIDADE ADEMAR",
+       "basin": "CORREGO ZAVUVUS",
+       "grade": 3,
+       "households": 290,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 6.6,
+       "p24_mm": 12.1,
+       "a72_mm": 27.4,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 2,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 6,6 mm em 1 h; 12,1 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,4 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "2 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 171,
+       "code": "HCL-35-01",
+       "name": "JARDIM UMUARAMA I",
+       "subprefecture": "CAMPO LIMPO",
+       "basin": "CORREGO PIRAJUSSARA",
+       "grade": 4,
+       "households": 290,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.6,
+       "p24_mm": 14.8,
+       "a72_mm": 27.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 4,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,6 mm em 1 h; 14,8 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "4 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 631,
+       "code": "HCS-16-01",
+       "name": "JARDIM SAO VICENTE",
+       "subprefecture": "CAPELA DO SOCORRO",
+       "basin": "BACIA JUSANTE RIO COCAIA",
+       "grade": 4,
+       "households": 285,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2.2,
+       "p24_mm": 8.4,
+       "a72_mm": 31.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 4,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2,2 mm em 1 h; 8,4 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 31,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "4 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 63,
+       "code": "HLA-05-02",
+       "name": "DIOGO PIRES",
+       "subprefecture": "LAPA",
+       "basin": "AREA DE CONTRIBUICAO DIRETA DE ESCOAMENTO DIFUSO JAGUARE/CONTINENTAL",
+       "grade": 3,
+       "households": 275,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.6,
+       "p24_mm": 14.8,
+       "a72_mm": 27.8,
+       "in_flood_extent_100y": true,
+       "nearby_occurrences_12m": 0,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,6 mm em 1 h; 14,8 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "FLOOD_EXTENT",
+         "text": "Setor cruza mancha de inundação de 100 anos (GeoSampa)",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 694,
+       "code": "HMP-03-04",
+       "name": "JARDIM NAIR E JARDIM LAPENA",
+       "subprefecture": "SAO MIGUEL PAULISTA",
+       "basin": "CORREGO JACU",
+       "grade": 3,
+       "households": 230,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 0.8,
+       "p24_mm": 7.3,
+       "a72_mm": 45.6,
+       "in_flood_extent_100y": true,
+       "nearby_occurrences_12m": 6,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 0,8 mm em 1 h; 7,3 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 45,6 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "FLOOD_EXTENT",
+         "text": "Setor cruza mancha de inundação de 100 anos (GeoSampa)",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "6 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 682,
+       "code": "HBT-12-01",
+       "name": "JARDIM JAQUELINE",
+       "subprefecture": "BUTANTA",
+       "basin": "CORREGO PIRAJUSSARA",
+       "grade": 4,
+       "households": 220,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.6,
+       "p24_mm": 14.8,
+       "a72_mm": 27.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 6,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,6 mm em 1 h; 14,8 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "6 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 292,
+       "code": "HMB-36-02",
+       "name": "PARQUE SANTO ANTONIO VI",
+       "subprefecture": "M BOI MIRIM",
+       "basin": "CORREGO MORRO DO S",
+       "grade": 3,
+       "households": 220,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2.2,
+       "p24_mm": 8.4,
+       "a72_mm": 31.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 3,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2,2 mm em 1 h; 8,4 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 31,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "3 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 674,
+       "code": "HBT-06-01",
+       "name": "NOSSA SENHORA ASSUNCAO",
+       "subprefecture": "BUTANTA",
+       "basin": "CORREGO JAGUARE",
+       "grade": 4,
+       "households": 200,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.6,
+       "p24_mm": 14.8,
+       "a72_mm": 27.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 8,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,6 mm em 1 h; 14,8 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "8 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 58,
+       "code": "HLA-02-01",
+       "name": "FAVELA DA LINHA",
+       "subprefecture": "LAPA",
+       "basin": "AREA DE CONTRIBUICAO DIRETA DE ESCOAMENTO DIFUSO FORTUNATO FERRAZ/BELINI",
+       "grade": 3,
+       "households": 200,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.6,
+       "p24_mm": 14.8,
+       "a72_mm": 27.8,
+       "in_flood_extent_100y": true,
+       "nearby_occurrences_12m": 0,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,6 mm em 1 h; 14,8 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "FLOOD_EXTENT",
+         "text": "Setor cruza mancha de inundação de 100 anos (GeoSampa)",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 689,
+       "code": "HMP-02-02",
+       "name": "JARDIM PANTANAL",
+       "subprefecture": "SAO MIGUEL PAULISTA",
+       "basin": "CORREGO SAO MARTINHO",
+       "grade": 3,
+       "households": 200,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 0.8,
+       "p24_mm": 7.3,
+       "a72_mm": 45.6,
+       "in_flood_extent_100y": true,
+       "nearby_occurrences_12m": 17,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 0,8 mm em 1 h; 7,3 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 45,6 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "FLOOD_EXTENT",
+         "text": "Setor cruza mancha de inundação de 100 anos (GeoSampa)",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "17 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 653,
+       "code": "HPA-06-01",
+       "name": "JD SAO NORBERTO II",
+       "subprefecture": "PARELHEIROS",
+       "basin": "RIBEIRAO PARELHEIROS",
+       "grade": 3,
+       "households": 190,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 1.2,
+       "p24_mm": 9.7,
+       "a72_mm": 33.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 4,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 1,2 mm em 1 h; 9,7 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 33,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "4 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 155,
+       "code": "HCL-28-02",
+       "name": "JARDIM CAMPO DE FORA",
+       "subprefecture": "CAMPO LIMPO",
+       "basin": "CORREGO MORRO DO S",
+       "grade": 3,
+       "households": 180,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2.2,
+       "p24_mm": 8.4,
+       "a72_mm": 31.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 8,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2,2 mm em 1 h; 8,4 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 31,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "8 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 672,
+       "code": "HBT-05-01",
+       "name": "CAMARAZAL",
+       "subprefecture": "BUTANTA",
+       "basin": "CORREGO JAGUARE",
+       "grade": 4,
+       "households": 175,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.6,
+       "p24_mm": 14.8,
+       "a72_mm": 27.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 0,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,6 mm em 1 h; 14,8 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 366,
+       "code": "HAD-19-02",
+       "name": "FUMACA",
+       "subprefecture": "CIDADE ADEMAR",
+       "basin": "RIBEIRAO GUACURI",
+       "grade": 3,
+       "households": 160,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 6.6,
+       "p24_mm": 12.1,
+       "a72_mm": 27.4,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 2,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 6,6 mm em 1 h; 12,1 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,4 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "2 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 109,
+       "code": "HCL-11-03",
+       "name": "NOVA FLORESTA",
+       "subprefecture": "CAMPO LIMPO",
+       "basin": "CORREGO PIRAJUSSARA",
+       "grade": 3,
+       "households": 160,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2.2,
+       "p24_mm": 8.4,
+       "a72_mm": 31.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 17,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2,2 mm em 1 h; 8,4 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 31,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "17 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 539,
+       "code": "HSB-03-02",
+       "name": "JARDIM PRIMAVERA II",
+       "subprefecture": "SAPOPEMBA",
+       "basin": "RIO ARICANDUVA",
+       "grade": 3,
+       "households": 157,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.1,
+       "p24_mm": 10.7,
+       "a72_mm": 45.2,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 2,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,1 mm em 1 h; 10,7 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 45,2 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "2 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 494,
+       "code": "HJA-11-02",
+       "name": "GUIAN CORRUIAS",
+       "subprefecture": "JABAQUARA",
+       "basin": "CORREGO AGUA ESPRAIADA",
+       "grade": 4,
+       "households": 155,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 6.6,
+       "p24_mm": 12.1,
+       "a72_mm": 27.4,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 0,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 6,6 mm em 1 h; 12,1 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,4 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 354,
+       "code": "HAD-13-01",
+       "name": "ABACATEIRO",
+       "subprefecture": "CIDADE ADEMAR",
+       "basin": "CORREGO PEDREIRAS",
+       "grade": 3,
+       "households": 150,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 6.6,
+       "p24_mm": 12.1,
+       "a72_mm": 27.4,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 3,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 6,6 mm em 1 h; 12,1 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,4 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "3 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 134,
+       "code": "HCL-21-02",
+       "name": "JARDIM MITSUTANI",
+       "subprefecture": "CAMPO LIMPO",
+       "basin": "CORREGO PIRAJUSSARA",
+       "grade": 3,
+       "households": 150,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.6,
+       "p24_mm": 14.8,
+       "a72_mm": 27.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 2,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,6 mm em 1 h; 14,8 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "2 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 615,
+       "code": "HCS-07-01",
+       "name": "SETE DE SETEMBRO II",
+       "subprefecture": "CAPELA DO SOCORRO",
+       "basin": "CORREGO REIMBERG COCAIA",
+       "grade": 3,
+       "households": 145,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2.2,
+       "p24_mm": 8.4,
+       "a72_mm": 31.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 2,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2,2 mm em 1 h; 8,4 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 31,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "2 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 33,
+       "code": "HCV-05-01",
+       "name": "EUCALIPTOS-CONDESSA",
+       "subprefecture": "CASA VERDE-CACHOEIRINHA",
+       "basin": "CORREGO CABUCU DE BAIXO",
+       "grade": 3,
+       "households": 145,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 0.9,
+       "p24_mm": 8.2,
+       "a72_mm": 44.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 3,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 0,9 mm em 1 h; 8,2 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 44,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "3 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 744,
+       "code": "HEM-02-03",
+       "name": "AGRESTE DE ITABAIANA/FATEC",
+       "subprefecture": "ERMELINO MATARAZZO",
+       "basin": "CORREGO TIQUATIRA-LESTE",
+       "grade": 4,
+       "households": 142,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.1,
+       "p24_mm": 10.7,
+       "a72_mm": 45.2,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 0,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,1 mm em 1 h; 10,7 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 45,2 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 408,
+       "code": "HIT-10-01",
+       "name": "MONTE PIRAPIRAPUA",
+       "subprefecture": "ITAIM PAULISTA",
+       "basin": "CORREGO ITAIM REGIAO LESTE",
+       "grade": 3,
+       "households": 135,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 0.8,
+       "p24_mm": 7.3,
+       "a72_mm": 45.6,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 4,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 0,8 mm em 1 h; 7,3 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 45,6 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "4 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 170,
+       "code": "HCL-34-01",
+       "name": "VALE DAS VIRTUDES I",
+       "subprefecture": "CAMPO LIMPO",
+       "basin": "CORREGO PIRAJUSSARA",
+       "grade": 3,
+       "households": 130,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.6,
+       "p24_mm": 14.8,
+       "a72_mm": 27.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 4,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,6 mm em 1 h; 14,8 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "4 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 509,
+       "code": "HJA-10-01",
+       "name": "VIETNA",
+       "subprefecture": "JABAQUARA",
+       "basin": "CORREGO AGUA ESPRAIADA",
+       "grade": 3,
+       "households": 130,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 6.6,
+       "p24_mm": 12.1,
+       "a72_mm": 27.4,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 4,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 6,6 mm em 1 h; 12,1 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,4 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "4 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 635,
+       "code": "HCS-19-01",
+       "name": "RECANTO COCAIA",
+       "subprefecture": "CAPELA DO SOCORRO",
+       "basin": "CORREGO REIMBERG COCAIA",
+       "grade": 3,
+       "households": 115,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2.2,
+       "p24_mm": 8.4,
+       "a72_mm": 31.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 3,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2,2 mm em 1 h; 8,4 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 31,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "3 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 90,
+       "code": "HCL-05-02",
+       "name": "OLARIA",
+       "subprefecture": "CAMPO LIMPO",
+       "basin": "CORREGO PIRAJUSSARA",
+       "grade": 4,
+       "households": 110,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.6,
+       "p24_mm": 14.8,
+       "a72_mm": 27.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 1,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,6 mm em 1 h; 14,8 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "1 ocorrência registrada a até 300 m nos últimos 12 meses",
+         "effect": "info"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 388,
+       "code": "HIT-01-01",
+       "name": "LUIZA ROSA",
+       "subprefecture": "ITAIM PAULISTA",
+       "basin": "RIBEIRAO AGUA VERMELHA",
+       "grade": 4,
+       "households": 110,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 0.8,
+       "p24_mm": 7.3,
+       "a72_mm": 45.6,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 0,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 0,8 mm em 1 h; 7,3 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 45,6 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 300,
+       "code": "HMG-02-01",
+       "name": "PEDRO PAULO LAGRECA NETO",
+       "subprefecture": "VILA MARIA/VILA GUILHERME",
+       "basin": "CORREGO PACIENCIA",
+       "grade": 4,
+       "households": 105,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 0.9,
+       "p24_mm": 8.2,
+       "a72_mm": 44.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 0,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 0,9 mm em 1 h; 8,2 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 44,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 349,
+       "code": "HAD-09-01",
+       "name": "PARQUE SANTA AMELIA",
+       "subprefecture": "CIDADE ADEMAR",
+       "basin": "CORREGO APUCAS",
+       "grade": 3,
+       "households": 100,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 6.6,
+       "p24_mm": 12.1,
+       "a72_mm": 27.4,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 2,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 6,6 mm em 1 h; 12,1 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,4 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "2 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 676,
+       "code": "HBT-06-04",
+       "name": "NOSSA SENHORA ASSUNCAO",
+       "subprefecture": "BUTANTA",
+       "basin": "CORREGO JAGUARE",
+       "grade": 4,
+       "households": 100,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.6,
+       "p24_mm": 14.8,
+       "a72_mm": 27.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 8,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,6 mm em 1 h; 14,8 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "8 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 275,
+       "code": "HMB-26-02",
+       "name": "ANGELO TARSINI",
+       "subprefecture": "M BOI MIRIM",
+       "basin": "AC - EMBU MIRIM/GUARAPIRANGA",
+       "grade": 3,
+       "households": 100,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2.2,
+       "p24_mm": 8.4,
+       "a72_mm": 31.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 2,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2,2 mm em 1 h; 8,4 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 31,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "2 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 290,
+       "code": "HMB-35-01",
+       "name": "PARQUE SANTO ANTONIO IV",
+       "subprefecture": "M BOI MIRIM",
+       "basin": "CORREGO MORRO DO S",
+       "grade": 3,
+       "households": 100,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2.2,
+       "p24_mm": 8.4,
+       "a72_mm": 31.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 8,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2,2 mm em 1 h; 8,4 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 31,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "8 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 612,
+       "code": "HCS-04-02",
+       "name": "ERWIN FUHRMANN",
+       "subprefecture": "CAPELA DO SOCORRO",
+       "basin": "RIBEIRAO VARGINHA",
+       "grade": 4,
+       "households": 95,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2.2,
+       "p24_mm": 8.4,
+       "a72_mm": 31.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 0,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2,2 mm em 1 h; 8,4 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 31,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 166,
+       "code": "HCL-08-02",
+       "name": "PULLMAN",
+       "subprefecture": "CAMPO LIMPO",
+       "basin": "CORREGO MORRO DO S",
+       "grade": 4,
+       "households": 90,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.6,
+       "p24_mm": 14.8,
+       "a72_mm": 27.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 2,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,6 mm em 1 h; 14,8 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "2 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 725,
+       "code": "HMP-24-01",
+       "name": "TERRA PROMETIDA",
+       "subprefecture": "SAO MIGUEL PAULISTA",
+       "basin": "AC - AGUA VERMELHA/ ITAQUERA",
+       "grade": 3,
+       "households": 90,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 0.8,
+       "p24_mm": 7.3,
+       "a72_mm": 45.6,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 3,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 0,8 mm em 1 h; 7,3 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 45,6 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "3 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 686,
+       "code": "HMP-01-03",
+       "name": "FAVELA DA PAZ",
+       "subprefecture": "SAO MIGUEL PAULISTA",
+       "basin": "RIBEIRAO AGUA VERMELHA",
+       "grade": 3,
+       "households": 85,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 0.8,
+       "p24_mm": 7.3,
+       "a72_mm": 45.6,
+       "in_flood_extent_100y": true,
+       "nearby_occurrences_12m": 11,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 0,8 mm em 1 h; 7,3 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 45,6 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "FLOOD_EXTENT",
+         "text": "Setor cruza mancha de inundação de 100 anos (GeoSampa)",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "11 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 82,
+       "code": "HCL-01-03",
+       "name": "PARAISOPOLIS I",
+       "subprefecture": "CAMPO LIMPO",
+       "basin": "CORREGO PIRAJUSSARA",
+       "grade": 4,
+       "households": 80,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.6,
+       "p24_mm": 14.8,
+       "a72_mm": 27.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 1,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,6 mm em 1 h; 14,8 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "1 ocorrência registrada a até 300 m nos últimos 12 meses",
+         "effect": "info"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 139,
+       "code": "HCL-22-04",
+       "name": "JARDIM SAO BENTO VELHO",
+       "subprefecture": "CAMPO LIMPO",
+       "basin": "CORREGO MORRO DO S",
+       "grade": 3,
+       "households": 80,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2.2,
+       "p24_mm": 8.4,
+       "a72_mm": 31.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 6,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2,2 mm em 1 h; 8,4 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 31,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "6 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 600,
+       "code": "HPE-05-01",
+       "name": "SAO JOSE BARROCA",
+       "subprefecture": "PENHA",
+       "basin": "RIO ARICANDUVA",
+       "grade": 4,
+       "households": 80,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.1,
+       "p24_mm": 10.7,
+       "a72_mm": 45.2,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 0,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,1 mm em 1 h; 10,7 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 45,2 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 546,
+       "code": "HSB-07-02",
+       "name": "FAZENDA DA JUTA III",
+       "subprefecture": "SAPOPEMBA",
+       "basin": "RIBEIRAO DO ORATORIO",
+       "grade": 4,
+       "households": 80,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.1,
+       "p24_mm": 10.7,
+       "a72_mm": 45.2,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 0,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,1 mm em 1 h; 10,7 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 45,2 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 531,
+       "code": "HVP-04-01",
+       "name": "MANGUE E PARQUE PEREIRA",
+       "subprefecture": "VILA PRUDENTE",
+       "basin": "RIBEIRAO DO ORATORIO",
+       "grade": 3,
+       "households": 80,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.1,
+       "p24_mm": 10.7,
+       "a72_mm": 45.2,
+       "in_flood_extent_100y": true,
+       "nearby_occurrences_12m": 14,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,1 mm em 1 h; 10,7 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 45,2 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "FLOOD_EXTENT",
+         "text": "Setor cruza mancha de inundação de 100 anos (GeoSampa)",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "14 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 474,
+       "code": "HJA-02-01",
+       "name": "ALEGRIA",
+       "subprefecture": "JABAQUARA",
+       "basin": "CORREGO CORDEIRO",
+       "grade": 3,
+       "households": 76,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 6.6,
+       "p24_mm": 12.1,
+       "a72_mm": 27.4,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 2,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 6,6 mm em 1 h; 12,1 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,4 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "2 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 365,
+       "code": "HAD-19-01",
+       "name": "FUMACA",
+       "subprefecture": "CIDADE ADEMAR",
+       "basin": "RIBEIRAO GUACURI",
+       "grade": 4,
+       "households": 75,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 6.6,
+       "p24_mm": 12.1,
+       "a72_mm": 27.4,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 2,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 6,6 mm em 1 h; 12,1 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,4 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "2 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 211,
+       "code": "HPJ-06-01",
+       "name": "OCUPACAO CITY JARAGUA",
+       "subprefecture": "PIRITUBA-JARAGUA",
+       "basin": "RIBEIRAO DOS PERUS",
+       "grade": 4,
+       "households": 75,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2,
+       "p24_mm": 11.5,
+       "a72_mm": 34.6,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 0,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2 mm em 1 h; 11,5 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 34,6 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 420,
+       "code": "HSA-07-01",
+       "name": "JARDIM UBIRAJARA",
+       "subprefecture": "SANTO AMARO",
+       "basin": "CORREGO PEDREIRAS",
+       "grade": 3,
+       "households": 75,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 6.6,
+       "p24_mm": 12.1,
+       "a72_mm": 27.4,
+       "in_flood_extent_100y": true,
+       "nearby_occurrences_12m": 1,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 6,6 mm em 1 h; 12,1 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,4 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "FLOOD_EXTENT",
+         "text": "Setor cruza mancha de inundação de 100 anos (GeoSampa)",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "1 ocorrência registrada a até 300 m nos últimos 12 meses",
+         "effect": "info"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 756,
+       "code": "HPJ-17-01",
+       "name": "VILA SALOA",
+       "subprefecture": "PIRITUBA-JARAGUA",
+       "basin": "RIBEIRAO VERMELHO-REGIAO NORTE",
+       "grade": 3,
+       "households": 73,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2,
+       "p24_mm": 11.5,
+       "a72_mm": 34.6,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 2,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2 mm em 1 h; 11,5 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 34,6 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "2 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 301,
+       "code": "HMG-03-01",
+       "name": "VILA DO SAPO",
+       "subprefecture": "VILA MARIA/VILA GUILHERME",
+       "basin": "AC - VIOLAO/NOVO MUNDO",
+       "grade": 3,
+       "households": 70,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 0.9,
+       "p24_mm": 8.2,
+       "a72_mm": 44.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 6,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 0,9 mm em 1 h; 8,2 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 44,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "6 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 9,
+       "code": "HPR-01-01",
+       "name": "CPTM-RECANTO DOS HUMILDES",
+       "subprefecture": "PERUS",
+       "basin": "RIBEIRAO DOS PERUS",
+       "grade": 4,
+       "households": 70,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2,
+       "p24_mm": 11.5,
+       "a72_mm": 34.6,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 0,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2 mm em 1 h; 11,5 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 34,6 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 423,
+       "code": "HSA-08-02",
+       "name": "BEIRA RIO",
+       "subprefecture": "SANTO AMARO",
+       "basin": "CORREGO AGUA ESPRAIADA",
+       "grade": 3,
+       "households": 70,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 6.6,
+       "p24_mm": 12.1,
+       "a72_mm": 27.4,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 2,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 6,6 mm em 1 h; 12,1 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,4 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "2 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 152,
+       "code": "HCL-27-01",
+       "name": "JARDIM GERMANIA",
+       "subprefecture": "CAMPO LIMPO",
+       "basin": "CORREGO MORRO DO S",
+       "grade": 3,
+       "households": 65,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.6,
+       "p24_mm": 14.8,
+       "a72_mm": 27.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 3,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,6 mm em 1 h; 14,8 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R3 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "OCCURRENCES",
+         "text": "3 ocorrências registradas a até 300 m nos últimos 12 meses",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 507,
+       "code": "HJA-05-02",
+       "name": "TANQUINHO-BALDOMERO FERNANDEZ",
+       "subprefecture": "JABAQUARA",
+       "basin": "CORREGO CORDEIRO",
+       "grade": 4,
+       "households": 65,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 6.6,
+       "p24_mm": 12.1,
+       "a72_mm": 27.4,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 0,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 6,6 mm em 1 h; 12,1 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,4 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 61,
+       "code": "HLA-04-02",
+       "name": "BARAO DE ANTONINA",
+       "subprefecture": "LAPA",
+       "basin": "AREA DE CONTRIBUICAO DIRETA DE ESCOAMENTO DIFUSO JAGUARE/CONTINENTAL",
+       "grade": 4,
+       "households": 65,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 4.6,
+       "p24_mm": 14.8,
+       "a72_mm": 27.8,
+       "in_flood_extent_100y": true,
+       "nearby_occurrences_12m": 0,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 4,6 mm em 1 h; 14,8 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 27,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        },
+        {
+         "code": "FLOOD_EXTENT",
+         "text": "Setor cruza mancha de inundação de 100 anos (GeoSampa)",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      },
+      {
+       "id": 243,
+       "code": "HMB-03-01",
+       "name": "PARQUE EUROPA II",
+       "subprefecture": "M BOI MIRIM",
+       "basin": "CORREGO PONTE BAIXA",
+       "grade": 4,
+       "households": 65,
+       "category": "LOW",
+       "rain_level": 0,
+       "susceptibility": 4,
+       "p1h_max_mm": 2.2,
+       "p24_mm": 8.4,
+       "a72_mm": 31.8,
+       "in_flood_extent_100y": false,
+       "nearby_occurrences_12m": 0,
+       "factors": [
+        {
+         "code": "RAIN_NONE",
+         "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 2,2 mm em 1 h; 8,4 mm no total)",
+         "effect": "info"
+        },
+        {
+         "code": "ANTECEDENT_LOW",
+         "text": "Chuva estimada nas 72 h anteriores: 31,8 mm",
+         "effect": "info"
+        },
+        {
+         "code": "GRADE",
+         "text": "Setor R4 vistoriado pela Prefeitura",
+         "effect": "raises"
+        }
+       ],
+       "unknown_reason": null
+      }
+     ],
+     "total": 793,
+     "limit": 1000,
+     "offset": 0,
+     "subprefectures": [
+      "ARICANDUVA-FORMOSA-CARRAO",
+      "BUTANTA",
+      "CAMPO LIMPO",
+      "CAPELA DO SOCORRO",
+      "CASA VERDE-CACHOEIRINHA",
+      "CIDADE ADEMAR",
+      "CIDADE TIRADENTES",
+      "ERMELINO MATARAZZO",
+      "FREGUESIA-BRASILANDIA",
+      "GUAIANASES",
+      "IPIRANGA",
+      "ITAIM PAULISTA",
+      "ITAQUERA",
+      "JABAQUARA",
+      "JACANA-TREMEMBE",
+      "LAPA",
+      "M BOI MIRIM",
+      "MOOCA",
+      "PARELHEIROS",
+      "PENHA",
+      "PERUS",
+      "PINHEIROS",
+      "PIRITUBA-JARAGUA",
+      "SANTO AMARO",
+      "SAO MATEUS",
+      "SAO MIGUEL PAULISTA",
+      "SAPOPEMBA",
+      "SE",
+      "VILA MARIANA",
+      "VILA MARIA/VILA GUILHERME",
+      "VILA PRUDENTE"
+     ],
+     "disclaimer": "Estimativa experimental do sistema, heurística e não validada. Não é alerta oficial. Em emergência, ligue 199 (Defesa Civil)."
+    }
+   }
+  ],
+  "GET /api/v1/risk/areas": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": {
+     "items": [],
+     "total": 0,
+     "limit": 1000,
+     "offset": 0,
+     "subprefectures": [
+      "ARICANDUVA-FORMOSA-CARRAO",
+      "BUTANTA",
+      "CAMPO LIMPO",
+      "CAPELA DO SOCORRO",
+      "CASA VERDE-CACHOEIRINHA",
+      "CIDADE ADEMAR",
+      "CIDADE TIRADENTES",
+      "ERMELINO MATARAZZO",
+      "FREGUESIA-BRASILANDIA",
+      "GUAIANASES",
+      "IPIRANGA",
+      "ITAIM PAULISTA",
+      "ITAQUERA",
+      "JABAQUARA",
+      "JACANA-TREMEMBE",
+      "LAPA",
+      "M BOI MIRIM",
+      "MOOCA",
+      "PARELHEIROS",
+      "PENHA",
+      "PERUS",
+      "PINHEIROS",
+      "PIRITUBA-JARAGUA",
+      "SANTO AMARO",
+      "SAO MATEUS",
+      "SAO MIGUEL PAULISTA",
+      "SAPOPEMBA",
+      "SE",
+      "VILA MARIANA",
+      "VILA MARIA/VILA GUILHERME",
+      "VILA PRUDENTE"
+     ],
+     "disclaimer": "Estimativa experimental do sistema, heurística e não validada. Não é alerta oficial. Em emergência, ligue 199 (Defesa Civil)."
+    }
+   }
+  ],
+  "GET /api/v1/risk/areas?limit=1000&category=CRITICAL": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": {
+     "items": [],
+     "total": 0,
+     "limit": 1000,
+     "offset": 0,
+     "subprefectures": [
+      "ARICANDUVA-FORMOSA-CARRAO",
+      "BUTANTA",
+      "CAMPO LIMPO",
+      "CAPELA DO SOCORRO",
+      "CASA VERDE-CACHOEIRINHA",
+      "CIDADE ADEMAR",
+      "CIDADE TIRADENTES",
+      "ERMELINO MATARAZZO",
+      "FREGUESIA-BRASILANDIA",
+      "GUAIANASES",
+      "IPIRANGA",
+      "ITAIM PAULISTA",
+      "ITAQUERA",
+      "JABAQUARA",
+      "JACANA-TREMEMBE",
+      "LAPA",
+      "M BOI MIRIM",
+      "MOOCA",
+      "PARELHEIROS",
+      "PENHA",
+      "PERUS",
+      "PINHEIROS",
+      "PIRITUBA-JARAGUA",
+      "SANTO AMARO",
+      "SAO MATEUS",
+      "SAO MIGUEL PAULISTA",
+      "SAPOPEMBA",
+      "SE",
+      "VILA MARIANA",
+      "VILA MARIA/VILA GUILHERME",
+      "VILA PRUDENTE"
+     ],
+     "disclaimer": "Estimativa experimental do sistema, heurística e não validada. Não é alerta oficial. Em emergência, ligue 199 (Defesa Civil)."
+    }
+   }
+  ],
+  "GET /api/v1/risk/areas/737": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": {
+     "id": 737,
+     "code": "HMP-30-02",
+     "name": "VILA JACUI I",
+     "subprefecture": "SAO MIGUEL PAULISTA",
+     "basin": "CORREGO JACU",
+     "grade": 3,
+     "households": 960,
+     "category": "LOW",
+     "rain_level": 0,
+     "susceptibility": 4,
+     "p1h_max_mm": 0.8,
+     "p24_mm": 7.3,
+     "a72_mm": 45.6,
+     "in_flood_extent_100y": true,
+     "nearby_occurrences_12m": 6,
+     "factors": [
+      {
+       "code": "RAIN_NONE",
+       "text": "Sem chuva relevante prevista nas próximas 24 h (máx. 0,8 mm em 1 h; 7,3 mm no total)",
+       "effect": "info"
+      },
+      {
+       "code": "ANTECEDENT_LOW",
+       "text": "Chuva estimada nas 72 h anteriores: 45,6 mm",
+       "effect": "info"
+      },
+      {
+       "code": "GRADE",
+       "text": "Setor R3 vistoriado pela Prefeitura",
+       "effect": "raises"
+      },
+      {
+       "code": "FLOOD_EXTENT",
+       "text": "Setor cruza mancha de inundação de 100 anos (GeoSampa)",
+       "effect": "raises"
+      },
+      {
+       "code": "OCCURRENCES",
+       "text": "6 ocorrências registradas a até 300 m nos últimos 12 meses",
+       "effect": "raises"
+      }
+     ],
+     "unknown_reason": null,
+     "processes": [
+      "ALAGAMENTO",
+      "INUNDACAO"
+     ],
+     "inspected_on": "2026-01-14",
+     "latitude": -23.488159995,
+     "longitude": -46.45661047087269,
+     "forecast_point_key": "-23.4446,-46.4669",
+     "forecast_distance_km": 4.95,
+     "inputs": [
+      {
+       "name": "Maior chuva prevista em 1 h (próximas 24 h)",
+       "value": 0.8,
+       "unit": "mm",
+       "kind": "FORECAST",
+       "source": "Open-Meteo.com (CC BY 4.0)"
+      },
+      {
+       "name": "Chuva prevista em 24 h",
+       "value": 7.3,
+       "unit": "mm",
+       "kind": "FORECAST",
+       "source": "Open-Meteo.com (CC BY 4.0)"
+      },
+      {
+       "name": "Chuva estimada nas 72 h anteriores",
+       "value": 45.6,
+       "unit": "mm",
+       "kind": "MODELED",
+       "source": "Open-Meteo.com (CC BY 4.0)"
+      },
+      {
+       "name": "Grau do setor (R1–R4)",
+       "value": 3,
+       "unit": "grau",
+       "kind": "OBSERVED",
+       "source": "GeoSampa — vistoria da Prefeitura"
+      }
+     ],
+     "nearby_occurrences": [
+      {
+       "type": "ALAGAMENTO",
+       "occurred_on": "2026-09-17",
+       "subprefecture": "SAO MIGUEL PAULISTA",
+       "distance_m": 45.3
+      },
+      {
+       "type": "ALAGAMENTO",
+       "occurred_on": "2026-09-14",
+       "subprefecture": "SAO MIGUEL PAULISTA",
+       "distance_m": 251.8
+      },
+      {
+       "type": "INUNDACAO",
+       "occurred_on": "2026-09-12",
+       "subprefecture": "SAO MIGUEL PAULISTA",
+       "distance_m": 16.1
+      },
+      {
+       "type": "ALAGAMENTO",
+       "occurred_on": "2026-06-24",
+       "subprefecture": "SAO MIGUEL PAULISTA",
+       "distance_m": 45.3
+      },
+      {
+       "type": "ALAGAMENTO",
+       "occurred_on": "2026-02-03",
+       "subprefecture": "SAO MIGUEL PAULISTA",
+       "distance_m": 211.3
+      },
+      {
+       "type": "ALAGAMENTO",
+       "occurred_on": "2026-01-14",
+       "subprefecture": "SAO MIGUEL PAULISTA",
+       "distance_m": 0
+      }
+     ],
+     "run": {
+      "id": 40,
+      "engine_version": "0.1.0-experimental",
+      "computed_at": "2026-11-25T17:26:46.943756Z",
+      "valid_until": "2026-11-26T17:26:46.943756Z",
+      "forecast_issued_at": "2026-11-25T17:26:38.274587Z",
+      "forecast_freshness": "FRESH",
+      "stale": false
+     },
+     "official_url": "https://geosampa.prefeitura.sp.gov.br",
+     "disclaimer": "Estimativa experimental do sistema, heurística e não validada. Não é alerta oficial. Em emergência, ligue 199 (Defesa Civil)."
+    }
+   }
+  ],
+  "GET /api/v1/geo/sectors/737/terrain": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": {
+     "sector_id": 737,
+     "computed_at": "2026-11-25T17:20:49.000383Z",
+     "elev_median_m": 729.9,
+     "elev_min_m": 726.9,
+     "slope_mean_pct": 3.1,
+     "relative_elev_m": -4.6,
+     "cells": 175,
+     "low_sample": false,
+     "basin_id": 98,
+     "basin_name": "Córrego Jacu",
+     "main_basin": "Rio Tietê",
+     "nearest_drainage": {
+      "id": 400,
+      "name": null,
+      "course_type": "Trecho canalizado subterrâneo",
+      "open_channel": false,
+      "distance_m": 0
+     },
+     "dem_resolution_m": 28.3,
+     "attribution": "Produced using Copernicus DEM GLO-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA, all rights reserved",
+     "hydro_attribution": "Bacias, drenagem e piscinões: GeoSampa — Prefeitura de São Paulo",
+     "disclaimer": "Relevo do Copernicus DEM GLO-30: modelo de superfície com ~30 m de resolução. Prédios e árvores entram na elevação. Serve para comparar bairros e bacias, não ruas. É contexto: não muda a categoria de risco."
+    }
+   }
+  ]
+ }
+}

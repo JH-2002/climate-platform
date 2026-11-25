@@ -1,0 +1,1434 @@
+{
+ "recordedAt": "2026-11-25T17:59:03.349Z",
+ "responses": {
+  "GET /api/v1/alerts/active": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": {
+     "generated_at": "2026-11-25T17:59:02.035884Z",
+     "official": [
+      {
+       "id": 13,
+       "category": "WEATHER_WARNING",
+       "category_label": "Aviso meteorológico oficial — INMET",
+       "source_code": "inmet-warnings",
+       "attribution": "Fonte: INMET — Alert-AS",
+       "sender_name": "Instituto Nacional de Meteorologia",
+       "msg_type": "Alert",
+       "event": "Tempestade",
+       "severity": "Severe",
+       "severity_label": "Severa",
+       "level_name": "Laranja — Perigo",
+       "color": "#F96602",
+       "urgency": "Future",
+       "certainty": "Likely",
+       "headline": "Aviso de Tempestade. Severidade Grau: Severe",
+       "description": "INMET publica aviso iniciando em: 25/11/2026 00:00. Chuva entre 30 e 60 mm/h ou 50 e 100 mm/dia, ventos intensos (60-100 km/h), e queda de granizo. Risco de corte de energia elétrica, estragos em plantações, queda de árvores e de alagamentos.",
+       "instruction": "Em caso de rajadas de vento: (não se abrigue debaixo de árvores, pois há risco de queda e descargas elétricas e não estacione veículos próximos a torres de transmissão e placas de propaganda). Se possível, desligue aparelhos elétricos e quadro geral de energia. Obtenha mais informações junto à Defesa Civil (telefone 199) e ao Corpo de Bombeiros (telefone 193).",
+       "web": "https://avisos.inmet.gov.br/56501",
+       "area_desc": "Aviso para as áreas: Norte Pioneiro Paranaense, Zona da Mata, Presidente Prudente, São José do Rio Preto, Metropolitana de Curitiba, Central Espírito-santense, Campinas, Bauru, Piracicaba, Sul/Sudoeste de Minas, Itapetininga, Sul Espírito-santense, Campo das Vertentes, Centro Ocidental Paranaense, Araçatuba, Noroeste Paranaense, Macro Metropolitana Paulista, Marília, Norte Central Paranaense, Sudoeste de Mato Grosso do Sul, Araraquara, Sudoeste Paranaense, Oeste Paranaense, Leste de Mato Grosso do Sul, Sul Fluminense, Sudeste Paranaense, Vale do Paraíba Paulista, Noroeste Fluminense, Centro Oriental Paranaense, Norte Catarinense, Baixadas, Centro Fluminense, Metropolitana de São Paulo, Assis, Litoral Sul Paulista, Metropolitana do Rio de Janeiro, Centro-Sul Paranaense, Oeste de Minas, Ribeirão Preto, Norte Fluminense, Metropolitana de Belo Horizonte, Oeste Catarinense, Vale do Rio Doce, Vale do Itajaí",
+       "sent_at": "2026-11-24T15:22:32Z",
+       "onset_at": "2026-11-25T03:00:00Z",
+       "expires_at": "2026-11-26T02:59:00Z",
+       "ended_at": null,
+       "status": "ACTIVE",
+       "subprefectures": [
+        "ARICANDUVA-FORMOSA-CARRAO",
+        "BUTANTA",
+        "CAMPO LIMPO",
+        "CAPELA DO SOCORRO",
+        "CASA VERDE-CACHOEIRINHA",
+        "CIDADE ADEMAR",
+        "CIDADE TIRADENTES",
+        "ERMELINO MATARAZZO",
+        "FREGUESIA-BRASILANDIA",
+        "GUAIANASES",
+        "IPIRANGA",
+        "ITAIM PAULISTA",
+        "ITAQUERA",
+        "JABAQUARA",
+        "JACANA-TREMEMBE",
+        "LAPA",
+        "M BOI MIRIM",
+        "MOOCA",
+        "PARELHEIROS",
+        "PENHA",
+        "PERUS",
+        "PINHEIROS",
+        "PIRITUBA-JARAGUA",
+        "SANTANA-TUCURUVI",
+        "SANTO AMARO",
+        "SAO MATEUS",
+        "SAO MIGUEL",
+        "SAPOPEMBA",
+        "SE",
+        "VILA MARIANA",
+        "VILA MARIA-VILA GUILHERME",
+        "VILA PRUDENTE"
+       ],
+       "city_fraction": 1,
+       "area_approximate": false
+      },
+      {
+       "id": 15,
+       "category": "WEATHER_WARNING",
+       "category_label": "Aviso meteorológico oficial — INMET",
+       "source_code": "inmet-warnings",
+       "attribution": "Fonte: INMET — Alert-AS",
+       "sender_name": "Instituto Nacional de Meteorologia",
+       "msg_type": "Alert",
+       "event": "Tempestade",
+       "severity": "Moderate",
+       "severity_label": "Moderada",
+       "level_name": "Amarelo — Perigo potencial",
+       "color": "#FFFE00",
+       "urgency": "Future",
+       "certainty": "Likely",
+       "headline": "Aviso de Tempestade. Severidade Grau: Moderate",
+       "description": "INMET publica aviso iniciando em: 25/11/2026 00:00. Chuva entre 20 e 30 mm/h ou até 50 mm/dia, ventos intensos (40-60 km/h), e queda de granizo. Baixo risco de corte de energia elétrica, estragos em plantações, queda de galhos de árvores e de alagamentos.",
+       "instruction": "Em caso de rajadas de vento: (não se abrigue debaixo de árvores, pois há leve risco de queda e descargas elétricas e não estacione veículos próximos a torres de transmissão e placas de propaganda). Evite usar aparelhos eletrônicos ligados à tomada. Obtenha mais informações junto à Defesa Civil (telefone 199) e ao Corpo de Bombeiros (telefone 193).",
+       "web": "https://avisos.inmet.gov.br/56499",
+       "area_desc": "Aviso para as áreas: Centro Goiano, Triângulo Mineiro/Alto Paranaíba, Leste Goiano, Central Mineira, Norte Pioneiro Paranaense, Serrana, Oeste Catarinense, Zona da Mata, Centro-Sul Mato-grossense, Sul Goiano, Vale do Rio Doce, Presidente Prudente, São José do Rio Preto, Metropolitana de Curitiba, Central Espírito-santense, Vale do Itajaí, Nordeste Mato-grossense, Leste de Mato Grosso do Sul, Noroeste Espírito-santense, Campinas, Oeste de Minas, Noroeste Rio-grandense, Bauru, Piracicaba, Vale do Mucuri, Grande Florianópolis, Norte de Minas, Sul/Sudoeste de Minas, Itapetininga, Centro Norte de Mato Grosso do Sul, Sul Baiano, Sul Espírito-santense, Campo das Vertentes, Ocidental do Tocantins, Oriental do Tocantins, Jequitinhonha, Norte Mato-grossense, Leste Rondoniense, Centro Ocidental Paranaense, Ribeirão Preto, Araçatuba, Sudeste Mato-grossense, Norte Goiano, Noroeste Paranaense, Macro Metropolitana Paulista, Marília, Metropolitana de Belo Horizonte, Norte Central Paranaense, Sudoeste de Mato Grosso do Sul, Araraquara, Sudoeste Paranaense, Oeste Paranaense, Pantanais Sul Mato-grossense, Sul Fluminense, Sudeste Paranaense, Vale do Paraíba Paulista, Noroeste Fluminense, Litoral Norte Espírito-santense, Noroeste Goiano, Centro Oriental Paranaense, Sudoeste Mato-grossense, Norte Catarinense, Baixadas, Centro Fluminense, Noroeste de Minas, Sul Catarinense, Metropolitana de São Paulo, Assis, Litoral Sul Paulista, Extremo Oeste Baiano, Metropolitana do Rio de Janeiro, Centro-Sul Paranaense, Nordeste Rio-grandense, Distrito Federal, Madeira-Guaporé, Norte Fluminense, Vale São-Franciscano da Bahia, Centro Sul Baiano",
+       "sent_at": "2026-11-24T15:12:51Z",
+       "onset_at": "2026-11-25T03:00:00Z",
+       "expires_at": "2026-11-26T02:59:00Z",
+       "ended_at": null,
+       "status": "ACTIVE",
+       "subprefectures": [
+        "ARICANDUVA-FORMOSA-CARRAO",
+        "BUTANTA",
+        "CAMPO LIMPO",
+        "CAPELA DO SOCORRO",
+        "CASA VERDE-CACHOEIRINHA",
+        "CIDADE ADEMAR",
+        "CIDADE TIRADENTES",
+        "ERMELINO MATARAZZO",
+        "FREGUESIA-BRASILANDIA",
+        "GUAIANASES",
+        "IPIRANGA",
+        "ITAIM PAULISTA",
+        "ITAQUERA",
+        "JABAQUARA",
+        "JACANA-TREMEMBE",
+        "LAPA",
+        "M BOI MIRIM",
+        "MOOCA",
+        "PARELHEIROS",
+        "PENHA",
+        "PERUS",
+        "PINHEIROS",
+        "PIRITUBA-JARAGUA",
+        "SANTANA-TUCURUVI",
+        "SANTO AMARO",
+        "SAO MATEUS",
+        "SAO MIGUEL",
+        "SAPOPEMBA",
+        "SE",
+        "VILA MARIANA",
+        "VILA MARIA-VILA GUILHERME",
+        "VILA PRUDENTE"
+       ],
+       "city_fraction": 1,
+       "area_approximate": false
+      },
+      {
+       "id": 10,
+       "category": "WEATHER_WARNING",
+       "category_label": "Aviso meteorológico oficial — INMET",
+       "source_code": "inmet-warnings",
+       "attribution": "Fonte: INMET — Alert-AS",
+       "sender_name": "Instituto Nacional de Meteorologia",
+       "msg_type": "Alert",
+       "event": "Chuvas Intensas",
+       "severity": "Severe",
+       "severity_label": "Severa",
+       "level_name": "Laranja — Perigo",
+       "color": "#F96602",
+       "urgency": "Future",
+       "certainty": "Likely",
+       "headline": "Aviso de Chuvas Intensas. Severidade Grau: Severe",
+       "description": "INMET publica aviso iniciando em: 26/11/2026 00:00. Chuva entre 30 e 60 mm/h ou 50 e 100 mm/dia, ventos intensos (60-100 km/h). Risco de corte de energia elétrica, queda de galhos de árvores, alagamentos e de descargas elétricas.",
+       "instruction": "Em caso de rajadas de vento: (não se abrigue debaixo de árvores, pois há risco de queda e descargas elétricas e não estacione veículos próximos a torres de transmissão e placas de propaganda) Se possível, desligue aparelhos elétricos e quadro geral de energia. Obtenha mais informações junto à Defesa Civil (telefone 199) e ao Corpo de Bombeiros (telefone 193).",
+       "web": "https://avisos.inmet.gov.br/56503",
+       "area_desc": "Aviso para as áreas: Triângulo Mineiro/Alto Paranaíba, Central Mineira, Zona da Mata, Vale do Rio Doce, São José do Rio Preto, Central Espírito-santense, Leste de Mato Grosso do Sul, Campinas, Sul Goiano, Oeste de Minas, Piracicaba, Sul/Sudoeste de Minas, Sul Espírito-santense, Campo das Vertentes, Ribeirão Preto, Macro Metropolitana Paulista, Metropolitana de Belo Horizonte, Araraquara, Araçatuba, Sul Fluminense, Bauru, Vale do Paraíba Paulista, Noroeste Fluminense, Litoral Norte Espírito-santense, Baixadas, Centro Fluminense, Metropolitana de São Paulo, Noroeste Espírito-santense, Metropolitana do Rio de Janeiro, Itapetininga, Centro Norte de Mato Grosso do Sul, Norte Fluminense, Jequitinhonha, Noroeste de Minas",
+       "sent_at": "2026-11-24T15:34:10Z",
+       "onset_at": "2026-11-26T03:00:00Z",
+       "expires_at": "2026-11-27T02:59:00Z",
+       "ended_at": null,
+       "status": "UPCOMING",
+       "subprefectures": [
+        "ARICANDUVA-FORMOSA-CARRAO",
+        "BUTANTA",
+        "CAMPO LIMPO",
+        "CAPELA DO SOCORRO",
+        "CASA VERDE-CACHOEIRINHA",
+        "CIDADE ADEMAR",
+        "CIDADE TIRADENTES",
+        "ERMELINO MATARAZZO",
+        "FREGUESIA-BRASILANDIA",
+        "GUAIANASES",
+        "IPIRANGA",
+        "ITAIM PAULISTA",
+        "ITAQUERA",
+        "JABAQUARA",
+        "JACANA-TREMEMBE",
+        "LAPA",
+        "M BOI MIRIM",
+        "MOOCA",
+        "PARELHEIROS",
+        "PENHA",
+        "PERUS",
+        "PINHEIROS",
+        "PIRITUBA-JARAGUA",
+        "SANTANA-TUCURUVI",
+        "SANTO AMARO",
+        "SAO MATEUS",
+        "SAO MIGUEL",
+        "SAPOPEMBA",
+        "SE",
+        "VILA MARIANA",
+        "VILA MARIA-VILA GUILHERME",
+        "VILA PRUDENTE"
+       ],
+       "city_fraction": 0.9723897806810204,
+       "area_approximate": false
+      },
+      {
+       "id": 12,
+       "category": "WEATHER_WARNING",
+       "category_label": "Aviso meteorológico oficial — INMET",
+       "source_code": "inmet-warnings",
+       "attribution": "Fonte: INMET — Alert-AS",
+       "sender_name": "Instituto Nacional de Meteorologia",
+       "msg_type": "Alert",
+       "event": "Chuvas Intensas",
+       "severity": "Moderate",
+       "severity_label": "Moderada",
+       "level_name": "Amarelo — Perigo potencial",
+       "color": "#FFFE00",
+       "urgency": "Future",
+       "certainty": "Likely",
+       "headline": "Aviso de Chuvas Intensas. Severidade Grau: Moderate",
+       "description": "INMET publica aviso iniciando em: 26/11/2026 00:00. Chuva entre 20 e 30 mm/h ou até 50 mm/dia, ventos intensos (40-60 km/h). Baixo risco de corte de energia elétrica, queda de galhos de árvores, alagamentos e de descargas elétricas.",
+       "instruction": "Em caso de rajadas de vento: (não se abrigue debaixo de árvores, pois há leve risco de queda e descargas elétricas e não estacione veículos próximos a torres de transmissão e placas de propaganda). Evite usar aparelhos eletrônicos ligados à tomada. Obtenha mais informações junto à Defesa Civil (telefone 199) e ao Corpo de Bombeiros (telefone 193).",
+       "web": "https://avisos.inmet.gov.br/56502",
+       "area_desc": "Aviso para as áreas: Centro Goiano, Triângulo Mineiro/Alto Paranaíba, Leste Goiano, Central Mineira, Norte Pioneiro Paranaense, Oeste Catarinense, Zona da Mata, Centro-Sul Mato-grossense, Vale do Acre, Sul Goiano, Vale do Rio Doce, Presidente Prudente, São José do Rio Preto, Metropolitana de Curitiba, Central Espírito-santense, Nordeste Mato-grossense, Leste de Mato Grosso do Sul, Noroeste Espírito-santense, Campinas, Oeste de Minas, Bauru, Piracicaba, Vale do Mucuri, Sul/Sudoeste de Minas, Itapetininga, Centro Norte de Mato Grosso do Sul, Sul Espírito-santense, Campo das Vertentes, Ocidental do Tocantins, Oriental do Tocantins, Norte Mato-grossense, Leste Rondoniense, Sudoeste Paraense, Centro Ocidental Paranaense, Ribeirão Preto, Araçatuba, Sudeste Mato-grossense, Norte Goiano, Noroeste Paranaense, Macro Metropolitana Paulista, Centro Amazonense, Marília, Metropolitana de Belo Horizonte, Norte Central Paranaense, Sudoeste de Mato Grosso do Sul, Sudoeste Amazonense, Araraquara, Sudoeste Paranaense, Oeste Paranaense, Pantanais Sul Mato-grossense, Jequitinhonha, Sul Fluminense, Sudeste Paranaense, Vale do Paraíba Paulista, Noroeste Fluminense, Sul Amazonense, Litoral Norte Espírito-santense, Noroeste Goiano, Centro Oriental Paranaense, Sudoeste Mato-grossense, Norte Catarinense, Baixadas, Centro Fluminense, Noroeste de Minas, Metropolitana de São Paulo, Assis, Vale do Itajaí, Norte Amazonense, Litoral Sul Paulista, Metropolitana do Rio de Janeiro, Centro-Sul Paranaense, Norte de Minas, Distrito Federal, Madeira-Guaporé, Norte Fluminense, Sul Baiano, Extremo Oeste Baiano, Vale do Juruá, Sudeste Paraense, Vale São-Franciscano da Bahia, Serrana",
+       "sent_at": "2026-11-24T15:28:43Z",
+       "onset_at": "2026-11-26T03:00:00Z",
+       "expires_at": "2026-11-27T02:59:00Z",
+       "ended_at": null,
+       "status": "UPCOMING",
+       "subprefectures": [
+        "ARICANDUVA-FORMOSA-CARRAO",
+        "BUTANTA",
+        "CAMPO LIMPO",
+        "CAPELA DO SOCORRO",
+        "CASA VERDE-CACHOEIRINHA",
+        "CIDADE ADEMAR",
+        "CIDADE TIRADENTES",
+        "ERMELINO MATARAZZO",
+        "FREGUESIA-BRASILANDIA",
+        "GUAIANASES",
+        "IPIRANGA",
+        "ITAIM PAULISTA",
+        "ITAQUERA",
+        "JABAQUARA",
+        "JACANA-TREMEMBE",
+        "LAPA",
+        "M BOI MIRIM",
+        "MOOCA",
+        "PARELHEIROS",
+        "PENHA",
+        "PERUS",
+        "PINHEIROS",
+        "PIRITUBA-JARAGUA",
+        "SANTANA-TUCURUVI",
+        "SANTO AMARO",
+        "SAO MATEUS",
+        "SAO MIGUEL",
+        "SAPOPEMBA",
+        "SE",
+        "VILA MARIANA",
+        "VILA MARIA-VILA GUILHERME",
+        "VILA PRUDENTE"
+       ],
+       "city_fraction": 1,
+       "area_approximate": false
+      }
+     ],
+     "system": [],
+     "counts": {
+      "official_active": 2,
+      "official_upcoming": 2,
+      "civil_defense_active": 0,
+      "weather_warning_active": 2,
+      "risk_estimate": 0,
+      "data_quality": 0
+     },
+     "sources": [
+      {
+       "code": "idap-alerts",
+       "name": "Defesa Civil — alertas à população (IDAP)",
+       "attribution": "Fonte: Defesa Civil (IDAP/MIDR)",
+       "freshness": "FRESH",
+       "last_success_at": "2026-11-25T17:56:45.580522Z"
+      },
+      {
+       "code": "inmet-warnings",
+       "name": "INMET — avisos meteorológicos (Alert-AS)",
+       "attribution": "Fonte: INMET — Alert-AS",
+       "freshness": "FRESH",
+       "last_success_at": "2026-11-25T17:56:38.024931Z"
+      }
+     ],
+     "sources_ok": true,
+     "cge_url": "https://www.cgesp.org",
+     "official_channel": "Para receber os alertas oficiais da Defesa Civil no celular, envie um SMS com o seu CEP para 40199. Em emergência, ligue 199 (Defesa Civil) ou 193 (Bombeiros)."
+    }
+   }
+  ],
+  "GET /api/v1/analytics/datasets": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": [
+     {
+      "id": "iag-rain-monthly",
+      "name": "Chuva mensal medida — IAG/USP (Água Funda)",
+      "description": "Total mensal de chuva medido no pluviômetro da estação do IAG/USP, de 1933 a 2025, publicado pela Prefeitura de São Paulo.",
+      "kind": "OBSERVED",
+      "resolution": "month",
+      "spatial": "Uma estação (Água Funda, zona sul)",
+      "source_code": "iag-usp-rain-monthly",
+      "source_name": "IAG/USP — chuva mensal medida (Água Funda), 1933–2025",
+      "attribution": "Chuva medida: IAG/USP (Estação Água Funda) — publicação: Prefeitura de São Paulo",
+      "license": "Dado público municipal (termos não informados)",
+      "freshness": "FRESH",
+      "variables": [
+       {
+        "code": "precipitation_month",
+        "label": "Chuva mensal",
+        "unit": "mm",
+        "aggregations": [
+         "sum",
+         "mean",
+         "min",
+         "max"
+        ]
+       }
+      ],
+      "grains": [
+       "month",
+       "year"
+      ],
+      "visualizations": [
+       "line",
+       "bar",
+       "histogram",
+       "box",
+       "table"
+      ],
+      "numeric": true,
+      "caveats": [
+       "Representa a zona sul (Água Funda), não a cidade inteira.",
+       "Atualização anual pela Prefeitura; o ano corrente ainda não está na série."
+      ],
+      "records": 1116,
+      "period_start": "1933-01",
+      "period_end": "2025-12",
+      "locations": [
+       {
+        "key": "IAG-AGUA-FUNDA",
+        "label": "IAG/USP — Água Funda",
+        "latitude": -23.6512,
+        "longitude": -46.6224,
+        "detail": null
+       }
+      ]
+     },
+     {
+      "id": "reanalysis-daily",
+      "name": "Reanálise diária — Open-Meteo (ERA5/ERA5-Land)",
+      "description": "Chuva e temperaturas diárias estimadas por reanálise para os pontos da grade de previsão, de 1991 até ontem.",
+      "kind": "MODELED",
+      "resolution": "day",
+      "spatial": "12 pontos da grade (chuva em células de ~25 km)",
+      "source_code": "open-meteo-archive",
+      "source_name": "Open-Meteo — reanálise diária (ERA5/ERA5-Land)",
+      "attribution": "Reanálise: Open-Meteo.com (CC BY 4.0), dados ERA5/ERA5-Land (Copernicus)",
+      "license": "CC BY 4.0 (uso não comercial da API gratuita)",
+      "freshness": "FRESH",
+      "variables": [
+       {
+        "code": "precipitation_sum",
+        "label": "Chuva diária",
+        "unit": "mm",
+        "aggregations": [
+         "sum",
+         "mean",
+         "min",
+         "max"
+        ]
+       },
+       {
+        "code": "air_temperature_max",
+        "label": "Temperatura máxima",
+        "unit": "°C",
+        "aggregations": [
+         "mean",
+         "min",
+         "max"
+        ]
+       },
+       {
+        "code": "air_temperature_min",
+        "label": "Temperatura mínima",
+        "unit": "°C",
+        "aggregations": [
+         "mean",
+         "min",
+         "max"
+        ]
+       },
+       {
+        "code": "air_temperature_mean",
+        "label": "Temperatura média",
+        "unit": "°C",
+        "aggregations": [
+         "mean",
+         "min",
+         "max"
+        ]
+       }
+      ],
+      "grains": [
+       "day",
+       "week",
+       "month",
+       "year"
+      ],
+      "visualizations": [
+       "line",
+       "bar",
+       "area",
+       "histogram",
+       "box",
+       "calendar",
+       "ranking",
+       "table"
+      ],
+      "numeric": true,
+      "caveats": [
+       "Estimativa de modelo, não medição.",
+       "Subestima temporais locais; no centro, ~12% abaixo da normal medida do IAG/USP.",
+       "Use para comparar um período com ele mesmo no mesmo ponto."
+      ],
+      "records": 629376,
+      "period_start": "1991-01-01",
+      "period_end": "2026-11-24",
+      "locations": [
+       {
+        "key": "-23.4500,-46.4900",
+        "label": "Nordeste (~18 km do centro)",
+        "latitude": -23.45,
+        "longitude": -46.49,
+        "detail": "célula do modelo -23.4446,-46.4669"
+       },
+       {
+        "key": "-23.4500,-46.6200",
+        "label": "Norte (~11 km do centro)",
+        "latitude": -23.45,
+        "longitude": -46.62,
+        "detail": "célula do modelo -23.4446,-46.6562"
+       },
+       {
+        "key": "-23.4500,-46.7500",
+        "label": "Noroeste (~16 km do centro)",
+        "latitude": -23.45,
+        "longitude": -46.75,
+        "detail": "célula do modelo -23.4446,-46.7508"
+       },
+       {
+        "key": "-23.5700,-46.4900",
+        "label": "Leste (~15 km do centro)",
+        "latitude": -23.57,
+        "longitude": -46.49,
+        "detail": "célula do modelo -23.5852,-46.4700"
+       },
+       {
+        "key": "-23.5700,-46.6200",
+        "label": "Centro",
+        "latitude": -23.57,
+        "longitude": -46.62,
+        "detail": "célula do modelo -23.5852,-46.6596"
+       },
+       {
+        "key": "-23.5700,-46.7500",
+        "label": "Oeste (~12 km do centro)",
+        "latitude": -23.57,
+        "longitude": -46.75,
+        "detail": "célula do modelo -23.5852,-46.7545"
+       },
+       {
+        "key": "-23.6900,-46.4900",
+        "label": "Sudeste (~21 km do centro)",
+        "latitude": -23.69,
+        "longitude": -46.49,
+        "detail": "célula do modelo -23.7258,-46.4731"
+       },
+       {
+        "key": "-23.6900,-46.6200",
+        "label": "Sul (~16 km do centro)",
+        "latitude": -23.69,
+        "longitude": -46.62,
+        "detail": "célula do modelo -23.6555,-46.6139"
+       },
+       {
+        "key": "-23.6900,-46.7500",
+        "label": "Sudoeste (~20 km do centro)",
+        "latitude": -23.69,
+        "longitude": -46.75,
+        "detail": "célula do modelo -23.7258,-46.7582"
+       },
+       {
+        "key": "-23.8300,-46.4900",
+        "label": "Sudeste (~34 km do centro)",
+        "latitude": -23.83,
+        "longitude": -46.49,
+        "detail": "célula do modelo -23.7961,-46.5222"
+       },
+       {
+        "key": "-23.8300,-46.6200",
+        "label": "Sul (~31 km do centro)",
+        "latitude": -23.83,
+        "longitude": -46.62,
+        "detail": "célula do modelo -23.8664,-46.5714"
+       },
+       {
+        "key": "-23.8300,-46.7500",
+        "label": "Sul (~33 km do centro)",
+        "latitude": -23.83,
+        "longitude": -46.75,
+        "detail": "célula do modelo -23.8664,-46.7619"
+       }
+      ]
+     },
+     {
+      "id": "forecast-hourly",
+      "name": "Previsão horária — Open-Meteo",
+      "description": "Previsão de 7 dias e estimativa das 72 h anteriores nos pontos da grade.",
+      "kind": "FORECAST",
+      "resolution": "hour",
+      "spatial": "12 pontos da grade",
+      "source_code": "open-meteo-forecast",
+      "source_name": "Open-Meteo — previsão do tempo",
+      "attribution": "Dados de previsão: Open-Meteo.com (CC BY 4.0)",
+      "license": "CC BY 4.0 (uso não comercial da API gratuita)",
+      "freshness": "FRESH",
+      "variables": [
+       {
+        "code": "precipitation",
+        "label": "Chuva",
+        "unit": "mm",
+        "aggregations": [
+         "sum",
+         "mean",
+         "min",
+         "max"
+        ]
+       },
+       {
+        "code": "air_temperature",
+        "label": "Temperatura",
+        "unit": "°C",
+        "aggregations": [
+         "mean",
+         "min",
+         "max"
+        ]
+       },
+       {
+        "code": "relative_humidity",
+        "label": "Umidade relativa",
+        "unit": "%",
+        "aggregations": [
+         "mean",
+         "min",
+         "max"
+        ]
+       },
+       {
+        "code": "wind_speed",
+        "label": "Vento",
+        "unit": "m/s",
+        "aggregations": [
+         "mean",
+         "min",
+         "max"
+        ]
+       }
+      ],
+      "grains": [
+       "day"
+      ],
+      "visualizations": [
+       "line",
+       "bar",
+       "area",
+       "table"
+      ],
+      "numeric": true,
+      "caveats": [
+       "Previsão de modelo: não é medição."
+      ],
+      "records": 19104,
+      "period_start": "2026-11-16T03:00:00+00:00",
+      "period_end": "2026-12-02T02:00:00+00:00",
+      "locations": [
+       {
+        "key": "-23.4446,-46.4669",
+        "label": "Nordeste (~21 km do centro)",
+        "latitude": -23.44464,
+        "longitude": -46.46689,
+        "detail": null
+       },
+       {
+        "key": "-23.4446,-46.6562",
+        "label": "Norte (~12 km do centro)",
+        "latitude": -23.44464,
+        "longitude": -46.65616,
+        "detail": null
+       },
+       {
+        "key": "-23.4446,-46.7508",
+        "label": "Noroeste (~17 km do centro)",
+        "latitude": -23.44464,
+        "longitude": -46.750793,
+        "detail": null
+       },
+       {
+        "key": "-23.5852,-46.4700",
+        "label": "Leste (~17 km do centro)",
+        "latitude": -23.585238,
+        "longitude": -46.46997,
+        "detail": null
+       },
+       {
+        "key": "-23.5852,-46.6596",
+        "label": "Centro",
+        "latitude": -23.585238,
+        "longitude": -46.659637,
+        "detail": null
+       },
+       {
+        "key": "-23.5852,-46.7545",
+        "label": "Oeste (~13 km do centro)",
+        "latitude": -23.585238,
+        "longitude": -46.754486,
+        "detail": null
+       },
+       {
+        "key": "-23.6555,-46.6139",
+        "label": "Sul (~12 km do centro)",
+        "latitude": -23.655537,
+        "longitude": -46.613922,
+        "detail": null
+       },
+       {
+        "key": "-23.7258,-46.4731",
+        "label": "Sudeste (~25 km do centro)",
+        "latitude": -23.725836,
+        "longitude": -46.473053,
+        "detail": null
+       },
+       {
+        "key": "-23.7258,-46.7582",
+        "label": "Sudoeste (~23 km do centro)",
+        "latitude": -23.725836,
+        "longitude": -46.75818,
+        "detail": null
+       },
+       {
+        "key": "-23.7961,-46.5222",
+        "label": "Sudeste (~30 km do centro)",
+        "latitude": -23.796133,
+        "longitude": -46.522217,
+        "detail": null
+       },
+       {
+        "key": "-23.8664,-46.5714",
+        "label": "Sul (~36 km do centro)",
+        "latitude": -23.866432,
+        "longitude": -46.57141,
+        "detail": null
+       },
+       {
+        "key": "-23.8664,-46.7619",
+        "label": "Sul (~37 km do centro)",
+        "latitude": -23.866432,
+        "longitude": -46.7619,
+        "detail": null
+       }
+      ]
+     },
+     {
+      "id": "flood-occurrences",
+      "name": "Ocorrências de alagamento e inundação — GeoSampa",
+      "description": "Registros de atendimento da Defesa Civil (SIGRC) publicados no GeoSampa.",
+      "kind": "OBSERVED",
+      "resolution": "event",
+      "spatial": "Pontos; agrupáveis por subprefeitura",
+      "source_code": "geosampa-flood-occurrences",
+      "source_name": "GeoSampa — ocorrências de alagamento e inundação",
+      "attribution": "GeoSampa — Prefeitura de São Paulo",
+      "license": "Dados abertos municipais (termos de licença não informados nos metadados)",
+      "freshness": "FRESH",
+      "variables": [
+       {
+        "code": "occurrences",
+        "label": "Ocorrências",
+        "unit": "registros",
+        "aggregations": [
+         "count"
+        ]
+       }
+      ],
+      "grains": [
+       "day",
+       "week",
+       "month"
+      ],
+      "visualizations": [
+       "bar",
+       "line",
+       "ranking",
+       "table"
+      ],
+      "numeric": false,
+      "caveats": [
+       "Registros de atendimento: podem não incluir todos os eventos.",
+       "O serviço WFS traz só o ano corrente."
+      ],
+      "records": 630,
+      "period_start": "2026-01-04",
+      "period_end": "2026-10-28",
+      "locations": [
+       {
+        "key": "ARICANDUVA/VILA FORMOSA",
+        "label": "Aricanduva/Vila Formosa",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "BUTANTA",
+        "label": "Butanta",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "CAMPO LIMPO",
+        "label": "Campo Limpo",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "CAPELA DO SOCORRO",
+        "label": "Capela Do Socorro",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "CASA VERDE/CACHOEIRINHA",
+        "label": "Casa Verde/Cachoeirinha",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "CIDADE ADEMAR",
+        "label": "Cidade Ademar",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "CIDADE TIRADENTES",
+        "label": "Cidade Tiradentes",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "ERMELINO MATARAZZO",
+        "label": "Ermelino Matarazzo",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "FREGUESIA DO O/BRASILANDIA",
+        "label": "Freguesia Do O/Brasilandia",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "GUAIANASES",
+        "label": "Guaianases",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "IPIRANGA",
+        "label": "Ipiranga",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "ITAIM PAULISTA",
+        "label": "Itaim Paulista",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "ITAQUERA",
+        "label": "Itaquera",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "JABAQUARA",
+        "label": "Jabaquara",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "JACANA/TREMEMBE",
+        "label": "Jacana/Tremembe",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "LAPA",
+        "label": "Lapa",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "MBOI MIRIM",
+        "label": "Mboi Mirim",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "MOOCA",
+        "label": "Mooca",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "PARELHEIROS",
+        "label": "Parelheiros",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "PENHA",
+        "label": "Penha",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "PERUS",
+        "label": "Perus",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "PINHEIROS",
+        "label": "Pinheiros",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "PIRITUBA/JARAGUA",
+        "label": "Pirituba/Jaragua",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "SANTANA/TUCURUVI",
+        "label": "Santana/Tucuruvi",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "SANTO AMARO",
+        "label": "Santo Amaro",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "SAO MATEUS",
+        "label": "Sao Mateus",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "SAO MIGUEL PAULISTA",
+        "label": "Sao Miguel Paulista",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "SAPOPEMBA",
+        "label": "Sapopemba",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "SE",
+        "label": "Se",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "VILA MARIANA",
+        "label": "Vila Mariana",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "VILA MARIA/VILA GUILHERME",
+        "label": "Vila Maria/Vila Guilherme",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "VILA PRUDENTE",
+        "label": "Vila Prudente",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       }
+      ]
+     },
+     {
+      "id": "risk-assessments",
+      "name": "Risco estimado — histórico das execuções",
+      "description": "Categorias do motor de risco v0 (experimental) a cada execução horária.",
+      "kind": "DERIVED",
+      "resolution": "run",
+      "spatial": "793 setores de risco hidrológico",
+      "source_code": "flood-risk-engine",
+      "source_name": "Motor de risco de alagamento v0 (experimental)",
+      "attribution": "Estimativa experimental do sistema",
+      "license": "Resultado derivado (DERIVED)",
+      "freshness": "FRESH",
+      "variables": [
+       {
+        "code": "sectors",
+        "label": "Setores por categoria",
+        "unit": "setores",
+        "aggregations": [
+         "count"
+        ]
+       }
+      ],
+      "grains": [
+       "day"
+      ],
+      "visualizations": [
+       "line",
+       "bar",
+       "table"
+      ],
+      "numeric": false,
+      "caveats": [
+       "Estimativa experimental do sistema: não é alerta oficial."
+      ],
+      "records": 40,
+      "period_start": "2026-11-20T01:45:10.229291+00:00",
+      "period_end": "2026-11-25T17:26:46.943756+00:00",
+      "locations": [
+       {
+        "key": "CRITICAL",
+        "label": "Crítico",
+        "latitude": null,
+        "longitude": null,
+        "detail": "793 setores ativos"
+       },
+       {
+        "key": "HIGH",
+        "label": "Alto",
+        "latitude": null,
+        "longitude": null,
+        "detail": "793 setores ativos"
+       },
+       {
+        "key": "MODERATE",
+        "label": "Moderado",
+        "latitude": null,
+        "longitude": null,
+        "detail": "793 setores ativos"
+       },
+       {
+        "key": "LOW",
+        "label": "Baixo",
+        "latitude": null,
+        "longitude": null,
+        "detail": "793 setores ativos"
+       },
+       {
+        "key": "UNKNOWN",
+        "label": "Desconhecido",
+        "latitude": null,
+        "longitude": null,
+        "detail": "793 setores ativos"
+       }
+      ]
+     },
+     {
+      "id": "ingestion-runs",
+      "name": "Coletas das fontes",
+      "description": "Execuções de coleta de cada fonte: estado, duração e registros.",
+      "kind": "DERIVED",
+      "resolution": "run",
+      "spatial": "Por fonte",
+      "source_code": "",
+      "source_name": null,
+      "attribution": null,
+      "license": null,
+      "freshness": null,
+      "variables": [
+       {
+        "code": "runs",
+        "label": "Execuções",
+        "unit": "execuções",
+        "aggregations": [
+         "count"
+        ]
+       },
+       {
+        "code": "duration_s",
+        "label": "Duração",
+        "unit": "s",
+        "aggregations": [
+         "mean",
+         "max",
+         "count"
+        ]
+       }
+      ],
+      "grains": [
+       "day"
+      ],
+      "visualizations": [
+       "bar",
+       "line",
+       "table"
+      ],
+      "numeric": false,
+      "caveats": [],
+      "records": 159,
+      "period_start": "2026-11-19T17:19:48.850471+00:00",
+      "period_end": "2026-11-25T17:56:37.082763+00:00",
+      "locations": [
+       {
+        "key": "copernicus-dem",
+        "label": "Copernicus DEM GLO-30 — elevação (modelo de superfície, 30 m)",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "flood-risk-engine",
+        "label": "Motor de risco de alagamento v0 (experimental)",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "geosampa-basins",
+        "label": "GeoSampa — bacias hidrográficas",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "geosampa-drainage",
+        "label": "GeoSampa — rede de drenagem (rios e córregos)",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "geosampa-flood-extent",
+        "label": "GeoSampa — manchas de inundação (100 anos)",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "geosampa-flood-occurrences",
+        "label": "GeoSampa — ocorrências de alagamento e inundação",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "geosampa-reservoirs",
+        "label": "GeoSampa — reservatórios de amortecimento (piscinões)",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "geosampa-risk-sectors",
+        "label": "GeoSampa — setores de risco hidrológico",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "geosampa-subprefectures",
+        "label": "GeoSampa — subprefeituras",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "iag-usp-rain-monthly",
+        "label": "IAG/USP — chuva mensal medida (Água Funda), 1933–2025",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "idap-alerts",
+        "label": "Defesa Civil — alertas à população (IDAP)",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "inmet-observations",
+        "label": "INMET — observações horárias",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "inmet-stations",
+        "label": "INMET — estações automáticas (cadastro)",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "inmet-warnings",
+        "label": "INMET — avisos meteorológicos (Alert-AS)",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "open-meteo-archive",
+        "label": "Open-Meteo — reanálise diária (ERA5/ERA5-Land)",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       },
+       {
+        "key": "open-meteo-forecast",
+        "label": "Open-Meteo — previsão do tempo",
+        "latitude": null,
+        "longitude": null,
+        "detail": null
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "GET /api/v1/analytics/datasets/iag-rain-monthly/describe?variable=precipitation_month&start=1933-01-01&end=2025-12-28&location=IAG-AGUA-FUNDA": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": {
+     "dataset": "iag-rain-monthly",
+     "variable": "precipitation_month",
+     "unit": "mm",
+     "kind": "OBSERVED",
+     "location": "IAG-AGUA-FUNDA",
+     "start": "1933-01-01",
+     "end": "2025-12-28",
+     "expected": 1116,
+     "n": 1116,
+     "missing": 0,
+     "coverage": 1,
+     "mean": 118.80430107526882,
+     "median": 98,
+     "minimum": 0.4,
+     "maximum": 653.2,
+     "std": 91.81547130370691,
+     "p5": 8.174999999999999,
+     "p25": 45.45,
+     "p75": 176.72499999999997,
+     "p95": 287.4,
+     "outlier_count": 16,
+     "outliers": [
+      653.2,
+      470.7,
+      469.6,
+      466.3,
+      465.5,
+      430.5,
+      424.9,
+      399.4,
+      395.7,
+      393.4
+     ],
+     "method": "Percentis por interpolação linear; atípicos fora de 1,5 × IQR."
+    }
+   }
+  ],
+  "GET /api/v1/analytics/datasets/iag-rain-monthly/describe": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": {
+     "dataset": "iag-rain-monthly",
+     "variable": "precipitation_month",
+     "unit": "mm",
+     "kind": "OBSERVED",
+     "location": "IAG-AGUA-FUNDA",
+     "start": "1933-01-01",
+     "end": "2025-12-28",
+     "expected": 1116,
+     "n": 1116,
+     "missing": 0,
+     "coverage": 1,
+     "mean": 118.80430107526882,
+     "median": 98,
+     "minimum": 0.4,
+     "maximum": 653.2,
+     "std": 91.81547130370691,
+     "p5": 8.174999999999999,
+     "p25": 45.45,
+     "p75": 176.72499999999997,
+     "p95": 287.4,
+     "outlier_count": 16,
+     "outliers": [
+      653.2,
+      470.7,
+      469.6,
+      466.3,
+      465.5,
+      430.5,
+      424.9,
+      399.4,
+      395.7,
+      393.4
+     ],
+     "method": "Percentis por interpolação linear; atípicos fora de 1,5 × IQR."
+    }
+   }
+  ],
+  "GET /api/v1/analytics/datasets/forecast-hourly/describe?variable=precipitation&start=2026-11-16&end=2026-12-02&location=-23.4446%2C-46.4669": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": {
+     "dataset": "forecast-hourly",
+     "variable": "precipitation",
+     "unit": "mm",
+     "kind": "FORECAST",
+     "location": "-23.4446,-46.4669",
+     "start": "2026-11-16",
+     "end": "2026-12-02",
+     "expected": 408,
+     "n": 384,
+     "missing": 24,
+     "coverage": 0.9412,
+     "mean": 0.34375,
+     "median": 0,
+     "minimum": 0,
+     "maximum": 4.9,
+     "std": 0.6978613356994566,
+     "p5": 0,
+     "p25": 0,
+     "p75": 0.3,
+     "p95": 1.9,
+     "outlier_count": 51,
+     "outliers": [
+      4.9,
+      4.8,
+      4.4,
+      3.6,
+      2.7,
+      2.6,
+      2.6,
+      2.6,
+      2.6,
+      2.4
+     ],
+     "method": "Percentis por interpolação linear; atípicos fora de 1,5 × IQR."
+    }
+   }
+  ],
+  "GET /api/v1/analytics/datasets/forecast-hourly/describe": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": {
+     "dataset": "forecast-hourly",
+     "variable": "precipitation",
+     "unit": "mm",
+     "kind": "FORECAST",
+     "location": "-23.4446,-46.4669",
+     "start": "2026-11-16",
+     "end": "2026-12-02",
+     "expected": 408,
+     "n": 384,
+     "missing": 24,
+     "coverage": 0.9412,
+     "mean": 0.34375,
+     "median": 0,
+     "minimum": 0,
+     "maximum": 4.9,
+     "std": 0.6978613356994566,
+     "p5": 0,
+     "p25": 0,
+     "p75": 0.3,
+     "p95": 1.9,
+     "outlier_count": 51,
+     "outliers": [
+      4.9,
+      4.8,
+      4.4,
+      3.6,
+      2.7,
+      2.6,
+      2.6,
+      2.6,
+      2.6,
+      2.4
+     ],
+     "method": "Percentis por interpolação linear; atípicos fora de 1,5 × IQR."
+    }
+   }
+  ],
+  "GET /api/v1/analytics/datasets/reanalysis-daily/describe?variable=precipitation_sum&start=1991-01-01&end=2026-11-24&location=-23.4500%2C-46.4900": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": {
+     "dataset": "reanalysis-daily",
+     "variable": "precipitation_sum",
+     "unit": "mm",
+     "kind": "MODELED",
+     "location": "-23.4500,-46.4900",
+     "start": "1991-01-01",
+     "end": "2026-11-24",
+     "expected": 13112,
+     "n": 13112,
+     "missing": 0,
+     "coverage": 1,
+     "mean": 3.7948901769371566,
+     "median": 0.6,
+     "minimum": 0,
+     "maximum": 135.8,
+     "std": 7.147991796066855,
+     "p5": 0,
+     "p25": 0,
+     "p75": 4.5,
+     "p95": 18.2,
+     "outlier_count": 1476,
+     "outliers": [
+      135.8,
+      105.6,
+      104.7,
+      103,
+      98.4,
+      82.9,
+      73.6,
+      67.4,
+      66.4,
+      63.9
+     ],
+     "method": "Percentis por interpolação linear; atípicos fora de 1,5 × IQR."
+    }
+   }
+  ],
+  "GET /api/v1/analytics/datasets/reanalysis-daily/describe": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": {
+     "dataset": "reanalysis-daily",
+     "variable": "precipitation_sum",
+     "unit": "mm",
+     "kind": "MODELED",
+     "location": "-23.4500,-46.4900",
+     "start": "1991-01-01",
+     "end": "2026-11-24",
+     "expected": 13112,
+     "n": 13112,
+     "missing": 0,
+     "coverage": 1,
+     "mean": 3.7948901769371566,
+     "median": 0.6,
+     "minimum": 0,
+     "maximum": 135.8,
+     "std": 7.147991796066855,
+     "p5": 0,
+     "p25": 0,
+     "p75": 4.5,
+     "p95": 18.2,
+     "outlier_count": 1476,
+     "outliers": [
+      135.8,
+      105.6,
+      104.7,
+      103,
+      98.4,
+      82.9,
+      73.6,
+      67.4,
+      66.4,
+      63.9
+     ],
+     "method": "Percentis por interpolação linear; atípicos fora de 1,5 × IQR."
+    }
+   }
+  ]
+ }
+}

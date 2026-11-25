@@ -146,6 +146,18 @@ export class MockApi {
       const request = route.request();
       const url = new URL(request.url());
       const entry = this.next(request.method(), url);
+      // Downloads não passam pelo gravador (o navegador salva direto); um PDF mínimo basta.
+      if (!entry && /^\/api\/v1\/reports\/[^/]+\/download$/.test(url.pathname)) {
+        await route.fulfill({
+          status: 200,
+          headers: {
+            "content-type": "application/pdf",
+            "content-disposition": 'attachment; filename="relatorio.pdf"',
+          },
+          body: "%PDF-1.4\n%%EOF\n",
+        });
+        return;
+      }
       if (!entry) {
         this.missing.push(`${request.method()} ${url.pathname}${url.search}`);
         await route.fulfill({
