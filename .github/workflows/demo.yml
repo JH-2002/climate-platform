@@ -49,7 +49,7 @@ jobs:
       DATABASE_URL: postgresql+asyncpg://climate:demo-only@localhost:5432/climate
       REDIS_URL: redis://localhost:6379/0
       RATE_LIMIT_ENABLED: "false"
-      DEM_DIR: ${{ runner.temp }}/dem
+      DEM_DIR: /tmp/dem
       FRONTEND_ORIGIN: http://localhost:3000
     steps:
       - name: Baixar o código
