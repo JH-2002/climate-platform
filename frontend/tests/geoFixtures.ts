@@ -1,4 +1,4 @@
-import type { BasinDetail, BasinList, Profile, SectorTerrain } from "@/features/geo/types";
+import type { BasinBlock, BasinDetail, BasinList, Profile, SectorTerrain } from "@/features/geo/types";
 
 const DISCLAIMER =
   "Relevo do Copernicus DEM GLO-30: modelo de superfície com ~30 m de resolução. Prédios e árvores entram na elevação. Serve para comparar bairros e bacias, não ruas. É contexto: não muda a categoria de risco.";
@@ -112,5 +112,26 @@ export const profileFixture: Profile = {
   step_m: 30,
   attribution: "Produced using Copernicus DEM GLO-30",
   hydro_attribution: "GeoSampa",
+  disclaimer: DISCLAIMER,
+};
+
+export const blockFixture: BasinBlock = {
+  basin_id: 9,
+  name: "Ribeirão Água Vermelha",
+  main_basin: "Rio Tietê",
+  bounds: { west: -46.44, south: -23.49, east: -46.418, north: -23.472 },
+  elev_min_m: 722,
+  elev_max_m: 768,
+  source: "simulação",
+  simulation_id: "4f9c2a8e-1b2d-4c3e-9f00-123456789abc",
+  computed_at: "2026-11-24T18:00:00Z",
+  banner: "SIMULAÇÃO — cenário hipotético, não é previsão nem alerta",
+  sectors: [
+    { id: 4, code: "HMP-01-03", name: "FAVELA DA PAZ", grade: 3, category: "CRITICAL", p_high: 0.9, longitude: -46.419, latitude: -23.4746 },
+    { id: 5, code: "HMP-07-02", name: "JARDIM HELENA", grade: 2, category: "HIGH", p_high: 0.6, longitude: -46.431, latitude: -23.4768 },
+    { id: 6, code: "HMP-07-01", name: "JARDIM HELENA", grade: 1, category: "LOW", p_high: 0, longitude: -46.43, latitude: -23.4756 },
+  ],
+  attribution: "Produced using Copernicus DEM GLO-30",
+  hydro_attribution: "Bacias, drenagem e piscinões: GeoSampa — Prefeitura de São Paulo",
   disclaimer: DISCLAIMER,
 };

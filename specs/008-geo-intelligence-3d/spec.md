@@ -48,11 +48,11 @@ Dividido em duas partes, entregues e validadas em sequência.
   - perfil traçado com dois cliques e mostrado em gráfico;
   - a ficha do setor na página de Risco passa a mostrar o terreno.
 
-**Parte B — bloco 3D da bacia (Three.js)**
-- Para a bacia escolhida, um bloco 3D gerado do DEM (malha de até 256 × 256), com exagero vertical ajustável.
-- Por cima do bloco: drenagem, piscinões e setores coloridos pela estimativa real **ou por uma simulação da Fase 7** (escolhida pelo link da simulação).
-- Controles de órbita por mouse, toque e teclado, e exportação de imagem.
-- Alternativa em 2D: o mesmo conteúdo em mapa sombreado e tabela, quando não há WebGL ou o usuário prefere.
+**Parte B — bloco 3D da bacia** *(revisado em 2026-11-24: MapLibre sobre o relevo do Copernicus, sem Three.js; ver ADR-013)*
+- Para a bacia escolhida, o terreno 3D do MapLibre alimentado pelo **próprio Copernicus**, servido pelo backend em blocos de relevo. O 3D usa o mesmo relevo dos cálculos. O exagero vertical é ajustável.
+- Por cima do terreno: drenagem, piscinões e setores coloridos pela estimativa real **ou por uma simulação da Fase 7** (escolhida pelo link da simulação). Fora da bacia, o mapa fica esmaecido.
+- Controles de órbita por mouse, toque e teclado (os do MapLibre), reinício da vista e exportação de imagem.
+- Alternativa em 2D: relevo sombreado da bacia gerado no servidor, com os mesmos setores, drenagem e piscinões, e tabela. Aparece quando não há WebGL ou o usuário prefere reduzir movimento.
 
 **Fora do escopo**
 - **Mancha de inundação por cota** ("encher" o relevo até um nível): num modelo de superfície de 30 m, sem a rede de drenagem real, seria uma inundação inventada.
@@ -102,18 +102,19 @@ Dividido em duas partes, entregues e validadas em sequência.
 
 ### Parte B
 - **FR-128 Bloco 3D.**
-  - `GET /geo/basins/{id}/terrain`: grade de elevação da bacia reamostrada para no máximo 256 × 256, com os limites e a resolução efetiva.
-  - O frontend monta a malha com Three.js (carregado só nessa vista), com exagero vertical de 1× a 5×.
+  - `GET /geo/terrain/{z}/{x}/{y}.png`: blocos de relevo no formato "terrarium" do MapLibre, gerados do recorte do Copernicus (zoom 6 a 14, com cache).
+  - `GET /geo/basins/{id}/block`: limites, faixa de elevação e setores da bacia.
+  - O frontend mostra a bacia no terreno 3D do MapLibre, com exagero vertical de 1× a 5×.
 - **FR-129 Camadas sobre o bloco.** Drenagem, piscinões e setores, coloridos pela estimativa real mais recente ou por uma simulação (`?simulacao=<id>`), com a faixa de simulação (BR-100 da spec 007) quando for o caso.
 - **FR-130 Controles e exportação.**
   - Órbita, zoom e reinício da vista por mouse, toque e teclado.
   - Exportação PNG, com título, legenda e fontes na própria imagem.
-- **FR-131 Alternativa em 2D.** O mesmo conteúdo em mapa sombreado e tabela, quando não há WebGL, quando o usuário prefere reduzir movimento ou quando escolhe a versão 2D.
+- **FR-131 Alternativa em 2D.** `GET /geo/basins/{id}/relief.png`: relevo sombreado da bacia, com os mesmos setores, drenagem e piscinões, mais a tabela dos setores. Aparece quando não há WebGL, quando o usuário prefere reduzir movimento ou quando escolhe a versão 2D.
 
 ## Requisitos não funcionais
 - **NFR-120** Os cálculos de terreno ficam num módulo puro (`app/geo/`), com rasterio e numpy só na camada que lê o arquivo. O módulo é testado com uma grade sintética pequena e um recorte real gravado como fixture, de no máximo 200 KB.
 - **NFR-121** O perfil responde em menos de 500 ms. A grade da bacia responde em menos de 1 s e pode ir para cache.
-- **NFR-122** O bloco 3D roda a 30 quadros por segundo num notebook comum, com no máximo 256 × 256 vértices. O Three.js só é carregado na vista 3D.
+- **NFR-122** O bloco 3D roda a 30 quadros por segundo num notebook comum. O MapLibre da vista 3D só é carregado nela. Os blocos de relevo ficam em cache no servidor e no navegador (24 h).
 - **NFR-123** A camada de drenagem não manda os 28 mil trechos de uma vez: recorte por área visível e simplificação conforme o zoom, com no máximo 5 MB por resposta.
 - **NFR-124** Acessibilidade: o perfil tem tabela e descrição, e o bloco 3D tem alternativa em 2D e controles por teclado.
 
@@ -139,7 +140,7 @@ Dividido em duas partes, entregues e validadas em sequência.
 
 ## Dependências
 - Specs 004 (mapa), 005 (setores e GeoSampa) e 007 (simulações, Parte B).
-- Bibliotecas novas: `rasterio` e `numpy` (backend); `three` (frontend, só na vista 3D).
+- Bibliotecas novas: `rasterio` e `numpy` (backend). Nenhuma no frontend: o bloco 3D usa o MapLibre já presente.
 
 ## Riscos e limitações
 - **Modelo de superfície de 30 m.** Em área densa, um setor pequeno pode ter a elevação de telhados. A elevação relativa usa medianas para reduzir esse efeito, mas não o elimina.

@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { BasinBlockView } from "@/components/geo/BasinBlockView";
 import { BasinCard } from "@/components/geo/BasinCard";
 import { BasinRanking } from "@/components/geo/BasinRanking";
 import { ProfileChart } from "@/components/geo/ProfileChart";
@@ -28,6 +29,7 @@ const GeoMap = dynamic(() => import("@/components/geo/GeoMap"), {
 const TABS: { id: GeoTab; label: string }[] = [
   { id: "bacias", label: "Bacias" },
   { id: "perfil", label: "Perfil do relevo" },
+  { id: "bloco", label: "Bloco 3D da bacia" },
 ];
 
 function GeoPage() {
@@ -77,6 +79,7 @@ function GeoPage() {
         ))}
       </div>
 
+      {state.tab !== "bloco" && (
       <GeoMap
         basins={layers.basins.data}
         reservoirs={layers.reservoirs.data}
@@ -88,10 +91,29 @@ function GeoPage() {
           state.profile.length < MAX_PROFILE_POINTS && update({ profile: [...state.profile, [lon, lat]] })
         }
       />
+      )}
+
+      {state.tab === "bloco" && (
+        <div role="tabpanel" aria-label="Bloco 3D da bacia">
+          <BasinBlockView
+            basinId={state.basinId}
+            simulationId={state.simulationId}
+            basins={layers.basins.data}
+            reservoirs={layers.reservoirs.data}
+            onSimulation={(simulationId) => update({ simulationId })}
+          />
+        </div>
+      )}
 
       {state.tab === "bacias" && (
         <div role="tabpanel" aria-label="Bacias" className="space-y-5">
-          {basin.data && <BasinCard detail={basin.data} onClose={() => update({ basinId: null })} />}
+          {basin.data && (
+            <BasinCard
+              detail={basin.data}
+              onClose={() => update({ basinId: null })}
+              onOpenBlock={() => update({ tab: "bloco" })}
+            />
+          )}
           {basin.isError && (
             <p role="alert" className="text-sm">
               Bacia não encontrada.

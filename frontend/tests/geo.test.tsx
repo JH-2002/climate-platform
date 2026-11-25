@@ -1,13 +1,15 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import axe from "axe-core";
 import { describe, expect, it, vi } from "vitest";
+import { BasinBlock2D, categorySummary } from "@/components/geo/BasinBlock2D";
+import { BasinBlockView } from "@/components/geo/BasinBlockView";
 import { BasinCard } from "@/components/geo/BasinCard";
 import { BasinRanking } from "@/components/geo/BasinRanking";
 import { ProfileChart } from "@/components/geo/ProfileChart";
 import { TerrainSection, relativeLabel } from "@/components/geo/TerrainSection";
 import { profileQuery } from "@/features/geo/api";
 import { PROFILE_EXAMPLES, parseGeoState, serializeGeoState } from "@/features/geo/state";
-import { basinDetail, basinList, profileFixture, terrainFixture } from "./geoFixtures";
+import { basinDetail, basinList, blockFixture, profileFixture, terrainFixture } from "./geoFixtures";
 import { renderWithQuery } from "./query";
 
 async function seriousViolations(container: HTMLElement) {
@@ -17,13 +19,19 @@ async function seriousViolations(container: HTMLElement) {
 
 describe("estado da página /geo-3d", () => {
   it("ida e volta pela URL", () => {
-    const state = { tab: "perfil" as const, basinId: 252, sort: "ocorrencias" as const, profile: PROFILE_EXAMPLES[0]!.points };
+    const state = {
+      tab: "bloco" as const,
+      basinId: 252,
+      sort: "ocorrencias" as const,
+      profile: PROFILE_EXAMPLES[0]!.points,
+      simulationId: "4f9c2a8e-1b2d-4c3e-9f00-123456789abc",
+    };
     expect(parseGeoState(new URLSearchParams(serializeGeoState(state)))).toEqual(state);
   });
 
   it("valores inválidos voltam ao padrão", () => {
-    const parsed = parseGeoState(new URLSearchParams("aba=x&bacia=-3&ordem=y&perfil=abc;1,2,3"));
-    expect(parsed).toEqual({ tab: "bacias", basinId: null, sort: "alto", profile: [] });
+    const parsed = parseGeoState(new URLSearchParams("aba=x&bacia=-3&ordem=y&perfil=abc;1,2,3&simulacao=zzz"));
+    expect(parsed).toEqual({ tab: "bacias", basinId: null, sort: "alto", profile: [], simulationId: null });
   });
 
   it("perfil vai para a API com 5 casas", () => {
@@ -91,5 +99,46 @@ describe("perfil (FR-124)", () => {
     expect(within(table).getByRole("rowheader", { name: "Setor de risco HMP-01-03" })).toBeInTheDocument();
     expect(screen.getByText("Calculado")).toBeInTheDocument();
     expect(await seriousViolations(container)).toEqual([]);
+  });
+});
+
+describe("bloco da bacia (Parte B)", () => {
+  it("resume as categorias em texto", () => {
+    expect(categorySummary(blockFixture)).toBe("1 crítico, 1 alto, 1 baixo");
+    expect(categorySummary({ ...blockFixture, sectors: [] })).toBe("nenhum setor de risco");
+  });
+
+  it("versão 2D: imagem com texto alternativo e tabela com a chance da simulação", async () => {
+    const { container } = render(<BasinBlock2D block={blockFixture} />);
+    const img = screen.getByRole("img");
+    expect(img).toHaveAttribute("src", `/api/v1/geo/basins/9/relief.png?simulacao=${blockFixture.simulation_id}`);
+    expect(img.getAttribute("alt")).toMatch(/Setores de risco \(3\): 1 crítico, 1 alto, 1 baixo/);
+    expect(screen.getByRole("columnheader", { name: "Chance de alto ou crítico" })).toBeInTheDocument();
+    expect(screen.getByText("90%")).toBeInTheDocument();
+    expect(await seriousViolations(container)).toEqual([]);
+  });
+
+  it("sem bacia escolhida, pede para escolher uma", () => {
+    renderWithQuery(<BasinBlockView basinId={null} simulationId={null} onSimulation={vi.fn()} />, [
+      [["simulation", "recent"], []],
+    ]);
+    expect(screen.getByText(/Escolha uma bacia no mapa ou no ranking/)).toBeInTheDocument();
+  });
+
+  it("sem WebGL mostra a versão 2D, com a faixa de simulação (AC-124, AC-125)", () => {
+    const onSimulation = vi.fn();
+    renderWithQuery(
+      <BasinBlockView basinId={9} simulationId={blockFixture.simulation_id} onSimulation={onSimulation} />,
+      [
+        [["geo", "block", 9, blockFixture.simulation_id], blockFixture],
+        [["simulation", "recent"], []],
+      ],
+    );
+    expect(screen.getByText(/não tem WebGL: mostrando a versão em 2D/)).toBeInTheDocument();
+    expect(screen.getByRole("note", { name: "Aviso de simulação" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "3D" })).toBeDisabled();
+    expect(screen.getByRole("img")).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Cores dos setores"), { target: { value: "" } });
+    expect(onSimulation).toHaveBeenCalledWith(null);
   });
 });

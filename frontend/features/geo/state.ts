@@ -2,14 +2,18 @@
 
 import type { BasinSort } from "./types";
 
-export type GeoTab = "bacias" | "perfil";
+export type GeoTab = "bacias" | "perfil" | "bloco";
 
 export interface GeoState {
   tab: GeoTab;
   basinId: number | null;
   sort: BasinSort;
   profile: [number, number][];
+  simulationId: string | null;
 }
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const TABS: readonly GeoTab[] = ["bacias", "perfil", "bloco"];
 
 const SORTS: readonly BasinSort[] = ["alto", "setores", "ocorrencias", "piscinoes", "nome"];
 export const SORT_LABELS: Record<BasinSort, string> = {
@@ -39,10 +43,11 @@ export function parseGeoState(params: URLSearchParams): GeoState {
   const sort = params.get("ordem");
   const basin = Number(params.get("bacia"));
   return {
-    tab: params.get("aba") === "perfil" ? "perfil" : "bacias",
+    tab: TABS.includes(params.get("aba") as GeoTab) ? (params.get("aba") as GeoTab) : "bacias",
     basinId: Number.isInteger(basin) && basin > 0 ? basin : null,
     sort: SORTS.includes(sort as BasinSort) ? (sort as BasinSort) : "alto",
     profile: parsePoints(params.get("perfil")),
+    simulationId: UUID.test(params.get("simulacao") ?? "") ? params.get("simulacao") : null,
   };
 }
 
@@ -53,6 +58,7 @@ export function serializeGeoState(state: GeoState): string {
   if (state.sort !== "alto") params.set("ordem", state.sort);
   if (state.profile.length > 0)
     params.set("perfil", state.profile.map(([lon, lat]) => `${lon.toFixed(5)},${lat.toFixed(5)}`).join(";"));
+  if (state.simulationId) params.set("simulacao", state.simulationId);
   return params.toString();
 }
 

@@ -19,7 +19,15 @@ function Metric({ label, value }: { label: string; value: string }) {
 }
 
 /** Ficha da bacia (FR-123): números, setores do mais grave ao menos, piscinões e drenagem. */
-export function BasinCard({ detail, onClose }: { detail: BasinDetail; onClose: () => void }) {
+export function BasinCard({
+  detail,
+  onClose,
+  onOpenBlock,
+}: {
+  detail: BasinDetail;
+  onClose: () => void;
+  onOpenBlock?: () => void;
+}) {
   const b = detail.basin;
   const elevation =
     b.elev_min_m !== null && b.elev_max_m !== null
@@ -38,9 +46,20 @@ export function BasinCard({ detail, onClose }: { detail: BasinDetail; onClose: (
             {b.coverage && ` · abrangência ${b.coverage.toLowerCase()} no município`}
           </p>
         </div>
-        <button type="button" onClick={onClose} className="rounded-md border border-surface-border px-3 py-1 text-sm">
-          Fechar
-        </button>
+        <div className="flex gap-2">
+          {onOpenBlock && (
+            <button
+              type="button"
+              onClick={onOpenBlock}
+              className="rounded-md border border-accent px-3 py-1 text-sm font-medium text-accent hover:bg-accent hover:text-white"
+            >
+              Ver em 3D
+            </button>
+          )}
+          <button type="button" onClick={onClose} className="rounded-md border border-surface-border px-3 py-1 text-sm">
+            Fechar
+          </button>
+        </div>
       </div>
       <dl className="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-2">
         <Metric label="Setores de risco" value={String(b.sectors)} />

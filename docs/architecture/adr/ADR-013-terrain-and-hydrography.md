@@ -27,3 +27,11 @@ Opção 1 com A.
 - As métricas de terreno são comparativas (bairro e bacia), com aviso de modelo de superfície. Elas não alteram o risco nesta fase.
 - O LiDAR fica como melhoria para o detalhe local, com download manual por folha.
 - A mancha de inundação continua sendo só a oficial: nenhuma área inundável é derivada do relevo.
+
+## Revisão (2026-11-24) — bloco 3D sem Three.js
+O bloco 3D da bacia usa o terreno 3D do MapLibre (ADR-009), alimentado por blocos de relevo "terrarium" que o backend gera do recorte do Copernicus.
+- **3D e cálculos sobre o mesmo dado:** o relevo visual deixa de vir dos Terrain Tiles nessa vista.
+- **Nenhuma dependência nova no frontend:** órbita, toque e teclado vêm prontos.
+- **Alternativa em 2D:** relevo sombreado em PNG gerado no servidor.
+
+O Three.js continua permitido pela Constituição para análises 3D que o MapLibre não cubra.

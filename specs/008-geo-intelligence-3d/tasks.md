@@ -30,9 +30,9 @@ Validação da Parte A (2026-11-24), com os dados reais:
 
 | ID | Tarefa | Arquivos | Critério de conclusão | Testes | Status |
 |---|---|---|---|---|---|
-| T129 | Grade reamostrada da bacia | `geo/raster.py`, `api/v1/geo.py` | FR-128, NFR-121 | unitários + integração | [ ] |
-| T130 | Bloco 3D com Three.js e exagero vertical | `components/geo/BasinBlock3D.tsx` | FR-128, NFR-122 | `geo.test.tsx` (montagem da malha) | [ ] |
+| T129 | Blocos de relevo "terrarium" do Copernicus e ficha do bloco da bacia | `geo/terrain.py`, `geo/png.py`, `services/geo_relief.py`, `api/v1/geo.py` | FR-128, NFR-121 | unitários + integração | [ ] |
+| T130 | Bloco 3D no MapLibre sobre o relevo do Copernicus, com exagero vertical | `components/geo/BasinBlock3D.tsx` | FR-128, NFR-122 | `geo.test.tsx` | [ ] |
 | T131 | Camadas sobre o bloco, incluindo simulação | idem | FR-129, AC-124 | idem | [ ] |
 | T132 | Controles por teclado e exportação PNG | idem | FR-130 | idem | [ ] |
-| T133 | Alternativa em 2D | `components/geo/BasinBlock2D.tsx` | FR-131, AC-125 | idem | [ ] |
+| T133 | Alternativa em 2D (relevo sombreado em PNG e tabela) | `services/geo_relief.py`, `components/geo/BasinBlock2D.tsx` | FR-131, AC-125 | integração + `geo.test.tsx` | [ ] |
 | T134 | Validação da Parte B e documentação | docs | Navegador + CI | manual | [ ] |

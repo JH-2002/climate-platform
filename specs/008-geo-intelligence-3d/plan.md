@@ -5,7 +5,7 @@
 - **Leitura isolada.** `app/integrations/copernicus/` baixa os blocos e grava o recorte. `app/geo/raster.py` abre o arquivo e entrega matrizes numpy. `app/geo/terrain.py` é puro, com declividade, estatísticas de zona, elevação relativa e amostragem de perfil sobre matrizes, e é testado sem arquivo.
 - **Projeção.** Os cálculos métricos (declividade, distâncias, entorno de 1 km) usam SIRGAS 2000 / UTM 23S (EPSG:31983, Constituição §8). O GeoSampa já entrega as camadas nessa projeção, e o banco guarda em 4326 como as demais.
 - **Drenagem no mapa.** Recorte por área visível com `ST_Intersects` e simplificação por zoom (`ST_SimplifyPreserveTopology`, com tolerância conforme o zoom). Abaixo do zoom 12, só os trechos abertos e canalizados a céu aberto.
-- **Bloco 3D.** O backend reamostra a grade da bacia, por média, para no máximo 256 × 256 e devolve `Float32Array` em base64 com os metadados. O frontend usa `three` puro, sem R3F, para manter o pacote pequeno, em um componente carregado com `dynamic(..., { ssr: false })`.
+- **Bloco 3D (revisado em 2026-11-24).** No lugar da malha em Three.js, o backend serve blocos de relevo "terrarium" gerados do recorte do Copernicus (amostragem bilinear vetorizada e codificador PNG próprio, sem dependência nova). O MapLibre, já usado no projeto (ADR-009), mostra o terreno 3D com o mesmo relevo dos cálculos. Motivos: nenhuma dependência nova no frontend; órbita, toque e teclado já prontos; 3D e cálculos sobre o mesmo dado.
 
 ## Modelo de dados (migration `0007_geo`)
 | Tabela | Campos principais |
@@ -34,7 +34,7 @@ Mais 4 fontes em `data_sources`: `copernicus-dem`, `geosampa-basins`, `geosampa-
 - `features/geo/{types,api,hooks,state}.ts`.
 - `components/geo/`:
   - `BasinRanking`, `BasinCard`, `ProfileChart` (Recharts, com tabela) e `TerrainSection` (usada pela Risco e pelo Laboratório);
-  - `BasinBlock3D` (three, carregamento dinâmico) e `BasinBlock2D` (alternativa);
+  - `BasinBlockView`, `BasinBlock3D` (MapLibre, carregamento dinâmico) e `BasinBlock2D` (relevo sombreado e tabela);
   - `TerrainDisclaimer` (BR-120).
 - `app/geo-3d/page.tsx`: o mapa (reaproveita `MapView` com camadas novas) e as abas Bacias, Perfil e Bloco 3D. O registro de navegação marca `/geo-3d` como implementado.
 

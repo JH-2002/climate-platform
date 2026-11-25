@@ -336,7 +336,9 @@ def test_basin_relief_png(client: TestClient) -> None:
     assert response.status_code == 200 and response.headers["content-type"] == "image/png"
     pixels = decode_png(response.content)
     assert pixels.ndim == 3 and max(pixels.shape[:2]) <= 900 and pixels.shape[2] == 3
-    assert len({tuple(p) for p in pixels.reshape(-1, 3)[::97]}) > 10  # não é uma imagem lisa
+    colors = {tuple(int(v) for v in p) for p in pixels.reshape(-1, 3)}
+    assert (11, 92, 122) in colors  # contorno da bacia
+    assert (46, 139, 87) in colors  # setores em "baixo" na estimativa real do teste
 
 
 def test_relief_and_tiles_without_dem(dem_settings: Settings) -> None:

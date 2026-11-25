@@ -138,3 +138,31 @@ export interface BasinLayerProps {
   occurrences_12m: number;
   reservoirs: number;
 }
+
+export interface BlockSector {
+  id: number;
+  code: string;
+  name: string | null;
+  grade: number;
+  category: string;
+  p_high: number | null;
+  longitude: number;
+  latitude: number;
+}
+
+export interface BasinBlock {
+  basin_id: number;
+  name: string;
+  main_basin: string | null;
+  bounds: { west: number; south: number; east: number; north: number };
+  elev_min_m: number | null;
+  elev_max_m: number | null;
+  source: "real" | "simulação";
+  simulation_id: string | null;
+  computed_at: string | null;
+  banner: string | null;
+  sectors: BlockSector[];
+  attribution: string;
+  hydro_attribution: string;
+  disclaimer: string;
+}

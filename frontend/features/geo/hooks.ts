@@ -1,7 +1,7 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { fetchBasin, fetchBasinLayer, fetchBasins, fetchDemStatus, fetchProfile, fetchReservoirLayer, fetchSectorTerrain } from "./api";
+import { fetchBasin, fetchBasinBlock, fetchBasinLayer, fetchBasins, fetchDemStatus, fetchProfile, fetchReservoirLayer, fetchSectorTerrain } from "./api";
 import type { BasinSort } from "./types";
 
 const HOUR = 60 * 60_000;
@@ -59,4 +59,14 @@ export function useGeoLayers() {
     staleTime: HOUR,
   });
   return { basins, reservoirs };
+}
+
+export function useBasinBlock(id: number | null, simulationId: string | null) {
+  return useQuery({
+    queryKey: ["geo", "block", id, simulationId],
+    queryFn: ({ signal }) => fetchBasinBlock(id as number, simulationId, signal),
+    enabled: id !== null,
+    staleTime: 5 * 60_000,
+    retry: noRetryOn([404]),
+  });
 }
