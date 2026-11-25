@@ -37,6 +37,7 @@ from app.analytics.rules import (
     in06_occurrence_concentration,
 )
 from app.analytics.stats import Description, describe
+from app.core.values import to_int
 from app.models.tables import (
     climate_daily,
     flood_occurrences,
@@ -604,7 +605,7 @@ async def occurrences_by_subprefecture(
         .where(o.c.occurred_on >= since, o.c.occurred_on <= until, o.c.subprefecture.is_not(None))
         .group_by(o.c.subprefecture)
     )
-    return {str(name): int(n) for name, n in rows}
+    return {str(name): to_int(n) for name, n in rows}
 
 
 # Ponto "central" da reanálise: até esta distância da Sé. Sem ele (carga inicial em

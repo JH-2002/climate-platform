@@ -13,6 +13,7 @@ import json
 import threading
 import uuid
 from collections import OrderedDict
+from datetime import datetime
 from typing import Any
 
 import numpy as np
@@ -194,7 +195,7 @@ async def _sector_rows(
 ) -> tuple[list[Any], str | None, str | None]:
     """Setores da bacia com a categoria real (última estimativa) ou da simulação."""
     if simulation_id is None:
-        at = (
+        at: datetime | None = (
             await session.execute(text("SELECT max(computed_at) FROM risk_runs"))
         ).scalar_one_or_none()
         rows = list(await session.execute(_SECTORS_REAL, {"id": basin_id}))

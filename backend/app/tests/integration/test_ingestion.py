@@ -100,7 +100,7 @@ def test_station_missing_from_list_becomes_inactive() -> None:
         )
         async with f() as s:
             query = select(weather_stations.c.external_code, weather_stations.c.status)
-            rows = dict((await s.execute(query)).tuples().all())
+            rows: dict[str, str] = dict((await s.execute(query)).tuples().all())
         assert rows == {"A701": "OPERATIONAL", "A771": "INACTIVE"}
 
     run(scenario)
