@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import uuid
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, time, timedelta
 from typing import Any, Literal
@@ -298,10 +299,10 @@ def _official_table(key: str, title: str, alerts: list[Any], main: bool = False)
         columns=(
             Column("category", "Categoria", width=1.1),
             Column("severity", "Severidade", width=0.9),
-            Column("status", "Situação", width=0.7),
+            Column("status", "Situação", width=0.95),
             Column("onset_at", "Início", "datetime", width=0.9),
             Column("expires_at", "Fim", "datetime", width=0.9),
-            Column("headline", "Alerta (texto da fonte)", width=3.0),
+            Column("headline", "Alerta (texto da fonte)", width=2.8),
             Column("area", "Subprefeituras atingidas", width=1.6),
         ),
         rows=tuple(
@@ -611,6 +612,11 @@ async def _alertas(session: AsyncSession, now: datetime, params: dict[str, Any])
     )
 
 
+def _round(value: float | None, digits: int) -> float | None:
+    """Sem ruído de ponto flutuante no JSON (112.00000000000001 -> 112.0)."""
+    return round(value, digits) if value is not None else None
+
+
 async def _chuva(session: AsyncSession, now: datetime, params: dict[str, Any]) -> Report:
     grain = params["grain"]
     try:
@@ -636,12 +642,12 @@ async def _chuva(session: AsyncSession, now: datetime, params: dict[str, Any]) -
     rows = tuple(
         {
             "start": date.fromisoformat(p.start[:10]),
-            "value": p.value,
-            "reference": p.reference,
-            "anomaly_pct": (p.value / p.reference - 1) * 100
+            "value": _round(p.value, 2),
+            "reference": _round(p.reference, 2),
+            "anomaly_pct": _round((p.value / p.reference - 1) * 100, 1)
             if p.value is not None and p.reference
             else None,
-            "coverage_pct": p.coverage * 100,
+            "coverage_pct": _round(p.coverage * 100, 1),
             "partial": p.partial or p.truncated,
         }
         for p in points
@@ -970,8 +976,17 @@ async def get_file(session: AsyncSession, request_id: uuid.UUID) -> ReportFile |
     return ReportFile(bytes(row.content), row.filename, row.media_type)
 
 
-async def generate(session: AsyncSession, request_id: uuid.UUID, now: datetime) -> str:
-    """Gera o arquivo de um pedido em fila (FR-151). Devolve o estado final."""
+async def generate(
+    session: AsyncSession,
+    request_id: uuid.UUID,
+    now: datetime,
+    clock: Callable[[], datetime] | None = None,
+) -> str:
+    """Gera o arquivo de um pedido em fila (FR-151). Devolve o estado final.
+
+    `now` é o horário de referência do conteúdo; `clock` dá o horário real do fim (o worker
+    passa o relógio; os testes usam um horário fixo).
+    """
     claimed = (
         await session.execute(
             update(report_requests)
@@ -1002,7 +1017,7 @@ async def generate(session: AsyncSession, request_id: uuid.UUID, now: datetime) 
         )
         await session.commit()
         return "FAILED"
-    finished = now
+    finished = clock() if clock is not None else now
     await session.execute(report_files.insert().values(request_id=request_id, content=content))
     await session.execute(
         update(report_requests)

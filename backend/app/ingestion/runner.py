@@ -351,7 +351,9 @@ async def run_alert_evaluation(settings: Settings) -> EvaluationSummary:
 
 async def run_report_generation(settings: Settings, request_id: str) -> str:
     async with _session_factory(settings) as sessions, sessions() as session:
-        return await report_service.generate(session, uuid.UUID(request_id), datetime.now(UTC))
+        return await report_service.generate(
+            session, uuid.UUID(request_id), datetime.now(UTC), clock=lambda: datetime.now(UTC)
+        )
 
 
 async def run_report_housekeeping(settings: Settings) -> tuple[int, int]:

@@ -1,6 +1,6 @@
 # Spec 010 — Central de relatórios
 
-> Status: **Em andamento** (2026-11-25) · Fase: 10 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md) · ADR: [ADR-015](../../docs/architecture/adr/ADR-015-report-center.md)
+> Status: **Concluída** (2026-11-25) · Fase: 10 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md) · ADR: [ADR-015](../../docs/architecture/adr/ADR-015-report-center.md)
 
 ## Contexto
 As Fases 3 a 9 mostram os dados na tela. Gestores, pesquisadores e jornalistas precisam **levar** esses dados: um PDF para anexar a um ofício, um CSV para a planilha, um JSON para outro sistema. Cada relatório tem que carregar a mesma rastreabilidade da tela: fonte, tipo do dado (medido, modelo, previsão, calculado, simulado), horário e os avisos de limitação (Constituição §7, §10 e §13).
@@ -45,7 +45,7 @@ Gerar, sob demanda e em segundo plano, relatórios em PDF, CSV e JSON a partir d
 - **US-104** Como analista, quero o relatório de uma simulação sem risco de ele ser confundido com dado real.
 
 ## Requisitos funcionais
-- **FR-150 Pedido.** `POST /reports` com `{tipo, formato, parametros}`: valida os parâmetros (422 com a mensagem em português), grava o pedido como `QUEUED` e enfileira a geração. Devolve `{id, status, links}`.
+- **FR-150 Pedido.** `POST /reports` com `{type, format, params}`: valida os parâmetros (422 com a mensagem em português), grava o pedido como `QUEUED` e enfileira a geração. Devolve `{id, status, links}`.
 - **FR-151 Geração.** Uma tarefa do worker monta o conteúdo a partir dos serviços já existentes (nada de consulta duplicada), escreve o arquivo no formato pedido e guarda bytes, tamanho, hash SHA-256 e tipo MIME. Estados: `QUEUED` → `RUNNING` → `DONE` ou `FAILED` (com a mensagem). Pedido parado em `RUNNING` há mais de 10 min vira `FAILED`.
 - **FR-152 Consulta e download.**
   - `GET /reports/{id}`: estado, título, parâmetros, tamanho e horários.
