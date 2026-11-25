@@ -60,6 +60,8 @@ export default function AlertsMapView({
         style: STYLE_URL,
         bounds: CITY_BOUNDS,
         fitBoundsOptions: { padding: 16 },
+        // A página rola por cima do mapa: zoom com Ctrl + roda (ou dois dedos no celular).
+        cooperativeGestures: true,
         attributionControl: {
           compact: false,
           customAttribution: "Alertas: Defesa Civil (IDAP/MIDR) e INMET · Subprefeituras: GeoSampa",
@@ -75,7 +77,7 @@ export default function AlertsMapView({
           id: "alertas-area",
           type: "fill",
           source: "alertas",
-          paint: { "fill-color": color as never, "fill-opacity": ["case", ["==", ["get", "status"], "ACTIVE"], 0.22, 0.1] },
+          paint: { "fill-color": color as never, "fill-opacity": ["case", ["==", ["get", "status"], "ACTIVE"], 0.14, 0.05] },
         });
         map.addLayer({
           id: "alertas-contorno",

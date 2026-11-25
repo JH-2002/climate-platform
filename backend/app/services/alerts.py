@@ -673,7 +673,8 @@ async def official_alert_features(session: AsyncSession, now: datetime) -> list[
                 FROM official_alerts a CROSS JOIN city
                 WHERE a.msg_type <> 'Cancel' AND a.geom IS NOT NULL AND a.ended_at IS NULL
                   AND a.expires_at > :now AND a.onset_at <= :horizon
-                ORDER BY a.onset_at
+                -- INMET (áreas grandes) primeiro; a Defesa Civil fica desenhada por cima
+                ORDER BY a.category DESC, a.onset_at
                 """
             ),
             {"now": now, "horizon": now + UPCOMING_WINDOW},

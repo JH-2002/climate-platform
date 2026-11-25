@@ -67,9 +67,13 @@ export function areaText(alert: OfficialAlert): string {
   if (alert.area_approximate) return "Área aproximada (limite da cidade ainda não carregado).";
   const n = alert.subprefectures.length;
   if (n === 0) return "Atinge a cidade em área pequena, sem cobrir 5% de nenhuma subprefeitura.";
-  if (n >= 32) return "Atinge toda a cidade.";
-  const names = alert.subprefectures.map(subprefectureName);
   const pct = alert.city_fraction == null ? "" : ` (${Math.round(alert.city_fraction * 100)}% da área da cidade)`;
+  if (n >= 32) {
+    return alert.city_fraction == null || alert.city_fraction >= 0.99
+      ? "Atinge toda a cidade."
+      : `Atinge as 32 subprefeituras${pct}.`;
+  }
+  const names = alert.subprefectures.map(subprefectureName);
   return `Subprefeituras atingidas${pct}: ${names.join(", ")}.`;
 }
 

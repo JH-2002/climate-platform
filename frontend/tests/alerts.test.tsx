@@ -48,6 +48,7 @@ describe("textos e escolhas dos alertas", () => {
   it("área, vigência e nomes", () => {
     expect(areaText(official())).toBe("Subprefeituras atingidas (21% da área da cidade): Lapa, Pinheiros, Sé.");
     expect(areaText(inmetWarning)).toBe("Atinge toda a cidade.");
+    expect(areaText({ ...inmetWarning, city_fraction: 0.81 })).toBe("Atinge as 32 subprefeituras (81% da área da cidade).");
     expect(areaText(official({ area_approximate: true }))).toMatch(/aproximada/);
     expect(validityText({ onset_at: null, expires_at: null })).toBe("Vigência não informada pela fonte");
     expect(validityText(official())).toMatch(/^De 24\/11\/2026/);

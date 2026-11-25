@@ -1,14 +1,14 @@
-import { StatusBadge, type BadgeTone } from "@/components/ui/StatusBadge";
 import { STATUS_LABELS, areaText, severityIcon, validityText } from "@/features/alerts/labels";
 import type { OfficialAlert, OfficialStatus } from "@/features/alerts/types";
 import { formatDateTime } from "@/lib/format";
 
-const STATUS_TONE: Record<OfficialStatus, BadgeTone> = {
-  ACTIVE: "error",
-  UPCOMING: "warn",
-  EXPIRED: "unknown",
-  CANCELLED: "unknown",
-  SUPERSEDED: "unknown",
+// Situação com ícone e texto próprios (o ✕ do selo genérico leria como "cancelado").
+const STATUS_STYLE: Record<OfficialStatus, { icon: string; className: string }> = {
+  ACTIVE: { icon: "●", className: "border-status-error/50 text-status-error" },
+  UPCOMING: { icon: "◷", className: "border-status-warn/50 text-status-warn" },
+  EXPIRED: { icon: "–", className: "border-surface-border text-ink-muted" },
+  CANCELLED: { icon: "–", className: "border-surface-border text-ink-muted" },
+  SUPERSEDED: { icon: "–", className: "border-surface-border text-ink-muted" },
 };
 
 const SEVERITY_STYLE: Record<string, string> = {
@@ -34,7 +34,10 @@ export function OfficialAlertCard({ alert, highlighted = false }: { alert: Offic
         <span className="rounded bg-ink px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-white">
           {alert.category_label}
         </span>
-        <StatusBadge tone={STATUS_TONE[alert.status]} label={STATUS_LABELS[alert.status]} />
+        <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-medium ${STATUS_STYLE[alert.status].className}`}>
+          <span aria-hidden="true">{STATUS_STYLE[alert.status].icon}</span>
+          {STATUS_LABELS[alert.status]}
+        </span>
         <span
           className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-medium ${
             SEVERITY_STYLE[alert.severity ?? ""] ?? "border-surface-border text-ink-muted"
