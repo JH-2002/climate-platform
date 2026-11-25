@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { ReportShortcut } from "@/components/reports/ReportShortcut";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ScenarioForm } from "@/components/simulation/ScenarioForm";
 import { SimulationBanner } from "@/components/simulation/SimulationBanner";
@@ -65,9 +65,11 @@ function SimulationPage() {
 
   // Link só com a execução: o formulário assume o cenário gravado.
   const hasScenarioInUrl = params.has("total");
-  useEffect(() => {
-    if (run.data && !hasScenarioInUrl) setForm({ ...fromRun(run.data), preset: run.data.preset });
-  }, [run.data, hasScenarioInUrl]);
+  const [formRunId, setFormRunId] = useState<string | null>(null);
+  if (run.data && !hasScenarioInUrl && run.data.id !== formRunId) {
+    setFormRunId(run.data.id);
+    setForm({ ...fromRun(run.data), preset: run.data.preset });
+  }
 
   function navigate(next: SimulationState) {
     router.replace(`${pathname}?${serializeSimulationState(next)}`, { scroll: false });

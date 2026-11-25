@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useWebGL } from "@/features/map/useCapabilities";
 import { ReportShortcut } from "@/components/reports/ReportShortcut";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -10,7 +11,6 @@ import { NotificationSettings } from "@/components/alerts/NotificationSettings";
 import { AlertsPageView, Section } from "@/components/alerts/AlertsPageView";
 import { OfficialAlertCard } from "@/components/alerts/OfficialAlertCard";
 import { useActiveAlerts, useAlertsLayer, useOfficialAlert } from "@/features/alerts/hooks";
-import { supportsWebGL } from "@/features/map/capabilities";
 
 const AlertsMapView = dynamic(() => import("@/components/alerts/AlertsMapView"), {
   ssr: false,
@@ -29,10 +29,9 @@ function AlertsPage() {
   const layer = useAlertsLayer();
   const inList = active.data?.official.some((a) => a.id === selectedId) ?? false;
   const selected = useOfficialAlert(active.data && !inList ? selectedId : null);
-  const [webgl, setWebgl] = useState<boolean | null>(null);
+  const webgl = useWebGL();
   const [mapError, setMapError] = useState<string | null>(null);
 
-  useEffect(() => setWebgl(supportsWebGL()), []);
   useEffect(() => {
     if (selectedId && active.data) document.getElementById(`alerta-${selectedId}`)?.scrollIntoView({ block: "start" });
   }, [selectedId, active.data, selected.data]);

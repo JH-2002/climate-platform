@@ -1,14 +1,14 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Suspense, useEffect, useState } from "react";
+import { useReducedMotion, useWebGL } from "@/features/map/useCapabilities";
+import { Suspense, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { MapControls } from "@/components/map/MapControls";
 import { MapFeatureList } from "@/components/map/MapFeatureList";
 import { MapLegend } from "@/components/map/MapLegend";
 import { RiskDisclaimer } from "@/components/risk/RiskDisclaimer";
 import { useLocations } from "@/features/locations/useLocations";
-import { prefersReducedMotion, supportsWebGL } from "@/features/map/capabilities";
 import { useMapLayers } from "@/features/map/hooks";
 import { parseMapState, serializeMapState, toggleLayer, type MapState } from "@/features/map/state";
 
@@ -29,14 +29,10 @@ function MapPage() {
   const state = parseMapState(params);
   const { region, stations, forecast, risk, occurrences, alerts } = useMapLayers();
   const locations = useLocations();
-  const [webgl, setWebgl] = useState<boolean | null>(null);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const webgl = useWebGL();
+  const reducedMotion = useReducedMotion();
   const [mapError, setMapError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setWebgl(supportsWebGL());
-    setReducedMotion(prefersReducedMotion());
-  }, []);
 
   function update(next: MapState) {
     router.replace(`${pathname}?${serializeMapState(next)}`, { scroll: false });

@@ -1,12 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useReducedMotion, useWebGL } from "@/features/map/useCapabilities";
+import { useState } from "react";
 import { SimulationBanner } from "@/components/simulation/SimulationBanner";
 import { useBasinBlock } from "@/features/geo/hooks";
 import type { BasinLayerProps } from "@/features/geo/types";
 import type { Feature, FeatureCollection } from "@/features/map/types";
-import { prefersReducedMotion, supportsWebGL } from "@/features/map/capabilities";
 import { CATEGORIES } from "@/features/risk/categories";
 import type { RiskCategory } from "@/features/risk/types";
 import { useRecentRuns } from "@/features/simulation/hooks";
@@ -36,15 +36,13 @@ interface Props {
 export function BasinBlockView({ basinId, simulationId, basins, reservoirs, onSimulation }: Props) {
   const block = useBasinBlock(basinId, simulationId);
   const recent = useRecentRuns();
-  const [view, setView] = useState<View>("3d");
-  const [canUse3d, setCanUse3d] = useState(true);
+  const webgl = useWebGL();
+  const reducedMotion = useReducedMotion();
+  const canUse3d = webgl !== false;
+  // Sem WebGL ou com movimento reduzido, começa na versão 2D; a escolha da pessoa prevalece.
+  const [chosenView, setView] = useState<View | null>(null);
+  const view: View = chosenView ?? (webgl === false || reducedMotion ? "2d" : "3d");
   const [problem, setProblem] = useState<string | null>(null);
-
-  useEffect(() => {
-    const webgl = supportsWebGL();
-    setCanUse3d(webgl);
-    if (!webgl || prefersReducedMotion()) setView("2d");
-  }, []);
 
   if (basinId === null) {
     return (

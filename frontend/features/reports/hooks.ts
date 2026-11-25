@@ -18,6 +18,7 @@ export function useReportTypes() {
 /** Ids guardados neste navegador; lidos depois de montar (HTML igual no servidor). */
 export function useReportIds() {
   const [ids, setIds] = useState<string[]>([]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- ids só do navegador, lidos depois de montar para o HTML estático e o do navegador serem iguais (spec 014)
   useEffect(() => setIds(loadReportIds(browserStorage())), []);
   const add = useCallback((id: string) => {
     setIds((current) => {

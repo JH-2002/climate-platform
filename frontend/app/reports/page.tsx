@@ -21,6 +21,7 @@ function ReportsPage() {
   const create = useCreateReport((request) => add(request.id));
 
   // Atalhos de outras páginas preenchem o formulário pela URL.
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- as datas padrão usam o relógio do navegador; no HTML estático ficariam com a data do build (spec 014)
   useEffect(() => setForm(formFromUrl(params, new Date())), [params]);
 
   const subprefectures = useQuery({
