@@ -19,7 +19,12 @@ export function falseAlarmSentence(table: ContingencyTable): string {
 }
 
 function thresholds(values: number[], factor: number): string {
-  return values.map((v) => formatNumber(Math.round(v * factor * 10) / 10, v * factor < 10 ? 1 : 0)).join(", ");
+  return values
+    .map((v) => {
+      const scaled = Math.round(v * factor * 10) / 10;
+      return formatNumber(scaled, Number.isInteger(scaled) ? 0 : 1);
+    })
+    .join(", ");
 }
 
 /** Recomendação da calibração (FR-214): só texto; o motor oficial não muda. */

@@ -75,7 +75,7 @@ describe("frases da avaliação (FR-216, BR-210)", () => {
 
   it("calibração recomenda sem mudar o motor", () => {
     const text = calibrationSentence(evaluation);
-    expect(text).toMatch(/^Faixas mais baixas \(fator 0,7: 7,0, 17,5, 35 mm em 1 h e 21, 42, 70 mm em 24 h\)/);
+    expect(text).toMatch(/^Faixas mais baixas \(fator 0,7: 7, 17,5, 35 mm em 1 h e 21, 42, 70 mm em 24 h\)/);
     expect(text).toMatch(/o motor oficial não muda/);
     expect(calibrationSentence({ ...evaluation, best_factor: 1 })).toMatch(/as atuais tiveram o melhor/);
   });

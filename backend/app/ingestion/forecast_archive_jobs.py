@@ -51,7 +51,8 @@ def make_forecast_archive_job(
             start = start_day(last.date() if last is not None else None)
             if start > yesterday:
                 continue
-            params = build_params(lat, lon, start, yesterday)
+            # Até hoje em UTC: o dia local de ontem termina às 03 h UTC de hoje.
+            params = build_params(lat, lon, start, yesterday + timedelta(days=1))
             payload = await fetcher(HISTORICAL_FORECAST_URL, params)
             if payload is None:
                 raise ValueError(f"{key}: a fonte não retornou conteúdo")
@@ -83,7 +84,7 @@ def make_forecast_archive_job(
                     )
                 )
             result.inserted += len(rows)
-            result.notes.append(f"{key}: {start.isoformat()} a {yesterday.isoformat()}")
+            result.notes.append(f"{key}: desde {start.isoformat()}")
         await ctx.session.commit()
         return result
 
