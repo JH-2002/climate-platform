@@ -222,7 +222,7 @@ export default function MapView(props: MapViewProps) {
           id: "alertas-area",
           type: "fill",
           source: "alertas",
-          paint: { "fill-color": alertColor as never, "fill-opacity": 0.12 },
+          paint: { "fill-color": alertColor as never, "fill-opacity": 0.07 },
         });
         map.addLayer({
           id: "alertas-contorno",

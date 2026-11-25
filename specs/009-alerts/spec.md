@@ -1,6 +1,6 @@
 # Spec 009 — Alertas
 
-> Status: **Em andamento** (2026-11-24) · Fase: 9 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md) · ADR: [ADR-014](../../docs/architecture/adr/ADR-014-official-alerts-and-rules.md)
+> Status: **Concluída** (2026-11-24) · Fase: 9 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md) · ADR: [ADR-014](../../docs/architecture/adr/ADR-014-official-alerts-and-rules.md)
 
 ## Contexto
 A plataforma estima risco (Fase 5) e simula cenários (Fase 7), mas não mostra o que os órgãos oficiais estão dizendo. Quem abre a página num dia de temporal precisa ver, antes de tudo, **os alertas oficiais**, e só depois a estimativa experimental do sistema. A Constituição (§7.7) exige que alertas oficiais, avisos meteorológicos, risco estimado, qualidade de dados e simulação sejam categorias distintas, com rótulos distintos. E o sistema não emite alerta público (§1).
