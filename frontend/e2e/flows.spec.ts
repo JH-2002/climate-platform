@@ -15,17 +15,18 @@ test("página de alertas", async ({ page }) => {
 test("risco com filtro e detalhe do setor", async ({ page }) => {
   await page.goto("/risk");
   await expect(page.getByRole("heading", { level: 1, name: "Risco de alagamento estimado" })).toBeVisible();
-  const sectors = page.getByRole("button", { name: /^Ver explicação do setor/ });
+  const sectors = page.getByRole("button", { name: /^Por quê\? Explicação do setor/ });
   await expect(sectors.first()).toBeVisible({ timeout: 15_000 });
 
-  await page.getByLabel("Categoria").selectOption({ index: 1 });
+  await page.getByRole("combobox", { name: "Categoria" }).selectOption({ index: 1 });
   await expect(page).toHaveURL(/categoria=/);
   await settle(page);
 
-  await page.getByLabel("Categoria").selectOption("");
+  await page.getByRole("combobox", { name: "Categoria" }).selectOption("");
   await expect(page).not.toHaveURL(/categoria=/);
   await expect(sectors.first()).toBeVisible();
-  const name = (await sectors.first().getAttribute("aria-label"))!.replace("Ver explicação do setor ", "");
+  const label = (await sectors.first().textContent()) ?? "";
+  const name = label.replace("Por quê? Explicação do setor ", "").trim();
   await sectors.first().click();
   await expect(page).toHaveURL(/setor=/);
   await expect(page.getByRole("heading", { level: 2, name: new RegExp(`^Setor ${name}`) })).toBeVisible();

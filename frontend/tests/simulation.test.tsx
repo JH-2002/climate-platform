@@ -202,7 +202,7 @@ describe("resultado", () => {
     const onSelect = vi.fn();
     const { container } = render(<SimulatedSectorTable items={[sector]} total={1} selectedId={null} onSelect={onSelect} />);
     expect(screen.getByText(/cenário hipotético/)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Ver explicação do setor HMP-01-03 na simulação" }));
+    fireEvent.click(screen.getByRole("button", { name: "Por quê? Explicação do setor HMP-01-03 na simulação" }));
     expect(onSelect).toHaveBeenCalledWith(4);
     expect(await seriousViolations(container)).toEqual([]);
   });

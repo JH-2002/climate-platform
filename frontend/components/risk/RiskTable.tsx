@@ -65,10 +65,9 @@ export function RiskTable({ items, total, selectedId, onSelect }: RiskTableProps
                 <button
                   type="button"
                   onClick={() => onSelect(area.id)}
-                  aria-label={`Ver explicação do setor ${area.code}`}
                   className="rounded-md border border-accent px-2 py-1 text-xs font-medium text-accent hover:bg-accent hover:text-white"
                 >
-                  Por quê?
+                  Por quê?<span className="sr-only"> Explicação do setor {area.code}</span>
                 </button>
               </td>
             </tr>

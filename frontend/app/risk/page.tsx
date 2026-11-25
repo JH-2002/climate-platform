@@ -91,6 +91,7 @@ function RiskPage() {
             <label className="flex flex-col gap-1">
               <span className="text-xs text-ink-muted">Categoria</span>
               <select
+                aria-label="Categoria"
                 className="rounded-md border border-surface-border bg-surface px-2 py-1.5"
                 value={filters.category ?? ""}
                 onChange={(e) =>
@@ -112,6 +113,7 @@ function RiskPage() {
             <label className="flex flex-col gap-1">
               <span className="text-xs text-ink-muted">Subprefeitura</span>
               <select
+                aria-label="Subprefeitura"
                 className="rounded-md border border-surface-border bg-surface px-2 py-1.5"
                 value={filters.subprefecture ?? ""}
                 onChange={(e) =>
