@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { basePath } from "@/lib/demo";
 import { useActiveAlerts, useAlertsAtLocations } from "@/features/alerts/hooks";
 import { loadSeen, noticesFor, saveSeen } from "@/features/alerts/notifications";
 import { browserStorage, useNotificationSettings } from "@/features/alerts/useNotifications";
@@ -29,7 +30,7 @@ export function AlertNotifier() {
         const n = new window.Notification(notice.title, { body: notice.body, tag: notice.key });
         n.onclick = () => {
           window.focus();
-          window.location.assign(notice.href);
+          window.location.assign(`${basePath()}${notice.href}`);
         };
       } catch {
         // navegador sem suporte a notificações fora de um service worker (alguns celulares)

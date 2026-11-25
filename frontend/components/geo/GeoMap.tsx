@@ -8,6 +8,7 @@
  */
 
 import "maplibre-gl/dist/maplibre-gl.css";
+import { basePath } from "@/lib/demo";
 import type { GeoJSON as GeoJSONData } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap, MapLayerMouseEvent, MapMouseEvent } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
@@ -18,7 +19,7 @@ import { apiGet } from "@/lib/api-client";
 import { DEFAULT_MAP_STYLE_URL, DEFAULT_TERRAIN_TILES_URL } from "@/lib/map-sources.mjs";
 
 const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL || DEFAULT_MAP_STYLE_URL;
-const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? "/vendor/maplibre-gl-worker.mjs";
+const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? `${basePath()}/vendor/maplibre-gl-worker.mjs`;
 const TERRAIN_URL =
   process.env.NEXT_PUBLIC_TERRAIN_TILES_URL || DEFAULT_TERRAIN_TILES_URL;
 const ATTRIBUTION =

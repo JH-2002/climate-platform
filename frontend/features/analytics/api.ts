@@ -1,4 +1,5 @@
 import { apiBaseUrl, apiGet } from "@/lib/api-client";
+import { assetUrl, demoEnabled } from "@/lib/demo";
 import type {
   ClimatologyResponse,
   DatasetInfo,
@@ -57,7 +58,9 @@ export const fetchSeries = (params: SeriesParams, signal?: AbortSignal) =>
 
 /** Link de download do CSV (mesma consulta do gráfico, AC-087). */
 export function seriesCsvUrl(params: SeriesParams): string {
-  return `${apiBaseUrl()}${BASE}/series.csv?${seriesQuery(params)}`;
+  return demoEnabled()
+    ? assetUrl(`${BASE}/series.csv?${seriesQuery(params)}`)
+    : `${apiBaseUrl()}${BASE}/series.csv?${seriesQuery(params)}`;
 }
 
 export function studioSeriesParams(state: StudioState): SeriesParams {

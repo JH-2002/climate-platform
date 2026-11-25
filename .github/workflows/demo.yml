@@ -1,0 +1,158 @@
+# Vitrine pública no GitHub Pages (spec 012, ADR-017).
+# Sobe a plataforma por alguns minutos, roda as coletas reais, grava o que a interface pede à
+# API e publica o frontend estático com essas respostas. Se algo falhar antes da publicação,
+# a versão anterior continua no ar.
+name: Vitrine pública
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+  push:
+    branches: ["feat/012-public-demo"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vitrine
+  cancel-in-progress: false
+
+env:
+  PLAYWRIGHT_VERSION: "1.55.0"
+  BASE_PATH: /${{ github.event.repository.name }}
+
+jobs:
+  build:
+    name: Coletar, gravar e montar
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    services:
+      db:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: climate
+          POSTGRES_PASSWORD: demo-only
+          POSTGRES_DB: climate
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U climate -d climate"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+      redis:
+        image: redis:7.4-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    env:
+      APP_ENV: development
+      DATABASE_URL: postgresql+asyncpg://climate:demo-only@localhost:5432/climate
+      REDIS_URL: redis://localhost:6379/0
+      RATE_LIMIT_ENABLED: "false"
+      DEM_DIR: ${{ runner.temp }}/dem
+      FRONTEND_ORIGIN: http://localhost:3000
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v7
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/pyproject.toml
+      - name: Configurar Node 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Instalar o backend
+        working-directory: backend
+        run: pip install -e .
+      - name: Migrações
+        working-directory: backend
+        run: alembic upgrade head
+      - name: Coletas reais
+        working-directory: backend
+        run: python scripts/demo_collect.py --backfill-minutes 6
+
+      - name: Subir API e worker
+        working-directory: backend
+        run: |
+          celery -A app.workers.celery_app worker --loglevel=WARNING --detach \
+            --pidfile=/tmp/celery.pid --logfile=/tmp/celery.log
+          nohup uvicorn app.main:create_app --factory --host 127.0.0.1 --port 8000 > /tmp/api.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:8000/api/v1/health >/dev/null && exit 0
+            sleep 2
+          done
+          cat /tmp/api.log; exit 1
+
+      - name: Instalar o frontend e o Playwright
+        working-directory: frontend
+        run: |
+          npm ci --no-audit --no-fund
+          npm install --no-save --no-audit --no-fund @playwright/test@$PLAYWRIGHT_VERSION
+          npx playwright install --with-deps chromium
+      - name: Build do frontend (servidor, para a gravação)
+        working-directory: frontend
+        env:
+          API_INTERNAL_URL: http://127.0.0.1:8000
+        run: |
+          npm run build
+          nohup npx next start --port 3000 > /tmp/next.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:3000/ >/dev/null && exit 0
+            sleep 2
+          done
+          cat /tmp/next.log; exit 1
+      - name: Gravar o que a interface pede
+        working-directory: frontend
+        env:
+          DEMO_OUT: ${{ runner.temp }}/demo-data
+          DEMO_API_URL: http://127.0.0.1:8000
+        run: npx playwright test -c demo/playwright.config.ts
+
+      - name: Build estático (modo demonstração)
+        working-directory: frontend
+        env:
+          NEXT_PUBLIC_DEMO: "1"
+          NEXT_PUBLIC_BASE_PATH: ${{ env.BASE_PATH }}
+        run: |
+          rm -rf .next out
+          npm run build
+          cp -r "$RUNNER_TEMP/demo-data" out/demo-data
+          touch out/.nojekyll
+          du -sh out out/demo-data
+          echo "Arquivos gravados: $(find out/demo-data -type f | wc -l)"
+      - name: Conferir o tamanho (NFR-191)
+        working-directory: frontend
+        run: |
+          size=$(du -sm out | cut -f1)
+          echo "Site: ${size} MB"
+          test "$size" -le 60
+      - name: Registros (em caso de falha)
+        if: failure()
+        run: |
+          tail -n 80 /tmp/api.log || true
+          tail -n 80 /tmp/celery.log || true
+          tail -n 40 /tmp/next.log || true
+      - name: Enviar o site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: frontend/out
+
+  deploy:
+    name: Publicar no GitHub Pages
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar
+        id: deployment
+        uses: actions/deploy-pages@v4
