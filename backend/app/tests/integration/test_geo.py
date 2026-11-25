@@ -266,3 +266,82 @@ def test_map_layers(client: TestClient) -> None:
     reservoirs = client.get("/api/v1/map/layers/reservoirs").json()
     assert len(reservoirs["features"]) == 3
     assert reservoirs["features"][0]["geometry"]["type"] == "Point"
+
+
+# --- Parte B: relevo 3D (blocos terrarium), bloco da bacia e relevo sombreado ---------------
+
+
+def tile_for(lon: float, lat: float, zoom: int) -> tuple[int, int]:
+    import math
+
+    x = int((lon + 180) / 360 * 2**zoom)
+    y = int((1 - math.asinh(math.tan(math.radians(lat))) / math.pi) / 2 * 2**zoom)
+    return x, y
+
+
+def test_terrain_tile_encodes_copernicus_elevation(client: TestClient) -> None:
+    from app.geo.png import decode_png
+    from app.geo.terrain import terrarium_decode, tile_centers
+
+    zoom = 12
+    x, y = tile_for(-46.4334, VALLEY_LAT, zoom)
+    response = client.get(f"/api/v1/geo/terrain/{zoom}/{x}/{y}.png")
+    assert response.status_code == 200 and response.headers["content-type"] == "image/png"
+    assert "max-age" in response.headers["cache-control"]
+    heights = terrarium_decode(decode_png(response.content))
+    _, lats = tile_centers(zoom, x, y)
+    row = int(np.argmin(np.abs(lats[:, 0] - VALLEY_LAT)))
+    assert heights[row].min() == pytest.approx(701, abs=2)  # fundo do vale sintético
+    expected = 700 + 2000 * np.abs(lats[:, 0] - VALLEY_LAT)
+    assert np.allclose(heights[:, 128], expected, atol=2.5)
+
+
+def test_terrain_tile_limits(client: TestClient) -> None:
+    assert client.get("/api/v1/geo/terrain/3/0/0.png").status_code == 404  # zoom baixo demais
+    assert client.get("/api/v1/geo/terrain/12/99999/0.png").status_code == 404
+    far = client.get("/api/v1/geo/terrain/8/0/0.png")  # longe da região: bloco plano
+    assert far.status_code == 200
+
+
+def test_basin_block_real_and_simulated(client: TestClient) -> None:
+    listing = client.get("/api/v1/geo/basins?ordem=setores").json()
+    basin_id = listing["items"][0]["id"]
+    real = client.get(f"/api/v1/geo/basins/{basin_id}/block").json()
+    assert real["source"] == "real" and real["banner"] is None
+    assert sorted(s["code"] for s in real["sectors"]) == ["HMP-01-03", "HMP-07-01", "HMP-07-02"]
+    assert {s["category"] for s in real["sectors"]} <= {"LOW", "UNKNOWN"}
+    assert real["bounds"]["west"] < real["bounds"]["east"]
+
+    run = client.post(
+        "/api/v1/simulation/runs",
+        json={"total_mm": 60, "duration_h": 1, "pattern": "CONSTANT", "antecedent_mm": 0},
+    ).json()
+    simulated = client.get(f"/api/v1/geo/basins/{basin_id}/block?simulacao={run['id']}").json()
+    assert simulated["source"] == "simulação" and simulated["banner"].startswith("SIMULAÇÃO")
+    by_code = {s["code"]: s["category"] for s in simulated["sectors"]}
+    assert by_code["HMP-01-03"] == "CRITICAL"
+
+    import uuid
+
+    missing = client.get(f"/api/v1/geo/basins/{basin_id}/block?simulacao={uuid.uuid4()}")
+    assert missing.status_code == 404
+    assert client.get("/api/v1/geo/basins/999999/block").status_code == 404
+
+
+def test_basin_relief_png(client: TestClient) -> None:
+    from app.geo.png import decode_png
+
+    basin_id = client.get("/api/v1/geo/basins?ordem=setores").json()["items"][0]["id"]
+    response = client.get(f"/api/v1/geo/basins/{basin_id}/relief.png")
+    assert response.status_code == 200 and response.headers["content-type"] == "image/png"
+    pixels = decode_png(response.content)
+    assert pixels.ndim == 3 and max(pixels.shape[:2]) <= 900 and pixels.shape[2] == 3
+    assert len({tuple(p) for p in pixels.reshape(-1, 3)[::97]}) > 10  # não é uma imagem lisa
+
+
+def test_relief_and_tiles_without_dem(dem_settings: Settings) -> None:
+    seed_and_compute()
+    app = create_app(get_settings())
+    app.dependency_overrides[get_settings] = lambda: dem_settings
+    with TestClient(app) as test_client:
+        assert test_client.get("/api/v1/geo/terrain/12/1517/2323.png").status_code == 503

@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import numpy.typing as npt
 
 from app.geo.terrain import Grid, GridSpec, Mask, slope_percent
 
@@ -130,3 +131,23 @@ def polygon_mask(spec: GridSpec, window: Window, geometry: dict[str, Any]) -> Ma
             [geometry], out_shape=window.shape, transform=transform, invert=True, all_touched=True
         )
     return mask
+
+
+def rasterize_shapes(
+    spec: GridSpec, shapes: list[tuple[dict[str, Any], int]], fill: int = 0
+) -> npt.NDArray[np.uint8]:
+    """Desenha geometrias GeoJSON (com um código 1–255) numa grade; toca todas as células."""
+    from rasterio.features import rasterize
+    from rasterio.transform import from_origin
+
+    if not shapes:
+        return np.full((spec.height, spec.width), fill, dtype=np.uint8)
+    out: npt.NDArray[np.uint8] = rasterize(
+        shapes,
+        out_shape=(spec.height, spec.width),
+        transform=from_origin(spec.west, spec.north, spec.dlon, spec.dlat),
+        fill=fill,
+        all_touched=True,
+        dtype="uint8",
+    )
+    return out

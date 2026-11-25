@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Response
 
 from app.api.v1.deps import ClockDep, SessionDep, SettingsDep
 from app.services.geo import (
@@ -25,6 +26,14 @@ from app.services.geo import (
     profile,
     require_terrain,
     sector_terrain_detail,
+)
+from app.services.geo_relief import (
+    BasinBlock,
+    BlockNotFoundError,
+    TileError,
+    basin_block,
+    basin_relief_png,
+    terrain_tile,
 )
 
 router = APIRouter(prefix="/geo", tags=["geointeligência"])
@@ -97,3 +106,63 @@ async def read_profile(
         raise HTTPException(status_code=422, detail=str(exc)) from None
     except TerrainUnavailableError as exc:
         raise _unavailable(exc) from None
+
+
+PNG_CACHE = "public, max-age=86400"
+
+
+@router.get(
+    "/terrain/{zoom}/{x}/{y}.png",
+    summary="Bloco de relevo (terrarium) do Copernicus DEM para o terreno 3D",
+    response_class=Response,
+)
+async def read_terrain_tile(
+    zoom: int, x: int, y: int, session: SessionDep, settings: SettingsDep
+) -> Response:
+    try:
+        dem = await require_terrain(session, settings)
+        png = terrain_tile(dem, zoom, x, y)
+    except TerrainUnavailableError as exc:
+        raise _unavailable(exc) from None
+    except TileError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from None
+    return Response(
+        content=png,
+        media_type="image/png",
+        headers={"Cache-Control": PNG_CACHE, "ETag": f'"{dem.sha256}-{zoom}-{x}-{y}"'},
+    )
+
+
+@router.get(
+    "/basins/{basin_id}/block",
+    response_model=BasinBlock,
+    summary="Bloco 3D da bacia: limites, elevação e setores (real ou simulação)",
+)
+async def read_basin_block(
+    basin_id: int, session: SessionDep, simulacao: uuid.UUID | None = None
+) -> BasinBlock:
+    try:
+        return await basin_block(session, basin_id, simulacao)
+    except BlockNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from None
+
+
+@router.get(
+    "/basins/{basin_id}/relief.png",
+    summary="Relevo sombreado da bacia com setores, drenagem e piscinões (alternativa 2D)",
+    response_class=Response,
+)
+async def read_basin_relief(
+    basin_id: int,
+    session: SessionDep,
+    settings: SettingsDep,
+    simulacao: uuid.UUID | None = None,
+) -> Response:
+    try:
+        dem = await require_terrain(session, settings)
+        png = await basin_relief_png(session, dem, basin_id, simulacao)
+    except TerrainUnavailableError as exc:
+        raise _unavailable(exc) from None
+    except BlockNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from None
+    return Response(content=png, media_type="image/png", headers={"Cache-Control": "no-cache"})

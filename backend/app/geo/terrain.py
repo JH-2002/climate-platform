@@ -164,3 +164,104 @@ def gain_loss(elevations: Sequence[float | None]) -> tuple[float, float]:
     gain = sum(max(0.0, b - a) for a, b in itertools.pairwise(valid))
     loss = sum(max(0.0, a - b) for a, b in itertools.pairwise(valid))
     return gain, loss
+
+
+# --- relevo para o mapa (Parte B: blocos "terrarium" e relevo sombreado) ---------------------
+
+
+def sample_grid(
+    z: Grid, spec: GridSpec, lons: npt.NDArray[np.float64], lats: npt.NDArray[np.float64]
+) -> Grid:
+    """Interpolação bilinear vetorizada; NaN fora da grade ou junto de célula vazia."""
+    rows = (spec.north - lats) / spec.dlat - 0.5
+    cols = (lons - spec.west) / spec.dlon - 0.5
+    inside = (rows >= 0) & (rows <= spec.height - 1) & (cols >= 0) & (cols <= spec.width - 1)
+    r = np.clip(rows, 0, spec.height - 1)
+    c = np.clip(cols, 0, spec.width - 1)
+    r0 = np.floor(r).astype(np.int64)
+    c0 = np.floor(c).astype(np.int64)
+    r1 = np.minimum(r0 + 1, spec.height - 1)
+    c1 = np.minimum(c0 + 1, spec.width - 1)
+    fr = (r - r0).astype(np.float32)
+    fc = (c - c0).astype(np.float32)
+    top = z[r0, c0] * (1 - fc) + z[r0, c1] * fc
+    bottom = z[r1, c0] * (1 - fc) + z[r1, c1] * fc
+    out = (top * (1 - fr) + bottom * fr).astype(np.float32)
+    out[~inside] = np.nan
+    return out
+
+
+def tile_centers(
+    zoom: int, x: int, y: int, size: int = 256
+) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+    """Longitude e latitude do centro de cada pixel de um bloco Web Mercator (z/x/y)."""
+    n = 2**zoom
+    px = (x + (np.arange(size) + 0.5) / size) / n
+    py = (y + (np.arange(size) + 0.5) / size) / n
+    lons = px * 360.0 - 180.0
+    lats = np.degrees(np.arctan(np.sinh(np.pi * (1 - 2 * py))))
+    lon_grid, lat_grid = np.meshgrid(lons, lats)
+    return lon_grid, lat_grid
+
+
+def tile_bounds(zoom: int, x: int, y: int) -> tuple[float, float, float, float]:
+    """(oeste, sul, leste, norte) de um bloco Web Mercator."""
+    n = 2**zoom
+
+    def lat(t: float) -> float:
+        return math.degrees(math.atan(math.sinh(math.pi * (1 - 2 * t))))
+
+    return x / n * 360 - 180, lat((y + 1) / n), (x + 1) / n * 360 - 180, lat(y / n)
+
+
+def terrarium_rgb(elevation: Grid, fill: float) -> npt.NDArray[np.uint8]:
+    """Codificação "terrarium" do MapLibre: altura = (R·256 + G + B/256) − 32768.
+
+    Células vazias recebem `fill` para não criar penhascos falsos na borda do recorte.
+    """
+    v = np.where(np.isfinite(elevation), elevation, fill).astype(np.float64) + 32768.0
+    r = np.floor(v / 256)
+    g = np.floor(v) - r * 256
+    b = np.floor((v - np.floor(v)) * 256)
+    return np.stack([r, g, b], axis=-1).clip(0, 255).astype(np.uint8)
+
+
+def terrarium_decode(rgb: npt.NDArray[np.uint8]) -> npt.NDArray[np.float64]:
+    px = rgb.astype(np.float64)
+    return px[..., 0] * 256 + px[..., 1] + px[..., 2] / 256 - 32768
+
+
+def hillshade(z: Grid, dx: float, dy: float, azimuth: float = 315, altitude: float = 45) -> Grid:
+    """Sombreamento (0 a 1) com luz do noroeste: produto da normal da superfície pela luz.
+
+    As linhas da grade crescem para o sul, então d(altura)/d(norte) = −gradiente das linhas.
+    """
+    grad_south, grad_east = np.gradient(z.astype(np.float64), dy, dx)
+    normal_e, normal_n = -grad_east, grad_south  # normal = (−∂z/∂leste, −∂z/∂norte, 1)
+    norm = np.sqrt(normal_e**2 + normal_n**2 + 1)
+    alt, az = math.radians(altitude), math.radians(azimuth)
+    light_e, light_n, light_up = (
+        math.cos(alt) * math.sin(az),
+        math.cos(alt) * math.cos(az),
+        math.sin(alt),
+    )
+    shade = (normal_e * light_e + normal_n * light_n + light_up) / norm
+    out: Grid = np.clip(shade, 0, 1).astype(np.float32)
+    return out
+
+
+def resample_mean(z: Grid, max_size: int) -> tuple[Grid, int]:
+    """Média por blocos até caber em `max_size` × `max_size`; devolve a grade e o fator."""
+    factor = max(1, math.ceil(max(z.shape) / max_size))
+    if factor == 1:
+        return z.copy(), 1
+    h = math.ceil(z.shape[0] / factor) * factor
+    w = math.ceil(z.shape[1] / factor) * factor
+    padded = np.full((h, w), np.nan, dtype=np.float32)
+    padded[: z.shape[0], : z.shape[1]] = z
+    blocks = padded.reshape(h // factor, factor, w // factor, factor)
+    with np.errstate(invalid="ignore"):
+        counts = np.isfinite(blocks).sum(axis=(1, 3))
+        sums = np.nansum(blocks, axis=(1, 3))
+        out = np.where(counts > 0, sums / np.maximum(counts, 1), np.nan)
+    return out.astype(np.float32), factor
