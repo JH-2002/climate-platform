@@ -37,4 +37,5 @@
 | 2026-11-19 | Frontend chama a API pela própria origem; o Next encaminha `/api/*` para o backend (`API_INTERNAL_URL`) | Elimina dependência de CORS e de portas expostas ao navegador; o navegador integrado do app bloqueava a chamada entre portas |
 | 2026-11-19 | Healthcheck do banco via TCP (`pg_isready -h 127.0.0.1`) | Na primeira subida o PostGIS usa um servidor temporário só no socket local; o backend falhava na migração |
 | 2026-11-19 | `overrides` força o `postcss` atualizado também dentro do Next | Next 15 embute um `postcss` com alertas altos |
-| 2026-11-19 | **Pendente:** migrar Vitest 2 → versão principal atual (5.x) e revisar Next 16, Python 3.15, Node 26 | Atualizações principais exigem teste dedicado; Dependabot ignora majors até lá |
+| 2026-11-19 | ~~**Pendente:** migrar Vitest 2 → versão principal atual (5.x) e revisar Next 16, Python 3.15, Node 26~~ | Resolvido na spec 014 (2026-11-25) |
+| 2026-11-25 | Vitest 5, Recharts 3, Next 16, mypy 2.4 e ruff 0.17 atualizados; ESLint 10, Tailwind 4 e TypeScript 7 adiados ([spec 014](specs/014-dependency-upgrades/spec.md)) | Os adiados exigem suporte do ecossistema (ESLint 10, TS 7) ou migração visual completa (Tailwind 4) |
