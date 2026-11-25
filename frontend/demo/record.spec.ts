@@ -119,9 +119,8 @@ test("risco: categorias, subprefeituras e detalhes de todos os setores", async (
     page,
     ids.flatMap((id) => [`/api/v1/risk/areas/${id}`, `/api/v1/geo/sectors/${id}/terrain`]),
   );
-  // Uma explicação aberta pela interface, para gravar o que mais ela pedir.
-  await page.getByRole("button", { name: /^Por quê\? Explicação do setor/ }).first().click();
-  await settle(page);
+  // Uma explicação aberta pela interface (pela URL, como num link compartilhado).
+  if (ids[0] !== undefined) await visit(page, `/risk?setor=${ids[0]}`);
 });
 
 test("alertas: detalhes dos alertas oficiais", async ({ page }) => {
