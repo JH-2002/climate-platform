@@ -149,7 +149,13 @@ def test_rain_report(client: TestClient) -> None:
     table = next(s for s in doc["sections"] if s["type"] == "table")
     (row,) = table["rows"]
     assert row["value"] == pytest.approx(108.0)  # 12 dias de 9 mm
-    assert row["reference"] == pytest.approx(88.0)  # normal de novembro (sintética)
+    # mês em andamento: não é comparado com a normal do mês inteiro
+    assert row["reference"] is None and row["partial"] is True
+    full = {"point": POINT_KEY, "since": "2020-11-01", "until": "2020-11-30", "grain": "month"}
+    _, past = produce(client, "chuva", "json", full)
+    (old,) = next(s for s in json.loads(past.content)["sections"] if s["type"] == "table")["rows"]
+    assert old["value"] == pytest.approx(88.0) and old["reference"] == pytest.approx(88.0)
+    assert old["anomaly_pct"] == pytest.approx(0.0)
     daily = {**params, "grain": "day"}
     _, csv_file = produce(client, "chuva", "csv", daily)
     data = [

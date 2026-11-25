@@ -29,7 +29,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
     implemented: true,
   },
   { href: "/geo-3d", label: "Geointeligência 3D", section: "primary", phase: 8, implemented: true },
-  { href: "/reports", label: "Relatórios", section: "primary", phase: 10, implemented: false },
+  { href: "/reports", label: "Relatórios", section: "primary", phase: 10, implemented: true },
   { href: "/locations", label: "Meus locais", section: "secondary", phase: 3, implemented: false },
   {
     href: "/analytics/datasets",

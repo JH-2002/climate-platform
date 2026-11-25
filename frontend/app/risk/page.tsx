@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ReportShortcut } from "@/components/reports/ReportShortcut";
 import { Suspense } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { RiskDisclaimer } from "@/components/risk/RiskDisclaimer";
@@ -35,6 +36,15 @@ function RiskPage() {
           inundação e as ocorrências registradas.
         </p>
       </header>
+
+      <div className="flex flex-wrap gap-2">
+        <ReportShortcut
+          type="risco"
+          params={{ formato: "csv", ...(filters.subprefecture ? { subprefeitura: filters.subprefecture } : {}) }}
+          label="Gerar relatório dos setores"
+        />
+        <ReportShortcut type="situacao" label="Relatório da situação agora" />
+      </div>
 
       <RiskDisclaimer />
 

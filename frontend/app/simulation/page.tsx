@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { ReportShortcut } from "@/components/reports/ReportShortcut";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ScenarioForm } from "@/components/simulation/ScenarioForm";
@@ -155,6 +156,7 @@ function SimulationPage() {
           <>
             <SimulationBanner hybrid={run.data.mode === "HYBRID"} />
             <SimulationSummary run={run.data} onRepeat={repeat} repeating={mutation.isPending} />
+            <ReportShortcut type="simulacao" params={{ simulacao: run.data.id }} label="Gerar relatório desta simulação" />
             {detail.data && (
               <SimulatedSectorExplanation sector={detail.data} onClose={() => navigate({ ...state, sectorId: null })} />
             )}

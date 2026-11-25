@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { ReportShortcut } from "@/components/reports/ReportShortcut";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AlertHistory } from "@/components/alerts/AlertHistory";
@@ -45,6 +46,7 @@ function AlertsPage() {
           publicaram. Depois, a estimativa experimental do sistema e o estado dos dados. Esta
           plataforma não emite alertas oficiais.
         </p>
+        <ReportShortcut type="alertas" label="Gerar relatório dos alertas" />
       </header>
 
       {selected.data && (

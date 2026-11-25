@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ReportShortcut } from "@/components/reports/ReportShortcut";
 import { Suspense } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -45,6 +46,7 @@ function AnalyticsPage() {
           </Link>
           .
         </p>
+        <ReportShortcut type="chuva" label="Gerar relatório de chuva" />
       </header>
 
       <nav aria-label="Áreas de análise" className="flex flex-wrap gap-2 border-b border-surface-border pb-2">
