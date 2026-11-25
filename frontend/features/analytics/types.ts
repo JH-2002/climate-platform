@@ -233,3 +233,34 @@ export interface SourceHealth {
   last_failure: string | null;
   coverage: string | null;
 }
+
+/** Avaliação retrospectiva do motor de risco (spec 015, `/analytics/risk-evaluation`). */
+export interface ContingencyTable {
+  hits: number;
+  misses: number;
+  false_alarms: number;
+  correct_negatives: number;
+  units: number;
+  events: number;
+  pod: number | null;
+  far: number | null;
+  csi: number | null;
+  bias: number | null;
+  base_rate: number | null;
+}
+
+export interface RiskEvaluation {
+  engine_version: string;
+  decision: string;
+  period: { start: string | null; end: string | null; days: number };
+  subprefectures: number;
+  contingency: ContingencyTable;
+  reliability: { category: "LOW" | "MODERATE" | "HIGH" | "CRITICAL"; units: number; with_occurrence: number; rate: number | null }[];
+  calibration: (ContingencyTable & { factor: number })[];
+  best_factor: number | null;
+  current_thresholds: { p1h_mm: number[]; p24_mm: number[] };
+  monthly: (ContingencyTable & { month: string })[];
+  unmatched_subprefectures: string[];
+  sources: string[];
+  computed_at: string;
+}

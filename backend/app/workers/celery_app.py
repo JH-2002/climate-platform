@@ -28,6 +28,8 @@ ALERT_EVALUATION_INTERVAL_S = 600
 SUBPREFECTURES_INTERVAL_S = 24 * 3600
 # Relatórios (spec 010): arquivos vencidos e pedidos presos.
 REPORT_HOUSEKEEPING_INTERVAL_S = 600
+# Avaliação retrospectiva do motor (spec 015): arquivo de previsões e avaliação, 1 vez por dia.
+FORECAST_ARCHIVE_INTERVAL_S = 24 * 3600
 
 _settings = get_settings()
 
@@ -111,6 +113,10 @@ celery_app.conf.update(
             "task": "reports.housekeeping",
             "schedule": float(REPORT_HOUSEKEEPING_INTERVAL_S),
         },
+        "forecast-archive": {
+            "task": "ingestion.open_meteo_forecast_archive",
+            "schedule": float(FORECAST_ARCHIVE_INTERVAL_S),
+        },
         "simulation-purge": {
             "task": "simulation.purge_old_runs",
             "schedule": float(SIMULATION_PURGE_INTERVAL_S),
@@ -140,6 +146,8 @@ STARTUP_TASKS = (
     "alerts.sync_subprefectures",
     "alerts.fetch_idap",
     "alerts.fetch_inmet",
+    # Avaliação do motor (spec 015): arquivo de previsões; a avaliação vem em seguida.
+    "ingestion.open_meteo_forecast_archive",
 )
 
 

@@ -8,6 +8,7 @@ import type {
   InsightsResponse,
   KpisResponse,
   RankingResponse,
+  RiskEvaluation,
   RiskHistoryResponse,
   SeriesResponse,
   SourceHealth,
@@ -27,6 +28,7 @@ export const fetchDatasets = (signal?: AbortSignal) => get<DatasetInfo[]>("/data
 export const fetchTrends = (signal?: AbortSignal) => get<TrendsResponse>("/trends", signal);
 export const fetchRiskHistory = (signal?: AbortSignal) => get<RiskHistoryResponse>("/risk-history?days=7", signal);
 export const fetchSourcesHealth = (signal?: AbortSignal) => get<SourceHealth[]>("/sources-health", signal);
+export const fetchRiskEvaluation = (signal?: AbortSignal) => get<RiskEvaluation>("/risk-evaluation", signal);
 
 export interface SeriesParams {
   dataset: string;

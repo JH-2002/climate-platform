@@ -39,6 +39,7 @@ from app.services.analytics_series import (
     get_trends,
     series_csv,
 )
+from app.services.risk_evaluation import RiskEvaluation, latest_evaluation
 
 router = APIRouter(prefix="/analytics", tags=["análises"])
 
@@ -261,3 +262,21 @@ async def sources_health(
     session: SessionDep, settings: SettingsDep, clock: ClockDep
 ) -> list[SourceHealth]:
     return await get_sources_health(session, clock(), _credentials(settings))
+
+
+@router.get(
+    "/risk-evaluation",
+    response_model=RiskEvaluation,
+    summary="Avaliação retrospectiva do motor de risco (spec 015)",
+    responses={404: {"description": "Avaliação ainda não calculada"}},
+)
+async def risk_evaluation(session: SessionDep, response: Response) -> RiskEvaluation:
+    """Retroteste do motor com previsão arquivada × ocorrências do GeoSampa (ADR-018)."""
+    result = await latest_evaluation(session)
+    if result is None:
+        raise HTTPException(
+            status_code=404,
+            detail="A avaliação do motor ainda não foi calculada (roda uma vez por dia).",
+        )
+    response.headers["Cache-Control"] = CACHE_LONG
+    return result

@@ -29,6 +29,7 @@ from app.ingestion.archive_jobs import (
     make_archive_update_job,
     pending_points,
 )
+from app.ingestion.forecast_archive_jobs import make_forecast_archive_job
 from app.ingestion.geo_jobs import (
     Download,
     make_basin_sync_job,
@@ -47,6 +48,7 @@ from app.ingestion.reference_import import make_iag_import_job
 from app.integrations.http import USER_AGENT, fetch
 from app.models.tables import data_sources, hydro_risk_sectors, ingestion_runs, sector_terrain
 from app.services import reports as report_service
+from app.services import risk_evaluation as risk_evaluation_service
 from app.services.alerts import EvaluationSummary, evaluate_system_alerts, thresholds_from
 from app.services.geo import DEM_CLIP_CODE, TerrainSummary, compute_terrain, dem_status
 from app.services.risk import RiskRunSummary, compute_flood_risk
@@ -177,6 +179,32 @@ async def run_archive_update(settings: Settings) -> RunOutcome:
             make_http_fetcher(client), settings.forecast_point_list, local_yesterday()
         )
         return await run_ingestion(sessions, ARCHIVE_SOURCE, job)
+
+
+# --- avaliação retrospectiva do motor de risco (spec 015) -----------------------------------
+FORECAST_ARCHIVE_SOURCE = "open-meteo-historical-forecast"
+
+
+async def run_forecast_archive(settings: Settings) -> RunOutcome:
+    """Previsões arquivadas dos pontos da grade, até ontem (FR-210)."""
+    async with (
+        _session_factory(settings) as sessions,
+        httpx.AsyncClient(timeout=ARCHIVE_TIMEOUT_S) as client,
+    ):
+        job = make_forecast_archive_job(
+            make_http_fetcher(client), settings.forecast_point_list, local_yesterday()
+        )
+        return await run_ingestion(sessions, FORECAST_ARCHIVE_SOURCE, job)
+
+
+async def run_risk_evaluation(
+    settings: Settings,
+) -> risk_evaluation_service.EvaluationSummary:
+    """Retroteste do motor com o arquivo de previsões e as ocorrências (FR-215)."""
+    async with _session_factory(settings) as sessions, sessions() as session:
+        return await risk_evaluation_service.compute_risk_evaluation(
+            session, datetime.now(UTC), settings.forecast_point_list
+        )
 
 
 # --- geointeligência (spec 008) ---------------------------------------------------------------
