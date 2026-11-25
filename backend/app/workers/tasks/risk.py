@@ -25,6 +25,8 @@ def sync_geosampa() -> dict[str, Any]:
 @celery_app.task(name=COMPUTE_TASK)
 def compute_flood_risk() -> dict[str, Any]:
     summary = asyncio.run(run_flood_risk(get_settings()))
+    # Alertas do sistema dependem da estimativa mais recente (spec 009, FR-144).
+    celery_app.send_task("alerts.evaluate")
     return {
         "run_id": summary.run_id,
         "status": summary.status,

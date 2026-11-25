@@ -9,6 +9,7 @@ from fastapi import APIRouter, HTTPException, Query
 
 from app.api.v1.deps import ClockDep, SessionDep, SettingsDep
 from app.core.geo import BoundingBox
+from app.services.alerts import ALERT_ATTRIBUTION, official_alert_features
 from app.services.geo import (
     HYDRO_ATTRIBUTION,
     basin_features,
@@ -120,3 +121,10 @@ async def drainage_layer(
 @router.get("/layers/reservoirs", summary="Piscinões (reservatórios de amortecimento)")
 async def reservoirs_layer(session: SessionDep) -> dict[str, Any]:
     return feature_collection(await reservoir_features(session), attribution=HYDRO_ATTRIBUTION)
+
+
+@router.get("/layers/alerts", summary="Alertas oficiais vigentes e próximos (polígonos)")
+async def alerts_layer(session: SessionDep, clock: ClockDep) -> dict[str, Any]:
+    return feature_collection(
+        await official_alert_features(session, clock()), attribution=ALERT_ATTRIBUTION
+    )

@@ -17,6 +17,12 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from sqlalchemy.pool import NullPool
 
 from app.core.config import Settings
+from app.ingestion.alert_jobs import (
+    BytesFetcher,
+    make_idap_job,
+    make_inmet_job,
+    make_subprefecture_sync_job,
+)
 from app.ingestion.archive_jobs import (
     make_archive_backfill_job,
     make_archive_update_job,
@@ -37,8 +43,9 @@ from app.ingestion.geosampa_jobs import (
 from app.ingestion.jobs import Fetcher, make_forecast_job, make_station_sync_job
 from app.ingestion.pipeline import RunOutcome, run_ingestion
 from app.ingestion.reference_import import make_iag_import_job
-from app.integrations.http import fetch
+from app.integrations.http import USER_AGENT, fetch
 from app.models.tables import data_sources, hydro_risk_sectors, ingestion_runs, sector_terrain
+from app.services.alerts import EvaluationSummary, evaluate_system_alerts, thresholds_from
 from app.services.geo import DEM_CLIP_CODE, TerrainSummary, compute_terrain, dem_status
 from app.services.risk import RiskRunSummary, compute_flood_risk
 
@@ -59,6 +66,12 @@ HYDRO_TIMEOUT_S = 180.0
 HYDRO_INTERVAL = timedelta(days=30)
 TERRAIN_MAX_AGE = timedelta(hours=20)
 DEM_SOURCE = "copernicus-dem"
+IDAP_SOURCE = "idap-alerts"
+INMET_WARNINGS_SOURCE = "inmet-warnings"
+SUBPREFECTURES_SOURCE = "geosampa-subprefectures"
+# Feed da IDAP: ~16 MB (SOURCES.md §15); limite de 60 MB na leitura.
+IDAP_TIMEOUT_S = 120.0
+IDAP_MAX_BYTES = 60 * 1024 * 1024
 HYDRO_SOURCES = (
     ("geosampa-basins", make_basin_sync_job),
     ("geosampa-drainage", make_drainage_sync_job),
@@ -265,3 +278,67 @@ async def run_geo_refresh(settings: Settings, now: datetime | None = None) -> Ge
             if changed or await _terrain_due(session, now):
                 report.terrain = await compute_terrain(session, settings, now)
     return report
+
+
+# --- alertas (spec 009) -----------------------------------------------------------------------
+
+
+def make_bytes_fetcher(client: httpx.AsyncClient, max_bytes: int = IDAP_MAX_BYTES) -> BytesFetcher:
+    """Corpo bruto da resposta, com teto de tamanho lido em fluxo (o XML vem de fora)."""
+
+    async def fetch_bytes(url: str) -> bytes | None:
+        chunks: list[bytes] = []
+        size = 0
+        async with client.stream("GET", url, headers={"User-Agent": USER_AGENT}) as response:
+            response.raise_for_status()
+            async for chunk in response.aiter_bytes(1 << 16):
+                size += len(chunk)
+                if size > max_bytes:
+                    raise ValueError(f"resposta acima de {max_bytes // (1024 * 1024)} MB")
+                chunks.append(chunk)
+        return b"".join(chunks) or None
+
+    return fetch_bytes
+
+
+async def run_idap(settings: Settings) -> RunOutcome:
+    async with (
+        _session_factory(settings) as sessions,
+        httpx.AsyncClient(timeout=IDAP_TIMEOUT_S, follow_redirects=True) as client,
+    ):
+        job = make_idap_job(
+            make_bytes_fetcher(client),
+            settings.idap_feed_url,
+            settings.region,
+            settings.region_ibge_code,
+        )
+        return await run_ingestion(sessions, IDAP_SOURCE, job)
+
+
+async def run_inmet_warnings(settings: Settings) -> RunOutcome:
+    async with (
+        _session_factory(settings) as sessions,
+        httpx.AsyncClient(timeout=settings.http_timeout_s, follow_redirects=True) as client,
+    ):
+        job = make_inmet_job(
+            make_bytes_fetcher(client, 5 * 1024 * 1024),
+            settings.inmet_warnings_url,
+            settings.region,
+            settings.region_ibge_code,
+        )
+        return await run_ingestion(sessions, INMET_WARNINGS_SOURCE, job)
+
+
+async def run_subprefecture_sync(settings: Settings) -> RunOutcome:
+    timeout = max(settings.http_timeout_s, GEOSAMPA_TIMEOUT_S)
+    async with (
+        _session_factory(settings) as sessions,
+        httpx.AsyncClient(timeout=timeout) as client,
+    ):
+        job = make_subprefecture_sync_job(make_http_fetcher(client), settings.geosampa_wfs_url)
+        return await run_ingestion(sessions, SUBPREFECTURES_SOURCE, job)
+
+
+async def run_alert_evaluation(settings: Settings) -> EvaluationSummary:
+    async with _session_factory(settings) as sessions, sessions() as session:
+        return await evaluate_system_alerts(session, datetime.now(UTC), thresholds_from(settings))

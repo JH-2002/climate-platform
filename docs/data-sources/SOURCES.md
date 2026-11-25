@@ -252,3 +252,47 @@ Também existem no WFS curvas de nível, pontos cotados, declividade (2015) e a 
 | Status | **VIÁVEL**; recorte real em 2026-11-24 com ~28 m de resolução |
 
 Limitação medida: 351 dos 793 setores de risco (44%) têm menos de 4 células de 30 m (mediana: 4 células). Para esses setores, a elevação é marcada como "pouca amostra".
+
+## 15. IDAP — alertas da Defesa Civil (Fase 9)
+
+| Campo | Valor |
+|---|---|
+| Responsável | Ministério da Integração e do Desenvolvimento Regional — Secretaria Nacional de Proteção e Defesa Civil |
+| URL | `https://idapfile.mdr.gov.br/idap/api/rss/cap` |
+| O que é | Os alertas que as Defesas Civis (estaduais e municipais) mandam à população por SMS, WhatsApp, Google Alertas Públicos e Defesa Civil Alerta |
+| Autenticação | Nenhuma; `robots.txt` responde 404 (sem regras) |
+| Formato | Feed Atom; cada `<entry>` traz uma mensagem CAP 1.2 com polígono |
+| Teste (2026-11-25 01:30 UTC) | 16,6 MB, 161 alertas das ~12 h anteriores, de 20 remetentes; 46 da Defesa Civil do Estado de SP, vários sobre a capital (ex.: "Chuva se espalhando pelas Zonas Oeste e Sul de São Paulo"). Só `msgType` "Alert". 48 alertas trazem geocódigo IBGE; os de SP não |
+| Particularidade | O `areaDesc` dos alertas da Defesa Civil de SP vem como "SÃO PAULO/SP" para todo o estado: a área vale pelo polígono |
+| Frequência no sistema | A cada 10 min (o feed guarda só ~12 h) |
+| Tipo | Alerta oficial (categoria `CIVIL_DEFENSE`) |
+| Licença | Alerta público oficial; atribuição "Fonte: Defesa Civil (IDAP/MIDR)" |
+| Status | **VIÁVEL** |
+
+## 16. INMET — avisos meteorológicos (Alert-AS, Fase 9)
+
+| Campo | Valor |
+|---|---|
+| Responsável | Instituto Nacional de Meteorologia (INMET) |
+| URL | RSS `https://apiprevmet3.inmet.gov.br/avisos/rss`; CAP de cada aviso em `…/avisos/rss/<número>` |
+| Autenticação | Nenhuma |
+| Formato | RSS 2.0 (UTF-8, servido sem `charset` no cabeçalho) + mensagem CAP 1.2 por aviso, com polígono e o parâmetro `Municipios` ("São Paulo - SP (3550308), …") |
+| Teste (2026-11-25 01:35 UTC) | 64 avisos no RSS; 29 citando a capital. CAP de 40 KB a 135 KB cada. Usa `Alert`, `Update` e `Cancel` (com `references`) |
+| Severidade | CAP Moderate/Severe/Extreme = amarelo "Perigo potencial", laranja "Perigo", vermelho "Grande perigo" |
+| Frequência no sistema | A cada 30 min; o CAP só é baixado para avisos ainda não vistos |
+| Tipo | Aviso meteorológico oficial (categoria `WEATHER_WARNING`) |
+| Licença | "O conteúdo deste site poderá ser reproduzido desde que citada a fonte" (comentário do próprio RSS) → "Fonte: INMET — Alert-AS" |
+| Status | **VIÁVEL** |
+
+## 17. GeoSampa — subprefeituras (Fase 9)
+
+| Campo | Valor |
+|---|---|
+| Camada | `subprefeitura` no WFS da §10 |
+| Conteúdo | 32 polígonos, com sigla, área e a região em 5 (`nm_regiao_05`: Norte, Sul, Leste, Oeste, Centro) e em 8 |
+| Teste (2026-11-24) | 2,35 MB; atualizada em 16/11/2026 |
+| Uso | Limite real do município (união das 32) para a interseção dos alertas, e lista das subprefeituras atingidas |
+| Frequência no sistema | A cada 24 h |
+| Status | **VIÁVEL** |
+
+As fixtures das §15 a §17 são recortes das respostas reais (ver `app/tests/fixtures/__init__.py`).

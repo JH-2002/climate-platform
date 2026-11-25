@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from app.api.v1 import (
+    alerts,
     analytics,
     geo,
     health,
@@ -22,3 +23,4 @@ api_router.include_router(risk.router)
 api_router.include_router(analytics.router)
 api_router.include_router(simulation.router)
 api_router.include_router(geo.router)
+api_router.include_router(alerts.router)

@@ -159,3 +159,16 @@ forbidden_modules = [
     "app.api",
     "app.workers",
 ]
+
+[[tool.importlinter.contracts]]
+name = "regras dos alertas são puras: sem modelos, serviços, ingestão, integrações, api ou workers"
+type = "forbidden"
+source_modules = ["app.alerts"]
+forbidden_modules = [
+    "app.models",
+    "app.services",
+    "app.ingestion",
+    "app.integrations",
+    "app.api",
+    "app.workers",
+]

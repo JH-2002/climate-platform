@@ -21,6 +21,11 @@ ARCHIVE_BACKFILL_INTERVAL_S = 120
 REFERENCE_IMPORT_INTERVAL_S = 7 * 24 * 3600
 SIMULATION_PURGE_INTERVAL_S = 24 * 3600
 GEO_REFRESH_INTERVAL_S = 24 * 3600
+# Alertas (spec 009): o feed da IDAP guarda só ~12 h; coleta curta para não perder nada.
+IDAP_INTERVAL_S = 600
+INMET_WARNINGS_INTERVAL_S = 1800
+ALERT_EVALUATION_INTERVAL_S = 600
+SUBPREFECTURES_INTERVAL_S = 24 * 3600
 
 _settings = get_settings()
 
@@ -34,6 +39,7 @@ celery_app = Celery(
         "app.workers.tasks.analytics",
         "app.workers.tasks.simulation",
         "app.workers.tasks.geo",
+        "app.workers.tasks.alerts",
     ],
 )
 
@@ -82,6 +88,22 @@ celery_app.conf.update(
             "task": "geo.refresh",
             "schedule": float(GEO_REFRESH_INTERVAL_S),
         },
+        "alerts-idap": {
+            "task": "alerts.fetch_idap",
+            "schedule": float(IDAP_INTERVAL_S),
+        },
+        "alerts-inmet": {
+            "task": "alerts.fetch_inmet",
+            "schedule": float(INMET_WARNINGS_INTERVAL_S),
+        },
+        "alerts-evaluate": {
+            "task": "alerts.evaluate",
+            "schedule": float(ALERT_EVALUATION_INTERVAL_S),
+        },
+        "alerts-subprefectures": {
+            "task": "alerts.sync_subprefectures",
+            "schedule": float(SUBPREFECTURES_INTERVAL_S),
+        },
         "simulation-purge": {
             "task": "simulation.purge_old_runs",
             "schedule": float(SIMULATION_PURGE_INTERVAL_S),
@@ -107,6 +129,10 @@ STARTUP_TASKS = (
     "ingestion.open_meteo_archive",
     # Hidrografia, DEM e terreno: cada etapa se pula quando já está em dia (spec 008).
     "geo.refresh",
+    # Alertas (spec 009): subprefeituras antes, para a interseção usar o limite real.
+    "alerts.sync_subprefectures",
+    "alerts.fetch_idap",
+    "alerts.fetch_inmet",
 )
 
 

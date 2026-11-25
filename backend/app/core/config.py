@@ -45,6 +45,12 @@ class Settings(BaseSettings):
     # Copernicus DEM GLO-30 (spec 008): blocos públicos na AWS, recorte gravado em `dem_dir`.
     copernicus_dem_url: str = "https://copernicus-dem-30m.s3.amazonaws.com"
     dem_dir: str = "/data/dem"
+    # Alertas (spec 009): código IBGE do município e fontes oficiais.
+    region_ibge_code: str = Field(default="3550308", pattern=r"^\d{7}$")
+    idap_feed_url: str = "https://idapfile.mdr.gov.br/idap/api/rss/cap"
+    inmet_warnings_url: str = "https://apiprevmet3.inmet.gov.br/avisos/rss"
+    alert_risk_stale_hours: float = Field(default=3.0, gt=0, le=48)
+    alert_clear_after: int = Field(default=2, ge=1, le=10)
     http_timeout_s: float = Field(default=15.0, gt=0, le=60)
 
     @property
