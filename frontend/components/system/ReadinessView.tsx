@@ -99,7 +99,7 @@ export function ReadinessView({
 
       {report && (
         <>
-          <div className="overflow-x-auto rounded-lg border border-surface-border">
+          <div className="overflow-x-auto rounded-lg border border-surface-border focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" tabIndex={0} role="region" aria-label="Componentes do sistema">
           <table className="w-full border-collapse bg-surface text-left text-sm">
             <caption className="sr-only">Estado de cada componente do sistema</caption>
             <thead className="bg-surface-muted text-ink-muted">

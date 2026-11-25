@@ -38,7 +38,7 @@ export function SourcesTab() {
   if (health.isError) return <p role="alert" className="text-sm">{health.error.message}</p>;
   return (
     <div className="space-y-3">
-      <div className="overflow-x-auto rounded-lg border border-surface-border">
+      <div className="overflow-x-auto rounded-lg border border-surface-border focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" tabIndex={0} role="region" aria-label="Fontes de dados">
         <table className="w-full border-collapse bg-surface text-left text-sm">
           <caption className="bg-surface-muted px-4 py-2 text-left font-medium">Fontes de dados e coletas</caption>
           <thead className="text-ink-muted">

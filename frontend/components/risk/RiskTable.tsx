@@ -13,7 +13,7 @@ interface RiskTableProps {
 /** Ranking dos setores (FR-066): maior categoria primeiro, depois chuva e moradias. */
 export function RiskTable({ items, total, selectedId, onSelect }: RiskTableProps) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-surface-border">
+    <div className="overflow-x-auto rounded-lg border border-surface-border focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" tabIndex={0} role="region" aria-label="Tabela de setores">
       <table className="w-full border-collapse bg-surface text-left text-sm">
         <caption className="bg-surface-muted px-4 py-2 text-left font-medium">
           Setores de risco hidrológico ({items.length < total ? `${items.length} de ${total}` : total})

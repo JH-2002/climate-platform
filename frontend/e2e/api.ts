@@ -180,12 +180,15 @@ export class MockApi {
   }
 }
 
-type Fixtures = { api: MockApi; consoleErrors: string[] };
+type Fixtures = { api: MockApi; consoleErrors: string[]; recording: string | null };
 
 export const test = base.extend<Fixtures>({
+  // Gravação usada pelo teste; por padrão, a de mesmo título. Os testes de celular reaproveitam
+  // as gravações dos testes de computador (test.use({ recording: "axe /risk" })).
+  recording: [null, { option: true }],
   api: [
-    async ({ page }, use, testInfo) => {
-    const file = path.join(FIXTURES, `${slug(testInfo.title)}.json`);
+    async ({ page, recording }, use, testInfo) => {
+    const file = path.join(FIXTURES, `${slug(recording ?? testInfo.title)}.json`);
     if (RECORD) {
       const recorder = new Recorder();
       recorder.attach(page);

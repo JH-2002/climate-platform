@@ -83,7 +83,7 @@ export function RiskExplanation({ detail, onClose }: { detail: RiskAreaDetail; o
         </ul>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" tabIndex={0} role="region" aria-label="Fatores da estimativa">
         <table className="w-full border-collapse text-left">
           <caption className="py-1 text-left font-medium">Dados usados</caption>
           <thead className="text-ink-muted">

@@ -92,7 +92,7 @@ export function ProfileChart({ profile }: { profile: Profile }) {
         </ResponsiveContainer>
       </ChartFrame>
       {profile.crossings.length > 0 && (
-        <div className="overflow-x-auto rounded-lg border border-surface-border bg-surface">
+        <div className="overflow-x-auto rounded-lg border border-surface-border bg-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" tabIndex={0} role="region" aria-label="Tabela do perfil do relevo">
           <table className="w-full border-collapse text-left text-sm">
             <caption className="px-3 py-2 text-left font-medium">O que o perfil cruza</caption>
             <thead className="text-ink-muted">

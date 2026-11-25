@@ -44,7 +44,7 @@ export function BasinRanking({ list, sort, selectedId, onSort, onSelect, limit =
           </select>
         </label>
       </div>
-      <div className="overflow-x-auto rounded-lg border border-surface-border">
+      <div className="overflow-x-auto rounded-lg border border-surface-border focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" tabIndex={0} role="region" aria-label="Tabela de bacias">
         <table className="w-full border-collapse bg-surface text-left text-sm">
           <caption className="sr-only">Bacias hidrográficas ordenadas por {SORT_LABELS[sort].toLowerCase()}</caption>
           <thead className="text-ink-muted">

@@ -24,9 +24,15 @@ export default defineConfig({
     locale: "pt-BR",
     timezoneId: "America/Sao_Paulo",
     trace: "retain-on-failure",
+    // O service worker (spec 013) atenderia as chamadas antes da API simulada.
+    serviceWorkers: "block",
     screenshot: "only-on-failure",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    { name: "chromium", use: { ...devices["Desktop Chrome"] }, testIgnore: /mobile\.spec\.ts/ },
+    // Tela de celular (spec 013, FR-205): só os testes de celular.
+    { name: "celular", use: { ...devices["Pixel 7"] }, testMatch: /mobile\.spec\.ts/ },
+  ],
   webServer: record
     ? undefined
     : {

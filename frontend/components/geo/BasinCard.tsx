@@ -81,7 +81,7 @@ export function BasinCard({
       </dl>
 
       {detail.sectors.length > 0 && (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" tabIndex={0} role="region" aria-label="Setores da bacia">
           <table className="w-full border-collapse text-left text-sm">
             <caption className="py-1 text-left font-medium">Setores de risco na bacia ({detail.sectors.length})</caption>
             <thead className="text-ink-muted">

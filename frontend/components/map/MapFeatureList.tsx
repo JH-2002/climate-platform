@@ -25,7 +25,7 @@ export function MapFeatureList({ stations, forecast }: MapFeatureListProps) {
         .
       </p>
 
-      <div className="overflow-x-auto rounded-lg border border-surface-border">
+      <div className="overflow-x-auto rounded-lg border border-surface-border focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" tabIndex={0} role="region" aria-label="Lista do mapa">
         <table className="w-full border-collapse bg-surface text-left text-sm">
           <caption className="bg-surface-muted px-4 py-2 text-left font-medium">Estações do INMET</caption>
           <thead className="text-ink-muted">
@@ -63,7 +63,7 @@ export function MapFeatureList({ stations, forecast }: MapFeatureListProps) {
         </table>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-surface-border">
+      <div className="overflow-x-auto rounded-lg border border-surface-border focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" tabIndex={0} role="region" aria-label="Lista do mapa">
         <table className="w-full border-collapse bg-surface text-left text-sm">
           <caption className="bg-surface-muted px-4 py-2 text-left font-medium">
             Pontos de previsão (modelo) — chuva prevista em 24 h
