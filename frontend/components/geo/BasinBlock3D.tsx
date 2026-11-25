@@ -7,6 +7,7 @@
  */
 
 import "maplibre-gl/dist/maplibre-gl.css";
+import { basePath } from "@/lib/demo";
 import type { GeoJSON as GeoJSONData } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
@@ -20,7 +21,7 @@ import { formatNumber } from "@/lib/format";
 import { DEFAULT_MAP_STYLE_URL } from "@/lib/map-sources.mjs";
 
 const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL || DEFAULT_MAP_STYLE_URL;
-const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? "/vendor/maplibre-gl-worker.mjs";
+const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? `${basePath()}/vendor/maplibre-gl-worker.mjs`;
 const PITCH = 62;
 // Grade de 30 m ≈ zoom 12: acima disso o MapLibre reaproveita os blocos (sem pedir mais).
 const TERRAIN_MAX_ZOOM = 12;

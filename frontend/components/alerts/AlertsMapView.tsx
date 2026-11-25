@@ -6,6 +6,7 @@
  */
 
 import "maplibre-gl/dist/maplibre-gl.css";
+import { basePath } from "@/lib/demo";
 import type { GeoJSON as GeoJSONData } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap, MapLayerMouseEvent } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
@@ -16,7 +17,7 @@ import type { FeatureCollection } from "@/features/map/types";
 import { DEFAULT_MAP_STYLE_URL } from "@/lib/map-sources.mjs";
 
 const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL || DEFAULT_MAP_STYLE_URL;
-const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? "/vendor/maplibre-gl-worker.mjs";
+const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? `${basePath()}/vendor/maplibre-gl-worker.mjs`;
 const CITY_BOUNDS: [[number, number], [number, number]] = [
   [-46.83, -24.01],
   [-46.36, -23.35],
@@ -31,7 +32,7 @@ function popup(props: AlertLayerProps): HTMLElement {
   const text = document.createElement("p");
   text.textContent = props.headline ?? "";
   const link = document.createElement("a");
-  link.href = alertHref(Number(props.id));
+  link.href = `${basePath()}${alertHref(Number(props.id))}`;
   link.textContent = "Ver alerta";
   link.className = "font-medium text-accent underline";
   root.append(label, text, link);

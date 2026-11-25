@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { AlertBanner } from "@/components/alerts/AlertBanner";
 import { AlertNotifier } from "@/components/alerts/AlertNotifier";
+import { DemoBanner } from "@/components/layout/DemoBanner";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Providers } from "./providers";
 import "./globals.css";
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <Sidebar />
             </aside>
             <div className="flex min-w-0 flex-1 flex-col">
+              <DemoBanner />
               <AlertBanner />
               <main id="conteudo" className="min-w-0 flex-1 p-4 md:p-8">
                 {children}

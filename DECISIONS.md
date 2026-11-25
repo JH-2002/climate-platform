@@ -20,6 +20,7 @@
 | [ADR-014](docs/architecture/adr/ADR-014-official-alerts-and-rules.md) | Alertas oficiais (IDAP e INMET) e alertas do sistema por regras | Aceita | 2026-11-24 |
 | [ADR-015](docs/architecture/adr/ADR-015-report-center.md) | Relatórios com PDF próprio e arquivos no banco | Aceita | 2026-11-25 |
 | [ADR-016](docs/architecture/adr/ADR-016-production-stack.md) | Pilha de produção: Docker Compose com Caddy | Aceita | 2026-11-25 |
+| [ADR-017](docs/architecture/adr/ADR-017-public-demo-pages.md) | Vitrine pública estática no GitHub Pages, gravada pelo Actions | Aceita | 2026-11-25 |
 
 ## Decisões menores (sem ADR)
 

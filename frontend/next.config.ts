@@ -6,7 +6,19 @@ import { securityHeaders } from "./lib/security-headers.mjs";
 // Assim não há chamadas entre origens (CORS) e o endereço interno do backend não vaza.
 const apiInternalUrl = (process.env.API_INTERNAL_URL ?? "http://backend:8000").replace(/\/+$/, "");
 
-const nextConfig: NextConfig = {
+// Vitrine pública (spec 012): site estático no GitHub Pages, sem servidor, sem /api nem cabeçalhos
+// (o Pages não aplica cabeçalhos próprios). As respostas da API vêm de demo-data/ (lib/demo.ts).
+const demo = process.env.NEXT_PUBLIC_DEMO === "1";
+const demoConfig: NextConfig = {
+  reactStrictMode: true,
+  poweredByHeader: false,
+  output: "export",
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || undefined,
+  trailingSlash: true,
+  images: { unoptimized: true },
+};
+
+const serverConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   // Build de produção autocontido (spec 011): a imagem leva só o necessário para `node server.js`.
@@ -30,4 +42,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default demo ? demoConfig : serverConfig;

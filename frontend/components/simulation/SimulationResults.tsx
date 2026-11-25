@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { basePath } from "@/lib/demo";
 import { useState } from "react";
 import { TerrainSection } from "@/components/geo/TerrainSection";
 import { RiskBadge } from "@/components/risk/RiskBadge";
@@ -20,7 +21,7 @@ export function SimulationSummary(props: { run: SimulationRun; onRepeat?: () => 
 
   async function copyLink() {
     try {
-      await navigator.clipboard.writeText(`${window.location.origin}${simulationHref(run.id)}`);
+      await navigator.clipboard.writeText(`${window.location.origin}${basePath()}${simulationHref(run.id)}`);
       setCopied(true);
     } catch {
       setCopied(false);

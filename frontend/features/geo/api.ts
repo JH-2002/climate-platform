@@ -1,4 +1,5 @@
 import { apiGet } from "@/lib/api-client";
+import { assetUrl } from "@/lib/demo";
 import type { FeatureCollection } from "@/features/map/types";
 import type {
   BasinBlock,
@@ -58,10 +59,10 @@ export async function fetchBasinBlock(id: number, simulationId: string | null, s
 }
 
 export function reliefUrl(id: number, simulationId: string | null): string {
-  return `/api/v1/geo/basins/${id}/relief.png${simulationQuery(simulationId)}`;
+  return assetUrl(`/api/v1/geo/basins/${id}/relief.png${simulationQuery(simulationId)}`);
 }
 
 /** URL absoluta dos blocos de relevo do Copernicus (o MapLibre exige URL completa). */
 export function terrainTilesUrl(origin: string): string {
-  return `${origin}/api/v1/geo/terrain/{z}/{x}/{y}.png`;
+  return `${origin}${assetUrl("/api/v1/geo/terrain/{z}/{x}/{y}.png")}`;
 }

@@ -7,6 +7,7 @@
  */
 
 import "maplibre-gl/dist/maplibre-gl.css";
+import { basePath } from "@/lib/demo";
 import type { GeoJSON as GeoJSONData } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap, MapLayerMouseEvent, MapMouseEvent } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
@@ -18,7 +19,7 @@ import type { CellInput, SimulationLayerProps } from "@/features/simulation/type
 import { DEFAULT_MAP_STYLE_URL } from "@/lib/map-sources.mjs";
 
 const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL || DEFAULT_MAP_STYLE_URL;
-const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? "/vendor/maplibre-gl-worker.mjs";
+const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? `${basePath()}/vendor/maplibre-gl-worker.mjs`;
 const ATTRIBUTION = "SIMULAÇÃO — cenário hipotético · Setores: GeoSampa — Prefeitura de São Paulo";
 const SAO_PAULO: [number, number] = [-46.6333, -23.5505];
 const VIOLET = "#6d28d9";

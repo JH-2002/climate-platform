@@ -6,6 +6,7 @@
  */
 
 import "maplibre-gl/dist/maplibre-gl.css";
+import { basePath } from "@/lib/demo";
 import type { GeoJSON as GeoJSONData, Point } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap, MapLayerMouseEvent } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
@@ -26,7 +27,7 @@ const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL || DEFAULT_MAP_STYLE_URL
 const TERRAIN_URL =
   process.env.NEXT_PUBLIC_TERRAIN_TILES_URL || DEFAULT_TERRAIN_TILES_URL;
 // Copiado por scripts/copy-maplibre-worker.mjs (pré-dev/pré-build).
-const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? "/vendor/maplibre-gl-worker.mjs";
+const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? `${basePath()}/vendor/maplibre-gl-worker.mjs`;
 const TERRAIN_ATTRIBUTION =
   '<a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md" target="_blank" rel="noopener">Relevo: Terrain Tiles (Mapzen/AWS)</a>';
 const DATA_ATTRIBUTION =
@@ -118,7 +119,7 @@ function popupContent(title: string, lines: string[], link?: { href: string; lab
   }
   if (link) {
     const a = document.createElement("a");
-    a.href = link.href;
+    a.href = `${basePath()}${link.href}`;
     a.textContent = link.label;
     a.className = "font-medium text-accent underline";
     root.append(a);
