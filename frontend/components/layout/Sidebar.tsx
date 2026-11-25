@@ -18,8 +18,9 @@ export function AlertCountBadge({ count, active = false }: { count: number; acti
         active ? "bg-white text-accent" : "bg-status-error text-white"
       }`}
     >
-      {count}
-      <span className="sr-only"> {count === 1 ? "alerta oficial vigente" : "alertas oficiais vigentes"}</span>
+      <span aria-hidden="true">{count}</span>
+      {/* A vírgula separa o número do texto anterior em qualquer leitor de tela. */}
+      <span className="sr-only">{`, ${count} ${count === 1 ? "alerta oficial vigente" : "alertas oficiais vigentes"}`}</span>
     </span>
   );
 }

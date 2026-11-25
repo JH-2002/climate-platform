@@ -43,7 +43,7 @@ describe("menu recolhível (FR-200, AC-201)", () => {
 
   it("o botão mostra os alertas oficiais vigentes", () => {
     render(<SidebarView pathname="/" alerts={3} />);
-    expect(screen.getByRole("button", { name: /^Menu\s*3 alertas oficiais vigentes$/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Menu, 3 alertas oficiais vigentes" })).toBeInTheDocument();
   });
 
   it("a página atual fica marcada", () => {
