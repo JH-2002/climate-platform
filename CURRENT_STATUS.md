@@ -16,6 +16,7 @@
 - **Fase 11 — Hardening: concluída** (limite de requisições, cabeçalhos de segurança e CSP, validação da configuração de produção, testes ponta a ponta com Playwright e axe no CI, pilha de produção com Caddy e HTTPS, backup diário com restauração conferida, metas de desempenho medidas e manual de operação; ADR-016).
 - **Fase 12 — Vitrine pública: concluída** — https://jh-2002.github.io/climate-platform/ (GitHub Pages, dados reais coletados e gravados pelo Actions a cada 6 h e a cada mudança no código; ADR-017).
 - **Fase 13 — Celular e app instalável: concluída** (menu recolhível, PWA com ícones próprios e service worker, uso sem conexão com aviso, tabelas roláveis acessíveis pelo teclado, E2E em tela de celular).
+- **Fase 14 — Atualização das dependências: concluída** (Vitest 5, jsdom 31, Recharts 3, Next 16, mypy 2.4, ruff 0.17; spec 014).
 - **Publicação completa:** a pilha de produção está pronta e validada na máquina local; falta escolher a hospedagem (servidor Linux com Docker e um domínio).
 
 ## Repositório
@@ -41,9 +42,8 @@
 - **Cemaden (chuva medida)**: a plataforma PED tem cadastro aberto, mas o login exige captcha; a coleta automática depende de criar a conta e confirmar se existe acesso por API sem captcha.
 
 ## Pendências técnicas
-- Migrar Vitest 2 → versão principal atual (alertas restritos à ferramenta de teste).
-- Avaliar Next 16, Python 3.15, Node 26 e as actions em versões principais novas (PR #20 do Dependabot).
-- mypy fixo em 1.13 (o PR #23 do Dependabot propõe atualizar).
+- Adiados na spec 014: ESLint 10 (plugins do eslint-config-next sem suporte declarado), Tailwind 4 (migração visual completa) e TypeScript 7 (compilador novo).
+- Python 3.15 e Node 26 nas imagens: avaliar quando forem as versões de suporte longo usadas pelas dependências.
 
 ## Limpeza pendente no GitHub
 - Branches temporários `feat/fase-3`, `feat/fase-4`, `feat/fase-5` e `chore/lockfiles` (o proxy desta sessão não permite apagar branches; podem ser removidos pela interface do GitHub).

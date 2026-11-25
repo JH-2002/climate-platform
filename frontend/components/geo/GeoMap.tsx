@@ -11,7 +11,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { basePath } from "@/lib/demo";
 import type { GeoJSON as GeoJSONData } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap, MapLayerMouseEvent, MapMouseEvent } from "maplibre-gl";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { drainageUrl } from "@/features/geo/api";
 import type { BasinLayerProps } from "@/features/geo/types";
 import type { FeatureCollection } from "@/features/map/types";
@@ -66,7 +66,10 @@ export default function GeoMap(props: Props) {
   const container = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const handlers = useRef({ props });
-  handlers.current = { props };
+  // Os ouvintes do mapa leem sempre as props mais recentes (atualizadas depois de renderizar).
+  useLayoutEffect(() => {
+    handlers.current = { props };
+  });
   const [ready, setReady] = useState(false);
   const [is3d, setIs3d] = useState(false);
   const [drainageNote, setDrainageNote] = useState<string | null>(null);

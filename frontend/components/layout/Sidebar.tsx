@@ -18,8 +18,9 @@ export function AlertCountBadge({ count, active = false }: { count: number; acti
         active ? "bg-white text-accent" : "bg-status-error text-white"
       }`}
     >
-      {count}
-      <span className="sr-only"> {count === 1 ? "alerta oficial vigente" : "alertas oficiais vigentes"}</span>
+      <span aria-hidden="true">{count}</span>
+      {/* A vírgula separa o número do texto anterior em qualquer leitor de tela. */}
+      <span className="sr-only">{`, ${count} ${count === 1 ? "alerta oficial vigente" : "alertas oficiais vigentes"}`}</span>
     </span>
   );
 }
@@ -53,22 +54,26 @@ function NavList({ items, pathname, alerts }: { items: NavItem[]; pathname: stri
  * e painel sobre o conteúdo, que fecha ao escolher uma página, com Esc e ao tocar fora (FR-200).
  */
 export function SidebarView({ pathname, alerts }: { pathname: string; alerts: number }) {
-  const [open, setOpen] = useState(false);
+  // Aberto só na página em que foi aberto: trocar de página fecha sem efeito extra.
+  const [openOn, setOpenOn] = useState<string | null>(null);
+  const open = openOn === pathname;
+  const setOpen = (value: boolean | ((current: boolean) => boolean)) =>
+    setOpenOn((current) => {
+      const next = typeof value === "function" ? value(current === pathname) : value;
+      return next ? pathname : null;
+    });
   const button = useRef<HTMLButtonElement>(null);
   const nav = useRef<HTMLElement>(null);
-
-  // Fecha ao trocar de página.
-  useEffect(() => setOpen(false), [pathname]);
 
   useEffect(() => {
     if (!open) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
-      setOpen(false);
+      setOpenOn(null);
       button.current?.focus();
     };
     const onPointer = (event: PointerEvent) => {
-      if (nav.current && !nav.current.contains(event.target as Node)) setOpen(false);
+      if (nav.current && !nav.current.contains(event.target as Node)) setOpenOn(null);
     };
     document.addEventListener("keydown", onKey);
     document.addEventListener("pointerdown", onPointer);

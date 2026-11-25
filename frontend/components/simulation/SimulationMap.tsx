@@ -10,7 +10,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { basePath } from "@/lib/demo";
 import type { GeoJSON as GeoJSONData } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap, MapLayerMouseEvent, MapMouseEvent } from "maplibre-gl";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { circlePolygon } from "@/features/map/geometry";
 import type { FeatureCollection } from "@/features/map/types";
 import { CATEGORIES } from "@/features/risk/categories";
@@ -64,7 +64,10 @@ export default function SimulationMap({ layer, cell, onPickCenter, onSelectSecto
   const mapRef = useRef<MapLibreMap | null>(null);
   const handlers = useRef({ onPickCenter, onSelectSector, cellMode: cell !== null, cell });
   const [ready, setReady] = useState(false);
-  handlers.current = { onPickCenter, onSelectSector, cellMode: cell !== null, cell };
+  // Os ouvintes do mapa leem sempre os valores mais recentes (atualizados depois de renderizar).
+  useLayoutEffect(() => {
+    handlers.current = { onPickCenter, onSelectSector, cellMode: cell !== null, cell };
+  });
 
   useEffect(() => {
     let cancelled = false;

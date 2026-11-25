@@ -25,7 +25,7 @@ test("risco com filtro e detalhe do setor", async ({ page }) => {
   await page.getByRole("combobox", { name: "Categoria" }).selectOption("");
   await expect(page).not.toHaveURL(/categoria=/);
   await expect(sectors.first()).toBeVisible();
-  const label = (await sectors.first().textContent()) ?? "";
+  const label = (await sectors.first().getAttribute("aria-label")) ?? "";
   const name = label.replace("Por quê? Explicação do setor ", "").trim();
   await sectors.first().click();
   await expect(page).toHaveURL(/setor=/);

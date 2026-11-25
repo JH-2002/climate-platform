@@ -306,7 +306,7 @@ async def _normal_reference(
         c = climate_daily
         year = cast(extract("year", c.c.day), Integer)
         month = cast(extract("month", c.c.day), Integer)
-        rows = await session.execute(
+        daily_rows = await session.execute(
             select(year, month, _agg(agg, c.c.value), func.count())
             .where(
                 c.c.point_key == location,
@@ -318,7 +318,7 @@ async def _normal_reference(
         )
         monthly = {
             (to_int(y), to_int(mo)): to_float(v)
-            for y, mo, v, n in rows
+            for y, mo, v, n in daily_rows
             if to_int(n) == calendar.monthrange(to_int(y), to_int(mo))[1]
         }
     else:
@@ -483,14 +483,14 @@ async def _monthly_values(
     c = climate_daily
     year = cast(extract("year", c.c.day), Integer)
     month = cast(extract("month", c.c.day), Integer)
-    rows = await session.execute(
+    daily_rows = await session.execute(
         select(year, month, _agg(agg, c.c.value), func.count())
         .where(c.c.point_key == location, c.c.variable == variable)
         .group_by(year, month)
     )
     return {
         (to_int(y), to_int(mo)): to_float(v)
-        for y, mo, v, n in rows
+        for y, mo, v, n in daily_rows
         if to_int(n) == calendar.monthrange(to_int(y), to_int(mo))[1]
     }
 

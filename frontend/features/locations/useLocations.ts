@@ -27,6 +27,7 @@ export function useLocations() {
 
   // Lê depois de montar, para o HTML do servidor e o do navegador serem iguais.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- dado só do navegador, lido depois de montar para o HTML estático e o do navegador serem iguais (spec 014)
     setState(loadLocations(browserStorage()));
   }, []);
 
