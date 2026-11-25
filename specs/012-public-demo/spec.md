@@ -1,6 +1,6 @@
 # Spec 012 — Vitrine pública (GitHub Pages)
 
-> Status: **Em andamento** (2026-11-25) · Fase: 12 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md) · ADR: [ADR-017](../../docs/architecture/adr/ADR-017-public-demo-pages.md)
+> Status: **Concluída** (2026-11-25) · Fase: 12 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md) · ADR: [ADR-017](../../docs/architecture/adr/ADR-017-public-demo-pages.md)
 
 ## Contexto
 A Fase 11 deixou a pilha de produção pronta e validada, mas publicar exige um servidor ligado o

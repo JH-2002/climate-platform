@@ -14,7 +14,7 @@
 - **Fase 9 — Alertas: concluída** (alertas da Defesa Civil pelo feed CAP da IDAP, avisos do INMET, limite pelas subprefeituras do GeoSampa, alertas do sistema por regras com histerese, página `/alerts`, faixa global, cartões, camada no mapa e notificações neste navegador; ADR-014).
 - **Fase 10 — Central de relatórios: concluída** (situação agora, risco por setor, alertas do período, chuva do período e simulação, em PDF, CSV e JSON, gerados no worker; PDF próprio sem dependência nova; arquivos por 7 dias; ADR-015).
 - **Fase 11 — Hardening: concluída** (limite de requisições, cabeçalhos de segurança e CSP, validação da configuração de produção, testes ponta a ponta com Playwright e axe no CI, pilha de produção com Caddy e HTTPS, backup diário com restauração conferida, metas de desempenho medidas e manual de operação; ADR-016).
-- **Fase 12 — Vitrine pública: em andamento** (GitHub Pages, dados reais gravados pelo Actions a cada 6 h; ADR-017).
+- **Fase 12 — Vitrine pública: concluída** — https://jh-2002.github.io/climate-platform/ (GitHub Pages, dados reais coletados e gravados pelo Actions a cada 6 h e a cada mudança no código; ADR-017).
 - **Publicação completa:** a pilha de produção está pronta e validada na máquina local; falta escolher a hospedagem (servidor Linux com Docker e um domínio).
 
 ## Repositório

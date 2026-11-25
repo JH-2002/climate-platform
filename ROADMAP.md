@@ -16,7 +16,7 @@ Cada fase tem spec, plan, tasks e critérios de conclusão próprios. Uma fase s
 | 9 ✅ | Alerts | 009 | Regras, alertas oficiais × internos, notificações | Fonte de alertas oficiais |
 | 10 ✅ | Report Center | 010 | PDF/CSV/JSON assíncronos | — |
 | 11 ✅ | Hardening | 011 | Segurança, performance, a11y, E2E, pilha de produção e operação | Hospedagem (só para publicar) |
-| 12 | Vitrine pública | 012 | Demonstração estática no GitHub Pages, atualizada pelo Actions a cada 6 h | — |
+| 12 ✅ | Vitrine pública | 012 | Demonstração estática no GitHub Pages, atualizada pelo Actions a cada 6 h | — |
 
 ## Ordem de prioridade dentro do produto
 1. Dados reais confiáveis e rastreáveis (Fases 1–2).
