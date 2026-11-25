@@ -2,14 +2,16 @@
 
 from __future__ import annotations
 
+import ipaddress
 import json
 import sys
 from datetime import UTC, datetime
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import Field, SecretStr, ValidationError, field_validator
+from pydantic import Field, SecretStr, ValidationError, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy.engine import make_url
 
 from app.core.geo import BoundingBox, parse_points
 
@@ -53,6 +55,20 @@ class Settings(BaseSettings):
     alert_clear_after: int = Field(default=2, ge=1, le=10)
     http_timeout_s: float = Field(default=15.0, gt=0, le=60)
 
+    # Hardening (spec 011): limite de requisições por cliente e proxies confiáveis.
+    # Vazio = ligado fora dos testes; os testes de integração ligam quando precisam.
+    rate_limit_enabled: bool | None = None
+    rate_limit_general: int = Field(default=240, ge=10, le=100_000)
+    rate_limit_heavy: int = Field(default=20, ge=1, le=10_000)
+    # X-Forwarded-For só vale vindo destas redes (Caddy e o proxy do Next, na rede do Docker).
+    trusted_proxies: str = "127.0.0.1/32,::1/128,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+
+    @property
+    def rate_limit_active(self) -> bool:
+        if self.rate_limit_enabled is not None:
+            return self.rate_limit_enabled
+        return self.app_env != "test"
+
     @property
     def inmet_token_value(self) -> str | None:
         if self.inmet_token is None:
@@ -85,6 +101,32 @@ class Settings(BaseSettings):
         if not value.startswith("postgresql+asyncpg://"):
             raise ValueError("DATABASE_URL deve usar o esquema postgresql+asyncpg://")
         return value
+
+    @field_validator("trusted_proxies")
+    @classmethod
+    def _validate_proxies(cls, value: str) -> str:
+        for part in value.split(","):
+            if part.strip():
+                ipaddress.ip_network(part.strip(), strict=False)
+        return value
+
+    @model_validator(mode="after")
+    def _production_rules(self) -> Settings:
+        """Produção não sobe com senha de exemplo, log de depuração ou origem sem HTTPS (FR-175)."""
+        if self.app_env != "production":
+            return self
+        password = make_url(self.database_url).password or ""
+        weak = {"change-me-local-only", "change-me", "climate", "postgres", "password", "ci-only"}
+        if len(password) < 16 or password.lower() in weak:
+            raise ValueError(
+                "Em produção, a senha do banco (DATABASE_URL) precisa ter 16 caracteres ou mais "
+                "e não pode ser um valor de exemplo"
+            )
+        if self.log_level == "DEBUG":
+            raise ValueError("Em produção, LOG_LEVEL=DEBUG não é permitido")
+        if not self.frontend_origin.startswith("https://"):
+            raise ValueError("Em produção, FRONTEND_ORIGIN precisa começar com https://")
+        return self
 
     @field_validator("redis_url")
     @classmethod

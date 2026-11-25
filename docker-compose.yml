@@ -102,8 +102,29 @@ services:
       retries: 12
       start_period: 60s
 
+  # Gravação dos dados do E2E (spec 011, FR-179). Só roda quando pedido:
+  #   docker compose --profile e2e run --rm e2e-record
+  e2e-record:
+    profiles: ["e2e"]
+    image: mcr.microsoft.com/playwright:v1.55.0-noble
+    working_dir: /app
+    environment:
+      E2E_RECORD: "1"
+      E2E_BASE_URL: http://frontend:3000
+    volumes:
+      - ./frontend:/app
+      - e2e-node-modules:/app/node_modules
+    command: >-
+      bash -c "npm ci --no-audit --no-fund
+      && npm install --no-save --no-audit --no-fund @playwright/test@1.55.0
+      && npx playwright test"
+    depends_on:
+      frontend:
+        condition: service_healthy
+
 volumes:
   db-data:
   dem-data:
   frontend-node-modules:
   frontend-next:
+  e2e-node-modules:

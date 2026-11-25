@@ -34,6 +34,9 @@ docker compose ps             # todos os serviços devem ficar "healthy" (até ~
 
 O `frontend/package-lock.json` é versionado e gerado pelo workflow **Gerar lockfiles** (Actions), com o mesmo Node da imagem. Ao mudar dependências do frontend, rode o workflow de novo ou, localmente, `docker compose run --rm frontend npm install` (grava o lock na pasta montada).
 
+## Produção
+Pilha própria em `docker-compose.prod.yml`: Caddy com HTTPS automático na frente, imagens sem ferramentas de desenvolvimento, banco e Redis fechados, backup diário e limites de memória. Instalação, atualização, backup, restauração e diagnóstico em [docs/operations/RUNBOOK.md](docs/operations/RUNBOOK.md). Para testar na própria máquina (Windows): `powershell -ExecutionPolicy Bypass -File scripts\validar-producao.ps1`.
+
 ## Testes
 ```bash
 # Backend: unitários + integração (com banco, Redis e worker reais)
@@ -53,6 +56,12 @@ docker compose exec frontend npm run format
 
 # Smoke test das fontes externas (na máquina host, sem dependências)
 python scripts/smoke_sources.py
+
+# Metas de desempenho (p95 por rota)
+docker compose exec backend python scripts/perf_check.py
+
+# Ponta a ponta (Playwright): roda no CI; para regravar as respostas da API local
+docker compose --profile e2e run --rm e2e-record
 ```
 
 ## Validação da Fase 1 (roteiro)
@@ -74,6 +83,7 @@ python scripts/smoke_sources.py
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Visão técnica global |
 | [ROADMAP.md](ROADMAP.md) | Fases |
 | [CURRENT_STATUS.md](CURRENT_STATUS.md) | Estado atual e bloqueios |
+| [docs/operations/RUNBOOK.md](docs/operations/RUNBOOK.md) | Operação da produção |
 | [DECISIONS.md](DECISIONS.md) | Índice de ADRs |
 | [docs/data-sources/SOURCES.md](docs/data-sources/SOURCES.md) | Fontes de dados |
 | [specs/](specs/) | Especificações, planos e tarefas |
@@ -88,5 +98,5 @@ Previsão: Open-Meteo.com (CC BY 4.0). Observações: INMET. Elevação: Produce
 `REGION_BBOX` (lon_min,lat_min,lon_max,lat_max) define quais estações são sincronizadas e `FORECAST_POINTS` (lat,lon;lat,lon) define os pontos de previsão. Padrão: município de São Paulo.
 
 ## Limitações atuais
-- Observações horárias do INMET dependem de token (pedido em andamento).
+- Observações horárias do INMET dependem de token, que o INMET só concede por Acordo de Cooperação Técnica.
 - Sem autenticação: a API é somente leitura e os locais salvos ficam no navegador (ADR-008).

@@ -170,7 +170,7 @@ describe("componentes de risco", () => {
     expect(within(row).getByText("Sao Miguel Paulista")).toBeInTheDocument();
     expect(within(row).getByText("Chuva forte")).toBeInTheDocument();
     expect(screen.getByText(/1 de 6/)).toBeInTheDocument();
-    fireEvent.click(within(row).getByRole("button", { name: "Ver explicação do setor HMP-01-03" }));
+    fireEvent.click(within(row).getByRole("button", { name: "Por quê? Explicação do setor HMP-01-03" }));
     expect(onSelect).toHaveBeenCalledWith(4);
     expect(await seriousViolations(container)).toEqual([]);
   });

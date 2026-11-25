@@ -239,10 +239,9 @@ export function SimulatedSectorTable(props: {
                 <button
                   type="button"
                   onClick={() => onSelect(s.id)}
-                  aria-label={`Ver explicação do setor ${s.code} na simulação`}
                   className="rounded-md border border-violet-700 px-2 py-1 text-xs font-medium text-violet-800 hover:bg-violet-700 hover:text-white"
                 >
-                  Por quê?
+                  Por quê?<span className="sr-only"> Explicação do setor {s.code} na simulação</span>
                 </button>
               </td>
             </tr>

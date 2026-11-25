@@ -15,8 +15,9 @@ import type { FeatureCollection } from "@/features/map/types";
 import { CATEGORIES } from "@/features/risk/categories";
 import type { RiskCategory } from "@/features/risk/types";
 import type { CellInput, SimulationLayerProps } from "@/features/simulation/types";
+import { DEFAULT_MAP_STYLE_URL } from "@/lib/map-sources.mjs";
 
-const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL ?? "https://tiles.openfreemap.org/styles/liberty";
+const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL || DEFAULT_MAP_STYLE_URL;
 const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? "/vendor/maplibre-gl-worker.mjs";
 const ATTRIBUTION = "SIMULAÇÃO — cenário hipotético · Setores: GeoSampa — Prefeitura de São Paulo";
 const SAO_PAULO: [number, number] = [-46.6333, -23.5505];

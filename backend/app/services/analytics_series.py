@@ -38,6 +38,7 @@ from app.analytics.series import (
     shifted_window,
 )
 from app.analytics.stats import percentile
+from app.core.values import to_float, to_int
 from app.models.tables import (
     climate_daily,
     data_sources,
@@ -316,9 +317,9 @@ async def _normal_reference(
             .group_by(year, month)
         )
         monthly = {
-            (int(y), int(mo)): float(v)
+            (to_int(y), to_int(mo)): to_float(v)
             for y, mo, v, n in rows
-            if int(n) == calendar.monthrange(int(y), int(mo))[1]
+            if to_int(n) == calendar.monthrange(to_int(y), to_int(mo))[1]
         }
     else:
         raise SeriesError(f"{ds.name}: sem normal climatológica")
@@ -488,9 +489,9 @@ async def _monthly_values(
         .group_by(year, month)
     )
     return {
-        (int(y), int(mo)): float(v)
+        (to_int(y), to_int(mo)): to_float(v)
         for y, mo, v, n in rows
-        if int(n) == calendar.monthrange(int(y), int(mo))[1]
+        if to_int(n) == calendar.monthrange(to_int(y), to_int(mo))[1]
     }
 
 
@@ -662,7 +663,7 @@ async def get_ranking(
     else:
         raise SeriesError(f"{ds.name}: ranking por local indisponível")
     items = sorted(
-        (RankItem(key=str(k), value=float(v), n=int(n)) for k, v, n in rows if v is not None),
+        (RankItem(key=str(k), value=to_float(v), n=to_int(n)) for k, v, n in rows if v is not None),
         key=lambda item: item.value,
         reverse=True,
     )
@@ -793,9 +794,9 @@ async def get_risk_history(session: AsyncSession, now: datetime, days: int) -> R
     by_run: dict[int, RunCounts] = {}
     for run_id, at, category, n in rows:
         item = by_run.setdefault(
-            int(run_id), RunCounts(computed_at=at, counts=dict.fromkeys(CATEGORIES, 0))
+            to_int(run_id), RunCounts(computed_at=at, counts=dict.fromkeys(CATEGORIES, 0))
         )
-        item.counts[str(category)] = int(n)
+        item.counts[str(category)] = to_int(n)
     latest = (
         await session.execute(
             select(r.c.id).where(r.c.status == "SUCCESS").order_by(r.c.computed_at.desc()).limit(1)
@@ -898,7 +899,7 @@ async def get_sources_health(
             .where(i.c.started_at >= now - timedelta(days=days))
             .group_by(i.c.source_id)
         )
-        return {int(sid): (int(total), int(success or 0)) for sid, total, success in rows}
+        return {to_int(sid): (to_int(total), to_int(success or 0)) for sid, total, success in rows}
 
     w7, w30 = await window(7), await window(30)
     stats = await session.execute(
@@ -920,7 +921,7 @@ async def get_sources_health(
     )
     failures = {int(r[0]): (r[1], r[2]) for r in last_failures}
     ids = {
-        str(code): int(sid)
+        str(code): to_int(sid)
         for code, sid in await session.execute(select(data_sources.c.code, data_sources.c.id))
     }
     coverage = await _coverage_texts(session)

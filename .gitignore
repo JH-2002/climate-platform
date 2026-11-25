@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+!.env.prod.example
 
 # Python
 __pycache__/
@@ -35,3 +36,10 @@ Thumbs.db
 frontend/public/vendor/
 data/raw/
 *.log
+
+# Playwright (E2E)
+frontend/playwright-report/
+frontend/test-results/
+
+# Saída do script de validação da produção
+validacao-producao.log

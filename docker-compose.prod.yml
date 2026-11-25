@@ -1,0 +1,183 @@
+# Pilha de produção (spec 011, ADR-016). Uso:
+#   cp .env.prod.example .env.prod   # e preencha
+#   docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
+# Só o Caddy publica portas. Banco e Redis ficam na rede interna.
+name: climate-platform-prod
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-backend: &backend
+  build:
+    context: ./backend
+    target: prod
+  image: climate-platform-api:prod
+  restart: unless-stopped
+  env_file: .env.prod
+  environment:
+    APP_ENV: production
+    DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+    FRONTEND_ORIGIN: https://${DOMAIN}
+  volumes:
+    - dem-data:/data/dem
+  logging: *logging
+  depends_on:
+    db:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+
+services:
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    ports:
+      - "${CADDY_HTTP_PORT:-80}:80"
+      - "${CADDY_HTTPS_PORT:-443}:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL:-admin@localhost}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    mem_limit: 128m
+    logging: *logging
+    depends_on:
+      frontend:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        API_INTERNAL_URL: http://api:8000
+        # Em branco, o frontend usa os provedores padrão (lib/map-sources.mjs).
+        NEXT_PUBLIC_MAP_STYLE_URL: ${NEXT_PUBLIC_MAP_STYLE_URL:-}
+        NEXT_PUBLIC_TERRAIN_TILES_URL: ${NEXT_PUBLIC_TERRAIN_TILES_URL:-}
+    image: climate-platform-frontend:prod
+    restart: unless-stopped
+    mem_limit: 512m
+    logging: *logging
+    depends_on:
+      api:
+        condition: service_healthy
+
+  migrate:
+    <<: *backend
+    restart: "no"
+    command: alembic upgrade head
+
+  api:
+    <<: *backend
+    mem_limit: 768m
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.workers.healthcheck", "api"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    <<: *backend
+    command: celery -A app.workers.celery_app worker --loglevel=INFO --concurrency=2
+    mem_limit: 1536m
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.workers.healthcheck", "worker"]
+      interval: 30s
+      timeout: 10s
+      retries: 6
+      start_period: 30s
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  beat:
+    <<: *backend
+    command: celery -A app.workers.celery_app beat --loglevel=INFO --schedule /tmp/celerybeat-schedule
+    mem_limit: 256m
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.workers.healthcheck", "beat"]
+      interval: 30s
+      timeout: 5s
+      retries: 6
+      start_period: 60s
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  db:
+    image: postgis/postgis:16-3.4
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    mem_limit: 1g
+    logging: *logging
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    mem_limit: 256m
+    logging: *logging
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep -q PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+  backup:
+    image: postgis/postgis:16-3.4
+    restart: unless-stopped
+    entrypoint: ["bash", "/backup.sh"]
+    environment:
+      TZ: America/Sao_Paulo
+      PGHOST: db
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB}
+      BACKUP_HOUR: ${BACKUP_HOUR:-03}
+      BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS:-14}
+      BACKUP_ON_START: ${BACKUP_ON_START:-0}
+    volumes:
+      - ./deploy/backup.sh:/backup.sh:ro
+      - backups:/backups
+    mem_limit: 256m
+    logging: *logging
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:
+  redis-data:
+  dem-data:
+  backups:
+  caddy-data:
+  caddy-config:

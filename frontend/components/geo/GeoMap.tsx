@@ -15,11 +15,12 @@ import { drainageUrl } from "@/features/geo/api";
 import type { BasinLayerProps } from "@/features/geo/types";
 import type { FeatureCollection } from "@/features/map/types";
 import { apiGet } from "@/lib/api-client";
+import { DEFAULT_MAP_STYLE_URL, DEFAULT_TERRAIN_TILES_URL } from "@/lib/map-sources.mjs";
 
-const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL ?? "https://tiles.openfreemap.org/styles/liberty";
+const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL || DEFAULT_MAP_STYLE_URL;
 const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? "/vendor/maplibre-gl-worker.mjs";
 const TERRAIN_URL =
-  process.env.NEXT_PUBLIC_TERRAIN_TILES_URL ?? "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
+  process.env.NEXT_PUBLIC_TERRAIN_TILES_URL || DEFAULT_TERRAIN_TILES_URL;
 const ATTRIBUTION =
   "Bacias, drenagem e piscinões: GeoSampa — Prefeitura de São Paulo · Relevo do mapa: Terrain Tiles (Mapzen/AWS)";
 const SAO_PAULO: [number, number] = [-46.6333, -23.62];

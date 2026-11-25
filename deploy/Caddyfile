@@ -1,0 +1,18 @@
+# Borda de produção (spec 011, ADR-016): HTTPS automático, HSTS e compressão.
+# DOMAIN=clima.exemplo.org obtém certificado do Let's Encrypt; DOMAIN=localhost usa a CA local
+# do Caddy (para testar a pilha na própria máquina). Sem log de acesso: o IP dos visitantes
+# não é gravado (a API registra só um hash dele).
+{
+	email {$ACME_EMAIL}
+}
+
+{$DOMAIN:localhost} {
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
+	reverse_proxy frontend:3000 {
+		header_up X-Forwarded-For {remote_host}
+	}
+}

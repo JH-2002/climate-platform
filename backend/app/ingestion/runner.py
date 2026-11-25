@@ -156,7 +156,7 @@ async def run_archive_backfill(settings: Settings) -> RunOutcome | None:
     points = settings.forecast_point_list
     async with _session_factory(settings) as sessions:
         async with sessions() as session:
-            source_id = (
+            source_id: int = (
                 await session.execute(
                     select(data_sources.c.id).where(data_sources.c.code == ARCHIVE_SOURCE)
                 )

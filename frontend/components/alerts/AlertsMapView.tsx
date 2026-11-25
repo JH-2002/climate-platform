@@ -13,8 +13,9 @@ import { OFFICIAL_COLORS } from "@/components/alerts/mapColors";
 import { alertHref } from "@/features/alerts/labels";
 import type { AlertLayerProps } from "@/features/alerts/types";
 import type { FeatureCollection } from "@/features/map/types";
+import { DEFAULT_MAP_STYLE_URL } from "@/lib/map-sources.mjs";
 
-const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL ?? "https://tiles.openfreemap.org/styles/liberty";
+const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL || DEFAULT_MAP_STYLE_URL;
 const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? "/vendor/maplibre-gl-worker.mjs";
 const CITY_BOUNDS: [[number, number], [number, number]] = [
   [-46.83, -24.01],

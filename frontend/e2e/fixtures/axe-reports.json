@@ -1,0 +1,413 @@
+{
+ "recordedAt": "2026-11-25T17:59:01.258Z",
+ "responses": {
+  "GET /api/v1/alerts/active": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": {
+     "generated_at": "2026-11-25T17:59:00.524096Z",
+     "official": [
+      {
+       "id": 13,
+       "category": "WEATHER_WARNING",
+       "category_label": "Aviso meteorológico oficial — INMET",
+       "source_code": "inmet-warnings",
+       "attribution": "Fonte: INMET — Alert-AS",
+       "sender_name": "Instituto Nacional de Meteorologia",
+       "msg_type": "Alert",
+       "event": "Tempestade",
+       "severity": "Severe",
+       "severity_label": "Severa",
+       "level_name": "Laranja — Perigo",
+       "color": "#F96602",
+       "urgency": "Future",
+       "certainty": "Likely",
+       "headline": "Aviso de Tempestade. Severidade Grau: Severe",
+       "description": "INMET publica aviso iniciando em: 25/11/2026 00:00. Chuva entre 30 e 60 mm/h ou 50 e 100 mm/dia, ventos intensos (60-100 km/h), e queda de granizo. Risco de corte de energia elétrica, estragos em plantações, queda de árvores e de alagamentos.",
+       "instruction": "Em caso de rajadas de vento: (não se abrigue debaixo de árvores, pois há risco de queda e descargas elétricas e não estacione veículos próximos a torres de transmissão e placas de propaganda). Se possível, desligue aparelhos elétricos e quadro geral de energia. Obtenha mais informações junto à Defesa Civil (telefone 199) e ao Corpo de Bombeiros (telefone 193).",
+       "web": "https://avisos.inmet.gov.br/56501",
+       "area_desc": "Aviso para as áreas: Norte Pioneiro Paranaense, Zona da Mata, Presidente Prudente, São José do Rio Preto, Metropolitana de Curitiba, Central Espírito-santense, Campinas, Bauru, Piracicaba, Sul/Sudoeste de Minas, Itapetininga, Sul Espírito-santense, Campo das Vertentes, Centro Ocidental Paranaense, Araçatuba, Noroeste Paranaense, Macro Metropolitana Paulista, Marília, Norte Central Paranaense, Sudoeste de Mato Grosso do Sul, Araraquara, Sudoeste Paranaense, Oeste Paranaense, Leste de Mato Grosso do Sul, Sul Fluminense, Sudeste Paranaense, Vale do Paraíba Paulista, Noroeste Fluminense, Centro Oriental Paranaense, Norte Catarinense, Baixadas, Centro Fluminense, Metropolitana de São Paulo, Assis, Litoral Sul Paulista, Metropolitana do Rio de Janeiro, Centro-Sul Paranaense, Oeste de Minas, Ribeirão Preto, Norte Fluminense, Metropolitana de Belo Horizonte, Oeste Catarinense, Vale do Rio Doce, Vale do Itajaí",
+       "sent_at": "2026-11-24T15:22:32Z",
+       "onset_at": "2026-11-25T03:00:00Z",
+       "expires_at": "2026-11-26T02:59:00Z",
+       "ended_at": null,
+       "status": "ACTIVE",
+       "subprefectures": [
+        "ARICANDUVA-FORMOSA-CARRAO",
+        "BUTANTA",
+        "CAMPO LIMPO",
+        "CAPELA DO SOCORRO",
+        "CASA VERDE-CACHOEIRINHA",
+        "CIDADE ADEMAR",
+        "CIDADE TIRADENTES",
+        "ERMELINO MATARAZZO",
+        "FREGUESIA-BRASILANDIA",
+        "GUAIANASES",
+        "IPIRANGA",
+        "ITAIM PAULISTA",
+        "ITAQUERA",
+        "JABAQUARA",
+        "JACANA-TREMEMBE",
+        "LAPA",
+        "M BOI MIRIM",
+        "MOOCA",
+        "PARELHEIROS",
+        "PENHA",
+        "PERUS",
+        "PINHEIROS",
+        "PIRITUBA-JARAGUA",
+        "SANTANA-TUCURUVI",
+        "SANTO AMARO",
+        "SAO MATEUS",
+        "SAO MIGUEL",
+        "SAPOPEMBA",
+        "SE",
+        "VILA MARIANA",
+        "VILA MARIA-VILA GUILHERME",
+        "VILA PRUDENTE"
+       ],
+       "city_fraction": 1,
+       "area_approximate": false
+      },
+      {
+       "id": 15,
+       "category": "WEATHER_WARNING",
+       "category_label": "Aviso meteorológico oficial — INMET",
+       "source_code": "inmet-warnings",
+       "attribution": "Fonte: INMET — Alert-AS",
+       "sender_name": "Instituto Nacional de Meteorologia",
+       "msg_type": "Alert",
+       "event": "Tempestade",
+       "severity": "Moderate",
+       "severity_label": "Moderada",
+       "level_name": "Amarelo — Perigo potencial",
+       "color": "#FFFE00",
+       "urgency": "Future",
+       "certainty": "Likely",
+       "headline": "Aviso de Tempestade. Severidade Grau: Moderate",
+       "description": "INMET publica aviso iniciando em: 25/11/2026 00:00. Chuva entre 20 e 30 mm/h ou até 50 mm/dia, ventos intensos (40-60 km/h), e queda de granizo. Baixo risco de corte de energia elétrica, estragos em plantações, queda de galhos de árvores e de alagamentos.",
+       "instruction": "Em caso de rajadas de vento: (não se abrigue debaixo de árvores, pois há leve risco de queda e descargas elétricas e não estacione veículos próximos a torres de transmissão e placas de propaganda). Evite usar aparelhos eletrônicos ligados à tomada. Obtenha mais informações junto à Defesa Civil (telefone 199) e ao Corpo de Bombeiros (telefone 193).",
+       "web": "https://avisos.inmet.gov.br/56499",
+       "area_desc": "Aviso para as áreas: Centro Goiano, Triângulo Mineiro/Alto Paranaíba, Leste Goiano, Central Mineira, Norte Pioneiro Paranaense, Serrana, Oeste Catarinense, Zona da Mata, Centro-Sul Mato-grossense, Sul Goiano, Vale do Rio Doce, Presidente Prudente, São José do Rio Preto, Metropolitana de Curitiba, Central Espírito-santense, Vale do Itajaí, Nordeste Mato-grossense, Leste de Mato Grosso do Sul, Noroeste Espírito-santense, Campinas, Oeste de Minas, Noroeste Rio-grandense, Bauru, Piracicaba, Vale do Mucuri, Grande Florianópolis, Norte de Minas, Sul/Sudoeste de Minas, Itapetininga, Centro Norte de Mato Grosso do Sul, Sul Baiano, Sul Espírito-santense, Campo das Vertentes, Ocidental do Tocantins, Oriental do Tocantins, Jequitinhonha, Norte Mato-grossense, Leste Rondoniense, Centro Ocidental Paranaense, Ribeirão Preto, Araçatuba, Sudeste Mato-grossense, Norte Goiano, Noroeste Paranaense, Macro Metropolitana Paulista, Marília, Metropolitana de Belo Horizonte, Norte Central Paranaense, Sudoeste de Mato Grosso do Sul, Araraquara, Sudoeste Paranaense, Oeste Paranaense, Pantanais Sul Mato-grossense, Sul Fluminense, Sudeste Paranaense, Vale do Paraíba Paulista, Noroeste Fluminense, Litoral Norte Espírito-santense, Noroeste Goiano, Centro Oriental Paranaense, Sudoeste Mato-grossense, Norte Catarinense, Baixadas, Centro Fluminense, Noroeste de Minas, Sul Catarinense, Metropolitana de São Paulo, Assis, Litoral Sul Paulista, Extremo Oeste Baiano, Metropolitana do Rio de Janeiro, Centro-Sul Paranaense, Nordeste Rio-grandense, Distrito Federal, Madeira-Guaporé, Norte Fluminense, Vale São-Franciscano da Bahia, Centro Sul Baiano",
+       "sent_at": "2026-11-24T15:12:51Z",
+       "onset_at": "2026-11-25T03:00:00Z",
+       "expires_at": "2026-11-26T02:59:00Z",
+       "ended_at": null,
+       "status": "ACTIVE",
+       "subprefectures": [
+        "ARICANDUVA-FORMOSA-CARRAO",
+        "BUTANTA",
+        "CAMPO LIMPO",
+        "CAPELA DO SOCORRO",
+        "CASA VERDE-CACHOEIRINHA",
+        "CIDADE ADEMAR",
+        "CIDADE TIRADENTES",
+        "ERMELINO MATARAZZO",
+        "FREGUESIA-BRASILANDIA",
+        "GUAIANASES",
+        "IPIRANGA",
+        "ITAIM PAULISTA",
+        "ITAQUERA",
+        "JABAQUARA",
+        "JACANA-TREMEMBE",
+        "LAPA",
+        "M BOI MIRIM",
+        "MOOCA",
+        "PARELHEIROS",
+        "PENHA",
+        "PERUS",
+        "PINHEIROS",
+        "PIRITUBA-JARAGUA",
+        "SANTANA-TUCURUVI",
+        "SANTO AMARO",
+        "SAO MATEUS",
+        "SAO MIGUEL",
+        "SAPOPEMBA",
+        "SE",
+        "VILA MARIANA",
+        "VILA MARIA-VILA GUILHERME",
+        "VILA PRUDENTE"
+       ],
+       "city_fraction": 1,
+       "area_approximate": false
+      },
+      {
+       "id": 10,
+       "category": "WEATHER_WARNING",
+       "category_label": "Aviso meteorológico oficial — INMET",
+       "source_code": "inmet-warnings",
+       "attribution": "Fonte: INMET — Alert-AS",
+       "sender_name": "Instituto Nacional de Meteorologia",
+       "msg_type": "Alert",
+       "event": "Chuvas Intensas",
+       "severity": "Severe",
+       "severity_label": "Severa",
+       "level_name": "Laranja — Perigo",
+       "color": "#F96602",
+       "urgency": "Future",
+       "certainty": "Likely",
+       "headline": "Aviso de Chuvas Intensas. Severidade Grau: Severe",
+       "description": "INMET publica aviso iniciando em: 26/11/2026 00:00. Chuva entre 30 e 60 mm/h ou 50 e 100 mm/dia, ventos intensos (60-100 km/h). Risco de corte de energia elétrica, queda de galhos de árvores, alagamentos e de descargas elétricas.",
+       "instruction": "Em caso de rajadas de vento: (não se abrigue debaixo de árvores, pois há risco de queda e descargas elétricas e não estacione veículos próximos a torres de transmissão e placas de propaganda) Se possível, desligue aparelhos elétricos e quadro geral de energia. Obtenha mais informações junto à Defesa Civil (telefone 199) e ao Corpo de Bombeiros (telefone 193).",
+       "web": "https://avisos.inmet.gov.br/56503",
+       "area_desc": "Aviso para as áreas: Triângulo Mineiro/Alto Paranaíba, Central Mineira, Zona da Mata, Vale do Rio Doce, São José do Rio Preto, Central Espírito-santense, Leste de Mato Grosso do Sul, Campinas, Sul Goiano, Oeste de Minas, Piracicaba, Sul/Sudoeste de Minas, Sul Espírito-santense, Campo das Vertentes, Ribeirão Preto, Macro Metropolitana Paulista, Metropolitana de Belo Horizonte, Araraquara, Araçatuba, Sul Fluminense, Bauru, Vale do Paraíba Paulista, Noroeste Fluminense, Litoral Norte Espírito-santense, Baixadas, Centro Fluminense, Metropolitana de São Paulo, Noroeste Espírito-santense, Metropolitana do Rio de Janeiro, Itapetininga, Centro Norte de Mato Grosso do Sul, Norte Fluminense, Jequitinhonha, Noroeste de Minas",
+       "sent_at": "2026-11-24T15:34:10Z",
+       "onset_at": "2026-11-26T03:00:00Z",
+       "expires_at": "2026-11-27T02:59:00Z",
+       "ended_at": null,
+       "status": "UPCOMING",
+       "subprefectures": [
+        "ARICANDUVA-FORMOSA-CARRAO",
+        "BUTANTA",
+        "CAMPO LIMPO",
+        "CAPELA DO SOCORRO",
+        "CASA VERDE-CACHOEIRINHA",
+        "CIDADE ADEMAR",
+        "CIDADE TIRADENTES",
+        "ERMELINO MATARAZZO",
+        "FREGUESIA-BRASILANDIA",
+        "GUAIANASES",
+        "IPIRANGA",
+        "ITAIM PAULISTA",
+        "ITAQUERA",
+        "JABAQUARA",
+        "JACANA-TREMEMBE",
+        "LAPA",
+        "M BOI MIRIM",
+        "MOOCA",
+        "PARELHEIROS",
+        "PENHA",
+        "PERUS",
+        "PINHEIROS",
+        "PIRITUBA-JARAGUA",
+        "SANTANA-TUCURUVI",
+        "SANTO AMARO",
+        "SAO MATEUS",
+        "SAO MIGUEL",
+        "SAPOPEMBA",
+        "SE",
+        "VILA MARIANA",
+        "VILA MARIA-VILA GUILHERME",
+        "VILA PRUDENTE"
+       ],
+       "city_fraction": 0.9723897806810204,
+       "area_approximate": false
+      },
+      {
+       "id": 12,
+       "category": "WEATHER_WARNING",
+       "category_label": "Aviso meteorológico oficial — INMET",
+       "source_code": "inmet-warnings",
+       "attribution": "Fonte: INMET — Alert-AS",
+       "sender_name": "Instituto Nacional de Meteorologia",
+       "msg_type": "Alert",
+       "event": "Chuvas Intensas",
+       "severity": "Moderate",
+       "severity_label": "Moderada",
+       "level_name": "Amarelo — Perigo potencial",
+       "color": "#FFFE00",
+       "urgency": "Future",
+       "certainty": "Likely",
+       "headline": "Aviso de Chuvas Intensas. Severidade Grau: Moderate",
+       "description": "INMET publica aviso iniciando em: 26/11/2026 00:00. Chuva entre 20 e 30 mm/h ou até 50 mm/dia, ventos intensos (40-60 km/h). Baixo risco de corte de energia elétrica, queda de galhos de árvores, alagamentos e de descargas elétricas.",
+       "instruction": "Em caso de rajadas de vento: (não se abrigue debaixo de árvores, pois há leve risco de queda e descargas elétricas e não estacione veículos próximos a torres de transmissão e placas de propaganda). Evite usar aparelhos eletrônicos ligados à tomada. Obtenha mais informações junto à Defesa Civil (telefone 199) e ao Corpo de Bombeiros (telefone 193).",
+       "web": "https://avisos.inmet.gov.br/56502",
+       "area_desc": "Aviso para as áreas: Centro Goiano, Triângulo Mineiro/Alto Paranaíba, Leste Goiano, Central Mineira, Norte Pioneiro Paranaense, Oeste Catarinense, Zona da Mata, Centro-Sul Mato-grossense, Vale do Acre, Sul Goiano, Vale do Rio Doce, Presidente Prudente, São José do Rio Preto, Metropolitana de Curitiba, Central Espírito-santense, Nordeste Mato-grossense, Leste de Mato Grosso do Sul, Noroeste Espírito-santense, Campinas, Oeste de Minas, Bauru, Piracicaba, Vale do Mucuri, Sul/Sudoeste de Minas, Itapetininga, Centro Norte de Mato Grosso do Sul, Sul Espírito-santense, Campo das Vertentes, Ocidental do Tocantins, Oriental do Tocantins, Norte Mato-grossense, Leste Rondoniense, Sudoeste Paraense, Centro Ocidental Paranaense, Ribeirão Preto, Araçatuba, Sudeste Mato-grossense, Norte Goiano, Noroeste Paranaense, Macro Metropolitana Paulista, Centro Amazonense, Marília, Metropolitana de Belo Horizonte, Norte Central Paranaense, Sudoeste de Mato Grosso do Sul, Sudoeste Amazonense, Araraquara, Sudoeste Paranaense, Oeste Paranaense, Pantanais Sul Mato-grossense, Jequitinhonha, Sul Fluminense, Sudeste Paranaense, Vale do Paraíba Paulista, Noroeste Fluminense, Sul Amazonense, Litoral Norte Espírito-santense, Noroeste Goiano, Centro Oriental Paranaense, Sudoeste Mato-grossense, Norte Catarinense, Baixadas, Centro Fluminense, Noroeste de Minas, Metropolitana de São Paulo, Assis, Vale do Itajaí, Norte Amazonense, Litoral Sul Paulista, Metropolitana do Rio de Janeiro, Centro-Sul Paranaense, Norte de Minas, Distrito Federal, Madeira-Guaporé, Norte Fluminense, Sul Baiano, Extremo Oeste Baiano, Vale do Juruá, Sudeste Paraense, Vale São-Franciscano da Bahia, Serrana",
+       "sent_at": "2026-11-24T15:28:43Z",
+       "onset_at": "2026-11-26T03:00:00Z",
+       "expires_at": "2026-11-27T02:59:00Z",
+       "ended_at": null,
+       "status": "UPCOMING",
+       "subprefectures": [
+        "ARICANDUVA-FORMOSA-CARRAO",
+        "BUTANTA",
+        "CAMPO LIMPO",
+        "CAPELA DO SOCORRO",
+        "CASA VERDE-CACHOEIRINHA",
+        "CIDADE ADEMAR",
+        "CIDADE TIRADENTES",
+        "ERMELINO MATARAZZO",
+        "FREGUESIA-BRASILANDIA",
+        "GUAIANASES",
+        "IPIRANGA",
+        "ITAIM PAULISTA",
+        "ITAQUERA",
+        "JABAQUARA",
+        "JACANA-TREMEMBE",
+        "LAPA",
+        "M BOI MIRIM",
+        "MOOCA",
+        "PARELHEIROS",
+        "PENHA",
+        "PERUS",
+        "PINHEIROS",
+        "PIRITUBA-JARAGUA",
+        "SANTANA-TUCURUVI",
+        "SANTO AMARO",
+        "SAO MATEUS",
+        "SAO MIGUEL",
+        "SAPOPEMBA",
+        "SE",
+        "VILA MARIANA",
+        "VILA MARIA-VILA GUILHERME",
+        "VILA PRUDENTE"
+       ],
+       "city_fraction": 1,
+       "area_approximate": false
+      }
+     ],
+     "system": [],
+     "counts": {
+      "official_active": 2,
+      "official_upcoming": 2,
+      "civil_defense_active": 0,
+      "weather_warning_active": 2,
+      "risk_estimate": 0,
+      "data_quality": 0
+     },
+     "sources": [
+      {
+       "code": "idap-alerts",
+       "name": "Defesa Civil — alertas à população (IDAP)",
+       "attribution": "Fonte: Defesa Civil (IDAP/MIDR)",
+       "freshness": "FRESH",
+       "last_success_at": "2026-11-25T17:56:45.580522Z"
+      },
+      {
+       "code": "inmet-warnings",
+       "name": "INMET — avisos meteorológicos (Alert-AS)",
+       "attribution": "Fonte: INMET — Alert-AS",
+       "freshness": "FRESH",
+       "last_success_at": "2026-11-25T17:56:38.024931Z"
+      }
+     ],
+     "sources_ok": true,
+     "cge_url": "https://www.cgesp.org",
+     "official_channel": "Para receber os alertas oficiais da Defesa Civil no celular, envie um SMS com o seu CEP para 40199. Em emergência, ligue 199 (Defesa Civil) ou 193 (Bombeiros)."
+    }
+   }
+  ],
+  "GET /api/v1/reports/types": [
+   {
+    "status": 200,
+    "contentType": "application/json",
+    "json": [
+     {
+      "code": "situacao",
+      "title": "Situação agora",
+      "description": "Alertas oficiais, risco estimado, chuva prevista para 24 h e estado das fontes, no momento da geração.",
+      "formats": [
+       "pdf",
+       "csv",
+       "json"
+      ],
+      "params": []
+     },
+     {
+      "code": "risco",
+      "title": "Risco por setor",
+      "description": "Os setores de risco hidrológico com a categoria estimada, a chuva prevista, os fatores e o terreno.",
+      "formats": [
+       "pdf",
+       "csv",
+       "json"
+      ],
+      "params": [
+       {
+        "name": "subprefecture",
+        "label": "Subprefeitura",
+        "required": false,
+        "help": "Em branco: a cidade inteira."
+       }
+      ]
+     },
+     {
+      "code": "alertas",
+      "title": "Alertas do período",
+      "description": "Alertas oficiais (Defesa Civil e INMET) com o texto da fonte, e alertas do sistema, num período de até 90 dias.",
+      "formats": [
+       "pdf",
+       "csv",
+       "json"
+      ],
+      "params": [
+       {
+        "name": "since",
+        "label": "Desde",
+        "required": true,
+        "help": "Data (AAAA-MM-DD)."
+       },
+       {
+        "name": "until",
+        "label": "Até",
+        "required": true,
+        "help": "Data (AAAA-MM-DD)."
+       },
+       {
+        "name": "category",
+        "label": "Categoria",
+        "required": false,
+        "help": "Em branco: todas."
+       }
+      ]
+     },
+     {
+      "code": "chuva",
+      "title": "Chuva do período",
+      "description": "Chuva da reanálise num ponto da grade, por dia, mês ou ano, com a normal 1991–2020 nos totais mensais e anuais.",
+      "formats": [
+       "pdf",
+       "csv",
+       "json"
+      ],
+      "params": [
+       {
+        "name": "point",
+        "label": "Ponto",
+        "required": false,
+        "help": "Em branco: o centro."
+       },
+       {
+        "name": "since",
+        "label": "Desde",
+        "required": true,
+        "help": "Data (AAAA-MM-DD)."
+       },
+       {
+        "name": "until",
+        "label": "Até",
+        "required": true,
+        "help": "Data (AAAA-MM-DD)."
+       },
+       {
+        "name": "grain",
+        "label": "Agregação",
+        "required": true,
+        "help": "day, month ou year."
+       }
+      ]
+     },
+     {
+      "code": "simulacao",
+      "title": "Simulação",
+      "description": "Cenário, contagens, setores e comparação com a estimativa real de uma simulação do Laboratório.",
+      "formats": [
+       "pdf",
+       "csv",
+       "json"
+      ],
+      "params": [
+       {
+        "name": "simulation_id",
+        "label": "Simulação",
+        "required": true,
+        "help": "Id da simulação."
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

@@ -13,7 +13,8 @@
 - **Fase 8 — Geointeligência 3D: concluída** (bacias, drenagem e piscinões do GeoSampa; Copernicus DEM; terreno por setor e bacia; perfil; bloco 3D da bacia no MapLibre sobre o relevo do Copernicus, com simulação, exportação PNG e versão 2D; ADR-013).
 - **Fase 9 — Alertas: concluída** (alertas da Defesa Civil pelo feed CAP da IDAP, avisos do INMET, limite pelas subprefeituras do GeoSampa, alertas do sistema por regras com histerese, página `/alerts`, faixa global, cartões, camada no mapa e notificações neste navegador; ADR-014).
 - **Fase 10 — Central de relatórios: concluída** (situação agora, risco por setor, alertas do período, chuva do período e simulação, em PDF, CSV e JSON, gerados no worker; PDF próprio sem dependência nova; arquivos por 7 dias; ADR-015).
-- **Próxima: Fase 11 — Hardening** (spec 011 a escrever).
+- **Fase 11 — Hardening: concluída** (limite de requisições, cabeçalhos de segurança e CSP, validação da configuração de produção, testes ponta a ponta com Playwright e axe no CI, pilha de produção com Caddy e HTTPS, backup diário com restauração conferida, metas de desempenho medidas e manual de operação; ADR-016).
+- **Publicação:** a pilha de produção está pronta e validada na máquina local; falta escolher a hospedagem (servidor Linux com Docker e um domínio).
 
 ## Repositório
 - GitHub: https://github.com/JH-2002/climate-platform (público), branch `main`, CI verde.
@@ -33,7 +34,7 @@
 - API: `/api/v1/health`, `/health/ready`, `/sources/status`, `/stations`, `/stations/nearby`, `/stations/{id}/observations`, `/weather/forecast`, `/map/region`, `/map/layers/stations`, `/map/layers/forecast-points`, `/map/layers/risk`, `/map/layers/flood-occurrences`, `/risk/summary`, `/risk/areas`, `/risk/areas/{id}`, `/risk/nearest`, `/simulation/*` (presets, centers, runs, histórico), `/map/layers/simulation/{id}`, `/geo/*` (dem, basins, sectors/{id}/terrain, elevation, profile, terrain/{z}/{x}/{y}.png, basins/{id}/block, basins/{id}/relief.png), `/map/layers/basins|drainage|reservoirs`, `/alerts` (active, histórico, official/{id}, at, rules), `/map/layers/alerts`, `/reports` (types, pedido, lista, andamento, download), `/analytics/*` (datasets, describe, kpis, insights, series, series.csv, climatology, distribution, ranking, trends, risk-history, sources-health) (documentação em http://localhost:8000/api/docs).
 
 ## Bloqueios externos
-- **Token do INMET**: e-mail enviado em 2026-11-19 para cadastro.act@inmet.gov.br. Quando chegar: colocar em `INMET_TOKEN` no `.env` e implementar a T020 com uma resposta real gravada.
+- **Token do INMET**: pedido por e-mail em 2026-11-19. A resposta de 2026-11-23 não concede token: indica o portal, o BDMEP (dados históricos, pedido manual por e-mail) e, para acesso por API, um Acordo de Cooperação Técnica (ACT) entre instituições. Sem token, as observações das estações do INMET continuam indisponíveis (FR-028), e a T020 fica fora do escopo enquanto não houver ACT. Cadastro de estações, avisos meteorológicos e previsão não dependem do token.
 
 ## Pendências técnicas
 - Migrar Vitest 2 → versão principal atual (alertas restritos à ferramenta de teste).
@@ -44,4 +45,4 @@
 - Branches temporários `feat/fase-3`, `feat/fase-4`, `feat/fase-5` e `chore/lockfiles` (o proxy desta sessão não permite apagar branches; podem ser removidos pela interface do GitHub).
 
 ## Próxima tarefa
-Fase 11 — Hardening: escrever a spec 011 (segurança, desempenho, acessibilidade, testes E2E e publicação). Melhorias em aberto: estados de atenção do CGE quando houver acesso permitido; notificação com o navegador fechado e relatórios agendados (exigem contas); calibrar as faixas de chuva do risco com ocorrências de anos anteriores; LiDAR da Prefeitura para o detalhe dos setores pequenos.
+Escolher a hospedagem e publicar seguindo `docs/operations/RUNBOOK.md`. Melhorias em aberto: estados de atenção do CGE quando houver acesso permitido; notificação com o navegador fechado e relatórios agendados (exigem contas); calibrar as faixas de chuva do risco com ocorrências de anos anteriores; LiDAR da Prefeitura para o detalhe dos setores pequenos.

@@ -15,6 +15,11 @@
 | [ADR-009](docs/architecture/adr/ADR-009-maplibre-2d-3d.md) | MapLibre GL para o mapa 2D/3D (no lugar de Leaflet) | Aceita | 2026-11-19 |
 | [ADR-010](docs/architecture/adr/ADR-010-geosampa-risk-matrix.md) | GeoSampa como base de suscetibilidade e motor de risco em matriz | Aceita | 2026-11-19 |
 | [ADR-011](docs/architecture/adr/ADR-011-reference-series-and-rule-insights.md) | Séries de referência (IAG/USP e reanálise) e insights por regra | Aceita | 2026-11-19 |
+| [ADR-012](docs/architecture/adr/ADR-012-simulation-reuses-risk-engine.md) | Simulação reaproveita o motor de risco, na resolução de setor | Aceita | 2026-11-20 |
+| [ADR-013](docs/architecture/adr/ADR-013-terrain-and-hydrography.md) | Terreno do Copernicus DEM em arquivo e hidrografia oficial do GeoSampa | Aceita | 2026-11-20 |
+| [ADR-014](docs/architecture/adr/ADR-014-official-alerts-and-rules.md) | Alertas oficiais (IDAP e INMET) e alertas do sistema por regras | Aceita | 2026-11-24 |
+| [ADR-015](docs/architecture/adr/ADR-015-report-center.md) | Relatórios com PDF próprio e arquivos no banco | Aceita | 2026-11-25 |
+| [ADR-016](docs/architecture/adr/ADR-016-production-stack.md) | Pilha de produção: Docker Compose com Caddy | Aceita | 2026-11-25 |
 
 ## Decisões menores (sem ADR)
 
