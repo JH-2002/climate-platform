@@ -52,7 +52,7 @@ export function BasinBlock2D({ block }: { block: BasinBlock }) {
           {block.hydro_attribution}.
         </figcaption>
       </figure>
-      <div className="overflow-x-auto rounded-lg border border-surface-border">
+      <div className="overflow-x-auto rounded-lg border border-surface-border focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" tabIndex={0} role="region" aria-label="Setores do bloco">
         <table className="w-full border-collapse bg-surface text-left text-sm">
           <caption className="px-3 py-2 text-left font-medium">
             Setores de risco na bacia ({block.sectors.length}) — {block.source === "real" ? "estimativa real" : "simulação"}

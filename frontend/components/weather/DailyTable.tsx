@@ -10,7 +10,7 @@ export function DailyTable({ days }: { days: DailyValues[] }) {
       {days.length === 0 ? (
         <p className="text-sm text-ink-muted">Sem previsão diária coletada para este local.</p>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-surface-border">
+        <div className="overflow-x-auto rounded-lg border border-surface-border focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" tabIndex={0} role="region" aria-label="Previsão por dia">
           <table className="w-full border-collapse bg-surface text-left text-sm">
             <caption className="sr-only">Previsão diária: temperaturas, chuva e probabilidade</caption>
             <thead className="bg-surface-muted text-ink-muted">

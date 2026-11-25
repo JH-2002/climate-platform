@@ -18,7 +18,7 @@ function statusText(status: string): string {
 export function AlertHistoryTable({ history }: { history: History }) {
   if (history.items.length === 0) return <p className="text-sm">Nenhum alerta neste período.</p>;
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" tabIndex={0} role="region" aria-label="Histórico de alertas">
       <table className="w-full text-left text-sm">
         <caption className="sr-only">Alertas dos últimos 7 dias</caption>
         <thead className="text-ink-muted">

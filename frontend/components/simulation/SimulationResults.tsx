@@ -114,7 +114,7 @@ export function SimulationSummary(props: { run: SimulationRun; onRepeat?: () => 
               <p className="text-sm text-amber-900">A estimativa real está desatualizada: compare com cuidado.</p>
             )}
             {c.subprefectures.length > 0 && (
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" tabIndex={0} role="region" aria-label="Comparação com a estimativa real">
                 <table className="w-full text-left text-sm">
                   <caption className="sr-only">Subprefeituras mais afetadas na simulação</caption>
                   <thead className="text-ink-muted">
@@ -184,7 +184,7 @@ export function SimulatedSectorTable(props: {
   const { items, total, selectedId, onSelect, limit = 50, withProbability = false } = props;
   const shownItems = items.slice(0, limit);
   return (
-    <div className="overflow-x-auto rounded-lg border border-surface-border">
+    <div className="overflow-x-auto rounded-lg border border-surface-border focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent" tabIndex={0} role="region" aria-label="Setores simulados">
       <table className="w-full border-collapse bg-surface text-left text-sm">
         <caption className="bg-violet-50 px-4 py-2 text-left font-medium">
           Setores na simulação ({shownItems.length < total ? `${shownItems.length} de ${total}` : total}) — cenário hipotético

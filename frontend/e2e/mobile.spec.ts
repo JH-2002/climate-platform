@@ -12,7 +12,7 @@ test.describe("menu recolhível", () => {
     await page.goto("/");
     const menu = page.getByRole("button", { name: /^Menu/ });
     await expect(menu).toBeVisible();
-    await expect(page.getByRole("link", { name: "Relatórios" })).toBeHidden();
+    await expect(page.getByRole("navigation", { name: "Navegação principal" }).getByRole("link", { name: "Relatórios" })).toBeHidden();
 
     await menu.click();
     await expect(menu).toHaveAttribute("aria-expanded", "true");
@@ -21,7 +21,7 @@ test.describe("menu recolhível", () => {
     await expect(menu).toBeFocused();
 
     await menu.click();
-    await page.getByRole("link", { name: "Estado do sistema" }).click();
+    await page.getByRole("navigation", { name: "Navegação principal" }).getByRole("link", { name: "Estado do sistema" }).click();
     await expect(page).toHaveURL(/\/status/);
     await expect(menu).toHaveAttribute("aria-expanded", "false");
   });
