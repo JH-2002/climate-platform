@@ -16,12 +16,16 @@ import { demoFile } from "../lib/demo";
 const OUT = path.resolve(process.env.DEMO_OUT ?? path.join(__dirname, "..", "demo-out"));
 const API = process.env.DEMO_API_URL ?? "http://localhost:8000";
 const counts = { files: 0, bytes: 0 };
+/** GETs da API que a interface pediu e os que ficaram gravados: o que faltar é buscado no fim. */
+const requested = new Set<string>();
+const saved = new Set<string>();
 
 function save(file: string, body: Buffer) {
   const target = path.join(OUT, file);
   if (!target.startsWith(OUT + path.sep)) throw new Error(`Caminho fora da saída: ${file}`);
   fs.mkdirSync(path.dirname(target), { recursive: true });
   if (!fs.existsSync(target)) counts.files += 1;
+  saved.add(file);
   fs.writeFileSync(target, body);
   counts.bytes += body.length;
 }
@@ -29,7 +33,8 @@ function save(file: string, body: Buffer) {
 async function record(response: Response) {
   const request = response.request();
   const url = new URL(response.url());
-  if (!url.pathname.startsWith("/api/v1/") || response.status() !== 200) return;
+  // Qualquer 2xx: a criação de uma simulação responde 201.
+  if (!url.pathname.startsWith("/api/v1/") || response.status() < 200 || response.status() >= 300) return;
   const method = request.method();
   if (method !== "GET" && method !== "POST") return;
   const body = method === "POST" ? (request.postDataJSON() as unknown) : undefined;
@@ -83,6 +88,10 @@ test.beforeAll(() => {
 
 test.beforeEach(({ page }) => {
   page.on("response", (response) => void record(response));
+  page.on("request", (request) => {
+    const url = new URL(request.url());
+    if (request.method() === "GET" && url.pathname.startsWith("/api/v1/")) requested.add(`${url.pathname}${url.search}`);
+  });
 });
 
 test("páginas do menu", async ({ page }) => {
@@ -165,6 +174,16 @@ test("laboratório: cada cenário pronto simulado", async ({ page }) => {
     await settle(page, 3000);
   }
   await visit(page, "/simulation");
+});
+
+// Respostas que a página não chegou a ler (navegação seguiu antes de o corpo chegar).
+test("completar o que a interface pediu e não ficou gravado", async ({ page }) => {
+  const missing = [...requested].filter((apiPath) => {
+    const file = demoFile("GET", apiPath);
+    return file !== null && !saved.has(file);
+  });
+  console.log(`Pedidos sem gravação: ${missing.length}`);
+  await fetchAll(page, missing);
 });
 
 test.afterAll(() => {
