@@ -1,16 +1,24 @@
 name: Gerar lockfiles
 
-# Gera frontend/package-lock.json com o mesmo Node da imagem Docker e publica em um branch.
-# Execução manual (Actions › Gerar lockfiles › Run workflow).
+# Gera frontend/package-lock.json com o mesmo Node da imagem Docker (spec 014).
+# - Em branches deps/**, quando o package.json muda: regenera o lock e faz commit na própria
+#   branch, e lista o que está desatualizado (npm outdated / pip list --outdated) no resumo.
+# - Manual (Actions › Gerar lockfiles › Run workflow): o mesmo, na branch escolhida.
 on:
   workflow_dispatch:
+  push:
+    branches: ["deps/**"]
+    paths:
+      - "frontend/package.json"
+      - "backend/pyproject.toml"
+      - ".github/workflows/lockfiles.yml"
 
 permissions:
   contents: write
 
 jobs:
   frontend:
-    name: package-lock.json do frontend
+    name: package-lock.json e versões desatualizadas
     runs-on: ubuntu-latest
     steps:
       - name: Baixar o código
@@ -19,14 +27,32 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: "22"
-      - name: Resolver dependências
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Resolver dependências do frontend
         working-directory: frontend
-        run: npm install --package-lock-only --ignore-scripts
-      - name: Publicar no branch chore/lockfiles
+        run: |
+          rm -f package-lock.json
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - name: Versões desatualizadas
+        run: |
+          {
+            echo "## Frontend (npm outdated)"
+            echo '```'
+            (cd frontend && npm install --ignore-scripts --no-audit --no-fund >/dev/null 2>&1; npm outdated || true)
+            echo '```'
+            echo "## Backend (pip list --outdated)"
+            echo '```'
+            (cd backend && pip install -q -e ".[dev]" >/dev/null 2>&1; pip list --outdated --format=columns || true)
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Commit do lock na própria branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -B chore/lockfiles
           git add frontend/package-lock.json
-          git commit -m "chore: gera package-lock.json do frontend"
-          git push --force origin chore/lockfiles
+          if git diff --cached --quiet; then echo "lock sem mudanças"; exit 0; fi
+          git commit -m "chore: regenera package-lock.json do frontend"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
