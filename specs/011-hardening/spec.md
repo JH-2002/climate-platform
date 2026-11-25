@@ -1,6 +1,6 @@
 # Spec 011 — Hardening
 
-> Status: **Em andamento** (2026-11-25) · Fase: 11 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md) · ADR: [ADR-016](../../docs/architecture/adr/ADR-016-production-stack.md)
+> Status: **Concluída** (2026-11-25) · Fase: 11 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md) · ADR: [ADR-016](../../docs/architecture/adr/ADR-016-production-stack.md)
 
 ## Contexto
 As Fases 0 a 10 entregaram a plataforma funcionando localmente, no Docker de desenvolvimento:

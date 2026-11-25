@@ -13,7 +13,8 @@
 - **Fase 8 — Geointeligência 3D: concluída** (bacias, drenagem e piscinões do GeoSampa; Copernicus DEM; terreno por setor e bacia; perfil; bloco 3D da bacia no MapLibre sobre o relevo do Copernicus, com simulação, exportação PNG e versão 2D; ADR-013).
 - **Fase 9 — Alertas: concluída** (alertas da Defesa Civil pelo feed CAP da IDAP, avisos do INMET, limite pelas subprefeituras do GeoSampa, alertas do sistema por regras com histerese, página `/alerts`, faixa global, cartões, camada no mapa e notificações neste navegador; ADR-014).
 - **Fase 10 — Central de relatórios: concluída** (situação agora, risco por setor, alertas do período, chuva do período e simulação, em PDF, CSV e JSON, gerados no worker; PDF próprio sem dependência nova; arquivos por 7 dias; ADR-015).
-- **Próxima: Fase 11 — Hardening** (spec 011 a escrever).
+- **Fase 11 — Hardening: concluída** (limite de requisições, cabeçalhos de segurança e CSP, validação da configuração de produção, testes ponta a ponta com Playwright e axe no CI, pilha de produção com Caddy e HTTPS, backup diário com restauração conferida, metas de desempenho medidas e manual de operação; ADR-016).
+- **Publicação:** a pilha de produção está pronta e validada na máquina local; falta escolher a hospedagem (servidor Linux com Docker e um domínio).
 
 ## Repositório
 - GitHub: https://github.com/JH-2002/climate-platform (público), branch `main`, CI verde.
@@ -44,4 +45,4 @@
 - Branches temporários `feat/fase-3`, `feat/fase-4`, `feat/fase-5` e `chore/lockfiles` (o proxy desta sessão não permite apagar branches; podem ser removidos pela interface do GitHub).
 
 ## Próxima tarefa
-Fase 11 — Hardening: escrever a spec 011 (segurança, desempenho, acessibilidade, testes E2E e publicação). Melhorias em aberto: estados de atenção do CGE quando houver acesso permitido; notificação com o navegador fechado e relatórios agendados (exigem contas); calibrar as faixas de chuva do risco com ocorrências de anos anteriores; LiDAR da Prefeitura para o detalhe dos setores pequenos.
+Escolher a hospedagem e publicar seguindo `docs/operations/RUNBOOK.md`. Melhorias em aberto: estados de atenção do CGE quando houver acesso permitido; notificação com o navegador fechado e relatórios agendados (exigem contas); calibrar as faixas de chuva do risco com ocorrências de anos anteriores; LiDAR da Prefeitura para o detalhe dos setores pequenos.
