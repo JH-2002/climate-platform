@@ -6,6 +6,7 @@ from app.api.v1 import (
     geo,
     health,
     maps,
+    reports,
     risk,
     simulation,
     sources,
@@ -24,3 +25,4 @@ api_router.include_router(analytics.router)
 api_router.include_router(simulation.router)
 api_router.include_router(geo.router)
 api_router.include_router(alerts.router)
+api_router.include_router(reports.router)

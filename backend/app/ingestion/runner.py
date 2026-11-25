@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import uuid
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
@@ -45,6 +46,7 @@ from app.ingestion.pipeline import RunOutcome, run_ingestion
 from app.ingestion.reference_import import make_iag_import_job
 from app.integrations.http import USER_AGENT, fetch
 from app.models.tables import data_sources, hydro_risk_sectors, ingestion_runs, sector_terrain
+from app.services import reports as report_service
 from app.services.alerts import EvaluationSummary, evaluate_system_alerts, thresholds_from
 from app.services.geo import DEM_CLIP_CODE, TerrainSummary, compute_terrain, dem_status
 from app.services.risk import RiskRunSummary, compute_flood_risk
@@ -342,3 +344,16 @@ async def run_subprefecture_sync(settings: Settings) -> RunOutcome:
 async def run_alert_evaluation(settings: Settings) -> EvaluationSummary:
     async with _session_factory(settings) as sessions, sessions() as session:
         return await evaluate_system_alerts(session, datetime.now(UTC), thresholds_from(settings))
+
+
+# --- relatórios (spec 010) --------------------------------------------------------------------
+
+
+async def run_report_generation(settings: Settings, request_id: str) -> str:
+    async with _session_factory(settings) as sessions, sessions() as session:
+        return await report_service.generate(session, uuid.UUID(request_id), datetime.now(UTC))
+
+
+async def run_report_housekeeping(settings: Settings) -> tuple[int, int]:
+    async with _session_factory(settings) as sessions, sessions() as session:
+        return await report_service.housekeeping(session, datetime.now(UTC))

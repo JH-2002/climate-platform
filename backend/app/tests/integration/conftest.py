@@ -18,6 +18,7 @@ from sqlalchemy.pool import NullPool
 from app.core.config import get_settings
 
 _TABLES = (
+    "report_files, report_requests, "
     "system_alerts, ignored_alert_items, official_alerts, subprefectures, "
     "basin_terrain, sector_terrain, dem_assets, detention_reservoirs, drainage_segments, basins, "
     "simulation_results, simulation_runs, "

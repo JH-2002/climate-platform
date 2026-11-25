@@ -14,6 +14,7 @@ from sqlalchemy import (
     Float,
     ForeignKey,
     Integer,
+    LargeBinary,
     MetaData,
     SmallInteger,
     Table,
@@ -514,4 +515,39 @@ system_alerts = Table(
     Column("updated_at", DateTime(timezone=True), nullable=False),
     Column("closed_at", DateTime(timezone=True)),
     Column("clear_count", Integer, nullable=False),
+)
+
+# --- relatórios (spec 010) --------------------------------------------------------------------
+
+report_requests = Table(
+    "report_requests",
+    metadata,
+    Column("id", UUID(as_uuid=True), primary_key=True),
+    Column("report_type", Text, nullable=False),
+    Column("format", Text, nullable=False),
+    Column("params", JSONB, nullable=False),
+    Column("title", Text, nullable=False),
+    Column("mode", Text, nullable=False),
+    Column("status", Text, nullable=False),
+    Column("error", Text),
+    Column("created_at", DateTime(timezone=True), nullable=False),
+    Column("started_at", DateTime(timezone=True)),
+    Column("finished_at", DateTime(timezone=True)),
+    Column("expires_at", DateTime(timezone=True)),
+    Column("bytes", Integer),
+    Column("sha256", Text),
+    Column("filename", Text),
+    Column("media_type", Text),
+)
+
+report_files = Table(
+    "report_files",
+    metadata,
+    Column(
+        "request_id",
+        UUID(as_uuid=True),
+        ForeignKey("report_requests.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column("content", LargeBinary, nullable=False),
 )

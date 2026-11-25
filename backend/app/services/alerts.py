@@ -708,3 +708,37 @@ async def official_alert_features(session: AsyncSession, now: datetime) -> list[
 
 
 ALERT_ATTRIBUTION = "Alertas: Defesa Civil (IDAP/MIDR) e INMET (Alert-AS)"
+
+
+async def official_alerts_between(
+    session: AsyncSession,
+    now: datetime,
+    since: datetime,
+    until: datetime,
+    category: OfficialCategory | None = None,
+) -> list[OfficialAlert]:
+    """Alertas oficiais com vigência no período, com o texto completo (relatórios, BR-152)."""
+    query = _official_select().where(
+        official_alerts.c.sent_at < until,
+        or_(official_alerts.c.expires_at.is_(None), official_alerts.c.expires_at >= since),
+    )
+    if category is not None:
+        query = query.where(official_alerts.c.category == category)
+    rows = (await session.execute(query.order_by(official_alerts.c.onset_at))).all()
+    return [_official(r, now) for r in rows]
+
+
+async def system_alerts_between(
+    session: AsyncSession,
+    since: datetime,
+    until: datetime,
+    category: SystemCategory | None = None,
+) -> list[SystemAlert]:
+    query = select(system_alerts).where(
+        system_alerts.c.opened_at < until,
+        or_(system_alerts.c.closed_at.is_(None), system_alerts.c.closed_at >= since),
+    )
+    if category is not None:
+        query = query.where(system_alerts.c.category == category)
+    rows = (await session.execute(query.order_by(system_alerts.c.opened_at))).all()
+    return [_system(r) for r in rows]

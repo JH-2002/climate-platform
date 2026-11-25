@@ -26,6 +26,8 @@ IDAP_INTERVAL_S = 600
 INMET_WARNINGS_INTERVAL_S = 1800
 ALERT_EVALUATION_INTERVAL_S = 600
 SUBPREFECTURES_INTERVAL_S = 24 * 3600
+# Relatórios (spec 010): arquivos vencidos e pedidos presos.
+REPORT_HOUSEKEEPING_INTERVAL_S = 600
 
 _settings = get_settings()
 
@@ -40,6 +42,7 @@ celery_app = Celery(
         "app.workers.tasks.simulation",
         "app.workers.tasks.geo",
         "app.workers.tasks.alerts",
+        "app.workers.tasks.reports",
     ],
 )
 
@@ -103,6 +106,10 @@ celery_app.conf.update(
         "alerts-subprefectures": {
             "task": "alerts.sync_subprefectures",
             "schedule": float(SUBPREFECTURES_INTERVAL_S),
+        },
+        "reports-housekeeping": {
+            "task": "reports.housekeeping",
+            "schedule": float(REPORT_HOUSEKEEPING_INTERVAL_S),
         },
         "simulation-purge": {
             "task": "simulation.purge_old_runs",
