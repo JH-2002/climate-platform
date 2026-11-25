@@ -68,12 +68,41 @@ jobs:
       - name: Instalar o backend
         working-directory: backend
         run: pip install -e .
+      # O banco passa de uma execução para a outra pelo cache: a reanálise (limitada pelo
+      # Open-Meteo) vai se completando, o histórico do risco cresce e uma fonte que falhar
+      # mantém o que já foi coletado.
+      - name: Recuperar o banco da execução anterior
+        id: db-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/demo-db.dump
+          key: demo-db-${{ github.run_id }}
+          restore-keys: demo-db-
+      - name: Restaurar o banco
+        if: steps.db-cache.outputs.cache-matched-key != ''
+        run: |
+          docker exec -i ${{ job.services.db.id }} \
+            pg_restore -U climate -d climate --no-owner --clean --if-exists \
+            < "$RUNNER_TEMP/demo-db.dump" || echo "restauração com avisos"
+          echo "Banco recuperado de ${{ steps.db-cache.outputs.cache-matched-key }}"
       - name: Migrações
         working-directory: backend
         run: alembic upgrade head
       - name: Coletas reais
         working-directory: backend
         run: python scripts/demo_collect.py --backfill-minutes 6
+
+      - name: Guardar o banco para a próxima execução
+        run: |
+          docker exec ${{ job.services.db.id }} pg_dump -U climate -d climate -Fc \
+            --exclude-table-data=raw_payloads --exclude-table-data=report_files \
+            > "$RUNNER_TEMP/demo-db.dump"
+          ls -lh "$RUNNER_TEMP/demo-db.dump"
+      - name: Salvar no cache
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ runner.temp }}/demo-db.dump
+          key: demo-db-${{ github.run_id }}
 
       - name: Subir API e worker
         working-directory: backend

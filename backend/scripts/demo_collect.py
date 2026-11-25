@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import dataclasses
 import sys
 import time
 from collections.abc import Awaitable, Callable
@@ -32,6 +33,13 @@ def describe(result: Any) -> str:
     if status is not None:
         error = getattr(result, "error", None)
         return f"{status}" + (f" ({error})" if error else "")
+    if dataclasses.is_dataclass(result) and not isinstance(result, type):
+        fields = (
+            f"{k}={v}"
+            for k, v in dataclasses.asdict(result).items()
+            if not isinstance(v, dict | list)
+        )
+        return f"{type(result).__name__}(" + ", ".join(fields)[:200] + ")"
     return type(result).__name__
 
 
