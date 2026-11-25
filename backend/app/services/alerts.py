@@ -504,7 +504,8 @@ async def official_alert_detail(
         await session.execute(
             _official_select(
                 func.ST_AsGeoJSON(
-                    func.ST_SimplifyPreserveTopology(official_alerts.c.geom, 0.0005), 5
+                    func.ST_Multi(func.ST_SimplifyPreserveTopology(official_alerts.c.geom, 0.0005)),
+                    5,
                 ).label("geojson"),
                 official_alerts.c.refs,
             ).where(official_alerts.c.id == alert_id)
@@ -614,15 +615,13 @@ async def alert_history(
 
 
 async def rules_info(session: AsyncSession, thresholds: Thresholds) -> RulesInfo:
-    counts = dict(
-        (
-            await session.execute(
-                select(system_alerts.c.rule_code, func.count())
-                .where(system_alerts.c.closed_at.is_(None))
-                .group_by(system_alerts.c.rule_code)
-            )
-        ).tuples()
+    rows = await session.execute(
+        select(system_alerts.c.rule_code, func.count())
+        .where(system_alerts.c.closed_at.is_(None))
+        .group_by(system_alerts.c.rule_code)
     )
+    # Result tem keys(): dict(result) tentaria indexar pelas colunas.
+    counts = {str(code): int(total) for code, total in rows.tuples()}
     hours = f"{thresholds.risk_stale_hours:g}".replace(".", ",")
     watched = ", ".join(WATCHED_SOURCES.values())
     return RulesInfo(
