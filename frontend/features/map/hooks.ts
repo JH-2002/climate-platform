@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { fetchAlertsLayer } from "@/features/alerts/api";
 import { fetchOccurrencesLayer, fetchRiskLayer } from "@/features/risk/api";
 import { fetchForecastPointsLayer, fetchRegion, fetchStationsLayer } from "./api";
 
@@ -26,5 +27,10 @@ export function useMapLayers() {
     queryFn: ({ signal }) => fetchOccurrencesLayer(signal),
     staleTime: 60 * 60_000,
   });
-  return { region, stations, forecast, risk, occurrences };
+  const alerts = useQuery({
+    queryKey: ["map", "alerts"],
+    queryFn: ({ signal }) => fetchAlertsLayer(signal),
+    refetchInterval: 2 * 60_000,
+  });
+  return { region, stations, forecast, risk, occurrences, alerts };
 }

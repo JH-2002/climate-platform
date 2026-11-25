@@ -1,5 +1,6 @@
 import { COLUMN_MAX_M, RAIN_CLASSES, STATION_STATUS } from "@/features/map/geometry";
 import type { MapMode } from "@/features/map/state";
+import { OFFICIAL_COLORS } from "@/components/alerts/mapColors";
 import { RiskSwatch } from "@/components/risk/RiskBadge";
 import { CATEGORIES, CATEGORY_ORDER } from "@/features/risk/categories";
 
@@ -55,6 +56,19 @@ export function MapLegend({ mode }: { mode: MapMode }) {
           Setores de risco hidrológico do GeoSampa × chuva prevista. Estimativa do sistema, não
           aviso oficial; detalhes na página Risco de alagamento.
         </p>
+      </div>
+      <div>
+        <h3 className="text-xs font-medium text-ink-muted">Alertas oficiais vigentes e próximos (camada desligada por padrão)</h3>
+        <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+          <li className="flex items-center gap-2">
+            <span aria-hidden="true" className="inline-block h-3 w-5 rounded-sm border-2" style={{ borderColor: OFFICIAL_COLORS.CIVIL_DEFENSE }} />
+            Defesa Civil
+          </li>
+          <li className="flex items-center gap-2">
+            <span aria-hidden="true" className="inline-block h-3 w-5 rounded-sm border-2" style={{ borderColor: OFFICIAL_COLORS.WEATHER_WARNING }} />
+            INMET
+          </li>
+        </ul>
       </div>
       <div className="flex flex-wrap gap-x-4 gap-y-1">
         <span className="flex items-center gap-2">

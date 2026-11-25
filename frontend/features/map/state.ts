@@ -1,13 +1,14 @@
 /** Modo (2D/3D) e camadas do mapa, sincronizados com a URL (FR-059). Funções puras. */
 
 export type MapMode = "2d" | "3d";
-export type LayerId = "estacoes" | "chuva" | "risco" | "ocorrencias" | "locais" | "regiao";
+export type LayerId = "estacoes" | "chuva" | "risco" | "ocorrencias" | "alertas" | "locais" | "regiao";
 
 export const ALL_LAYERS: readonly LayerId[] = [
   "estacoes",
   "chuva",
   "risco",
   "ocorrencias",
+  "alertas",
   "locais",
   "regiao",
 ];
@@ -17,6 +18,7 @@ export const LAYER_LABELS: Record<LayerId, string> = {
   chuva: "Chuva prevista (24 h)",
   risco: "Risco estimado (setores)",
   ocorrencias: "Ocorrências registradas",
+  alertas: "Alertas oficiais (Defesa Civil e INMET)",
   locais: "Meus locais",
   regiao: "Região de interesse",
 };
@@ -26,7 +28,8 @@ export interface MapState {
   layers: LayerId[];
 }
 
-export const DEFAULT_STATE: MapState = { mode: "3d", layers: [...ALL_LAYERS] };
+// Alertas oficiais começam desligados (spec 009, FR-148).
+export const DEFAULT_STATE: MapState = { mode: "3d", layers: ALL_LAYERS.filter((l) => l !== "alertas") };
 
 interface ParamsLike {
   get(name: string): string | null;

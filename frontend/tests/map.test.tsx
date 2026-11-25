@@ -14,8 +14,18 @@ async function seriousViolations(container: HTMLElement) {
 }
 
 describe("estado do mapa na URL (FR-059, AC-052)", () => {
-  it("padrão é 3D com todas as camadas", () => {
+  it("padrão é 3D com todas as camadas, menos a de alertas oficiais", () => {
     expect(parseMapState(new URLSearchParams(""))).toEqual(DEFAULT_STATE);
+    expect(DEFAULT_STATE.layers).not.toContain("alertas");
+    expect(toggleLayer(DEFAULT_STATE, "alertas").layers).toEqual([
+      "estacoes",
+      "chuva",
+      "risco",
+      "ocorrencias",
+      "alertas",
+      "locais",
+      "regiao",
+    ]);
   });
 
   it("lê e escreve modo e camadas, ignorando valores inválidos", () => {

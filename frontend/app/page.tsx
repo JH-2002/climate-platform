@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { AlertsNowCard } from "@/components/alerts/AlertsNowCard";
 import { InsightList } from "@/components/overview/InsightList";
 import { KpiGrid } from "@/components/overview/KpiGrid";
 import { WhereSection } from "@/components/overview/WhereSection";
@@ -60,6 +61,10 @@ export default function OverviewPage() {
         </p>
       </header>
 
+      <Section id="alertas-secao" title="Alertas agora">
+        <AlertsNowCard />
+      </Section>
+
       <Section id="agora-secao" title="O que está acontecendo">
         <div className="grid gap-4 lg:grid-cols-3">
           <div className="lg:col-span-1">
@@ -104,7 +109,7 @@ export default function OverviewPage() {
       </Section>
 
       <p className="text-xs text-ink-muted">
-        Para avisos oficiais, acompanhe a Defesa Civil (199) e o CGE. Estado detalhado das fontes e
+        Para avisos oficiais, acompanhe também a Defesa Civil (199) e o CGE. Estado detalhado das fontes e
         da infraestrutura em{" "}
         <Link className="text-accent underline" href="/status">
           Estado do sistema

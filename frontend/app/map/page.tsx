@@ -27,7 +27,7 @@ function MapPage() {
   const router = useRouter();
   const pathname = usePathname();
   const state = parseMapState(params);
-  const { region, stations, forecast, risk, occurrences } = useMapLayers();
+  const { region, stations, forecast, risk, occurrences, alerts } = useMapLayers();
   const locations = useLocations();
   const [webgl, setWebgl] = useState<boolean | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -90,6 +90,7 @@ function MapPage() {
           forecast={forecast.data}
           risk={risk.data}
           occurrences={occurrences.data}
+          alerts={alerts.data}
           locations={locations.locations}
           reducedMotion={reducedMotion}
           onError={setMapError}

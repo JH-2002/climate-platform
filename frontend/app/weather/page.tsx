@@ -7,6 +7,7 @@ import { HourlyChart } from "@/components/weather/HourlyChart";
 import { LocationPicker } from "@/components/weather/LocationPicker";
 import { NearbyRisk } from "@/components/weather/NearbyRisk";
 import { NearbyStations } from "@/components/weather/NearbyStations";
+import { AlertsNowCard } from "@/components/alerts/AlertsNowCard";
 import { NowCard } from "@/components/weather/NowCard";
 import { RainOutlook } from "@/components/weather/RainOutlook";
 import { SourceNote } from "@/components/weather/SourceNote";
@@ -99,6 +100,12 @@ function WeatherDashboard() {
               observationsAvailable={observationsAvailable}
             />
           </div>
+          <section aria-labelledby="alertas-clima" className="space-y-2">
+            <h2 id="alertas-clima" className="text-lg font-semibold">
+              Alertas agora
+            </h2>
+            <AlertsNowCard />
+          </section>
           <NearbyRisk
             state={risk.isPending ? "loading" : risk.isError ? "error" : "success"}
             data={risk.data}

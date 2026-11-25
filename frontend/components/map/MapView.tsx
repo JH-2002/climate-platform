@@ -11,6 +11,9 @@ import type { GeoJSONSource, Map as MapLibreMap, MapLayerMouseEvent } from "mapl
 import { useEffect, useRef, useState } from "react";
 import type { SavedLocation } from "@/features/locations/store";
 import { COLUMN_MAX_M, STATION_STATUS, circlePolygon, columnHeight, rainClass } from "@/features/map/geometry";
+import { OFFICIAL_COLORS } from "@/components/alerts/mapColors";
+import { alertHref } from "@/features/alerts/labels";
+import type { AlertLayerProps } from "@/features/alerts/types";
 import type { LayerId, MapMode } from "@/features/map/state";
 import type { FeatureCollection, ForecastPointProps, RegionFeature, StationProps } from "@/features/map/types";
 import { CATEGORIES, OCCURRENCE_TYPE_LABELS, categoryLabel, titleCase } from "@/features/risk/categories";
@@ -37,6 +40,7 @@ const LAYER_GROUPS: Record<LayerId, string[]> = {
   chuva: ["chuva-2d", "chuva-3d"],
   risco: ["risco-2d", "risco-contorno", "risco-3d"],
   ocorrencias: ["ocorrencias-pontos"],
+  alertas: ["alertas-area", "alertas-contorno"],
   locais: ["locais-circulos"],
   regiao: ["regiao-contorno"],
 };
@@ -49,6 +53,7 @@ interface MapViewProps {
   forecast?: FeatureCollection<ForecastPointProps>;
   risk?: RiskLayer;
   occurrences?: FeatureCollection<OccurrenceProps>;
+  alerts?: FeatureCollection<AlertLayerProps>;
   locations: SavedLocation[];
   reducedMotion: boolean;
   onError: (message: string) => void;
@@ -141,7 +146,7 @@ function setData(map: MapLibreMap, id: string, data: Json) {
 }
 
 export default function MapView(props: MapViewProps) {
-  const { mode, layers, region, stations, forecast, risk, occurrences, locations, reducedMotion, onError } = props;
+  const { mode, layers, region, stations, forecast, risk, occurrences, alerts, locations, reducedMotion, onError } = props;
   const container = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const [ready, setReady] = useState(false);
@@ -196,7 +201,7 @@ export default function MapView(props: MapViewProps) {
           paint: { "hillshade-exaggeration": 0.35, "hillshade-shadow-color": "#47515a" },
         });
 
-        for (const id of ["regiao", "risco", "ocorrencias", "estacoes", "chuva-pontos", "chuva-colunas", "locais"]) {
+        for (const id of ["regiao", "alertas", "risco", "ocorrencias", "estacoes", "chuva-pontos", "chuva-colunas", "locais"]) {
           map.addSource(id, { type: "geojson", data: emptyCollection() as unknown as GeoJSONData });
         }
         map.addLayer({
@@ -204,6 +209,26 @@ export default function MapView(props: MapViewProps) {
           type: "line",
           source: "regiao",
           paint: { "line-color": "#0b5c7a", "line-width": 2, "line-dasharray": [3, 2] },
+        });
+        // Alertas oficiais (spec 009): cores próprias, diferentes da paleta do risco estimado.
+        const alertColor = [
+          "match",
+          ["get", "category"],
+          "CIVIL_DEFENSE",
+          OFFICIAL_COLORS.CIVIL_DEFENSE,
+          OFFICIAL_COLORS.WEATHER_WARNING,
+        ];
+        map.addLayer({
+          id: "alertas-area",
+          type: "fill",
+          source: "alertas",
+          paint: { "fill-color": alertColor as never, "fill-opacity": 0.12 },
+        });
+        map.addLayer({
+          id: "alertas-contorno",
+          type: "line",
+          source: "alertas",
+          paint: { "line-color": alertColor as never, "line-width": 2 },
         });
         // Risco estimado (spec 005): preenchimento em 2D, extrusão por categoria em 3D.
         map.addLayer({
@@ -382,6 +407,21 @@ export default function MapView(props: MapViewProps) {
             )
             .addTo(map!);
         };
+        const showAlert = (e: MapLayerMouseEvent) => {
+          const f = e.features?.[0];
+          if (!f) return;
+          const p = f.properties as unknown as AlertLayerProps;
+          popup
+            .setLngLat(e.lngLat)
+            .setDOMContent(
+              popupContent(`${p.category_label}`, [`Severidade: ${p.severity_label}`, String(p.headline ?? "")], {
+                href: alertHref(Number(p.id)),
+                label: "Ver alerta",
+              }),
+            )
+            .addTo(map!);
+        };
+        map.on("click", "alertas-area", showAlert);
         map.on("click", "risco-2d", showRisk);
         map.on("click", "risco-3d", showRisk);
         map.on("click", "ocorrencias-pontos", showOccurrence);
@@ -438,7 +478,8 @@ export default function MapView(props: MapViewProps) {
     setData(map, "locais", locationsCollection(locations));
     setData(map, "risco", (risk as unknown as Json) ?? emptyCollection());
     setData(map, "ocorrencias", (occurrences as unknown as Json) ?? emptyCollection());
-  }, [ready, region, stations, forecast, risk, occurrences, locations]);
+    setData(map, "alertas", (alerts as unknown as Json) ?? emptyCollection());
+  }, [ready, region, stations, forecast, risk, occurrences, alerts, locations]);
 
   // Modo 2D/3D e visibilidade das camadas.
   useEffect(() => {

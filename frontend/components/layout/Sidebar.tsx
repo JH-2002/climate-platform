@@ -2,7 +2,26 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useActiveAlerts } from "@/features/alerts/hooks";
+import { officialActiveCount } from "@/features/alerts/labels";
 import { isActivePath, visibleNavItems, type NavItem } from "@/features/navigation/registry";
+
+/** Número de alertas oficiais vigentes ao lado de "Alertas" (FR-147). */
+function AlertCount({ active }: { active: boolean }) {
+  const { data } = useActiveAlerts();
+  const count = officialActiveCount(data);
+  if (count === 0) return null;
+  return (
+    <span
+      className={`ml-2 inline-flex min-w-5 justify-center rounded-full px-1.5 text-xs font-semibold ${
+        active ? "bg-white text-accent" : "bg-status-error text-white"
+      }`}
+    >
+      {count}
+      <span className="sr-only"> {count === 1 ? "alerta oficial vigente" : "alertas oficiais vigentes"}</span>
+    </span>
+  );
+}
 
 function NavList({ items, pathname }: { items: NavItem[]; pathname: string }) {
   return (
@@ -19,6 +38,7 @@ function NavList({ items, pathname }: { items: NavItem[]; pathname: string }) {
               }`}
             >
               {item.label}
+              {item.href === "/alerts" && <AlertCount active={active} />}
             </Link>
           </li>
         );

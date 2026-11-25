@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { AlertBanner } from "@/components/alerts/AlertBanner";
+import { AlertNotifier } from "@/components/alerts/AlertNotifier";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Providers } from "./providers";
 import "./globals.css";
@@ -25,10 +27,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <aside className="border-b border-surface-border bg-surface md:w-60 md:shrink-0 md:border-b-0 md:border-r">
               <Sidebar />
             </aside>
-            <main id="conteudo" className="min-w-0 flex-1 p-4 md:p-8">
-              {children}
-            </main>
+            <div className="flex min-w-0 flex-1 flex-col">
+              <AlertBanner />
+              <main id="conteudo" className="min-w-0 flex-1 p-4 md:p-8">
+                {children}
+              </main>
+            </div>
           </div>
+          <AlertNotifier />
         </Providers>
       </body>
     </html>
