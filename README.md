@@ -35,7 +35,7 @@ docker compose ps             # todos os serviços devem ficar "healthy" (até ~
 O `frontend/package-lock.json` é versionado e gerado pelo workflow **Gerar lockfiles** (Actions), com o mesmo Node da imagem. Ao mudar dependências do frontend, rode o workflow de novo ou, localmente, `docker compose run --rm frontend npm install` (grava o lock na pasta montada).
 
 ## Vitrine pública
-Demonstração estática em **https://jh-2002.github.io/climate-platform/**, sem servidor: a cada 6 h o workflow [Vitrine pública](.github/workflows/demo.yml) sobe a plataforma no GitHub Actions, roda as coletas reais, grava o que a interface pede à API e publica no GitHub Pages (spec 012, ADR-017). Relatórios e simulações com valores livres precisam da plataforma rodando; os cenários prontos do Laboratório funcionam.
+Demonstração estática em **https://jh-2002.github.io/climate-platform/**, sem servidor: a cada 6 h o workflow [Vitrine pública](.github/workflows/demo.yml) sobe a plataforma no GitHub Actions, roda as coletas reais, grava o que a interface pede à API e publica no GitHub Pages (spec 012, ADR-017). Relatórios e simulações com valores livres precisam da plataforma rodando; os cenários prontos do Laboratório funcionam. No celular, dá para instalar na tela inicial ("Adicionar à tela inicial"), e as telas já vistas abrem sem conexão.
 
 ## Produção
 Pilha própria em `docker-compose.prod.yml`: Caddy com HTTPS automático na frente, imagens sem ferramentas de desenvolvimento, banco e Redis fechados, backup diário e limites de memória. Instalação, atualização, backup, restauração e diagnóstico em [docs/operations/RUNBOOK.md](docs/operations/RUNBOOK.md). Para testar na própria máquina (Windows): `powershell -ExecutionPolicy Bypass -File scripts\validar-producao.ps1`.

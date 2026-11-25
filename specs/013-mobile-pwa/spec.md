@@ -1,6 +1,6 @@
 # Spec 013 — Celular e app instalável
 
-> Status: **Em andamento** (2026-11-25) · Fase: 13 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md)
+> Status: **Concluída** (2026-11-25) · Fase: 13 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md)
 
 ## Contexto
 A plataforma e a vitrine pública (spec 012) funcionam no computador, mas no celular o menu

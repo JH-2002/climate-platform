@@ -15,6 +15,7 @@
 - **Fase 10 — Central de relatórios: concluída** (situação agora, risco por setor, alertas do período, chuva do período e simulação, em PDF, CSV e JSON, gerados no worker; PDF próprio sem dependência nova; arquivos por 7 dias; ADR-015).
 - **Fase 11 — Hardening: concluída** (limite de requisições, cabeçalhos de segurança e CSP, validação da configuração de produção, testes ponta a ponta com Playwright e axe no CI, pilha de produção com Caddy e HTTPS, backup diário com restauração conferida, metas de desempenho medidas e manual de operação; ADR-016).
 - **Fase 12 — Vitrine pública: concluída** — https://jh-2002.github.io/climate-platform/ (GitHub Pages, dados reais coletados e gravados pelo Actions a cada 6 h e a cada mudança no código; ADR-017).
+- **Fase 13 — Celular e app instalável: concluída** (menu recolhível, PWA com ícones próprios e service worker, uso sem conexão com aviso, tabelas roláveis acessíveis pelo teclado, E2E em tela de celular).
 - **Publicação completa:** a pilha de produção está pronta e validada na máquina local; falta escolher a hospedagem (servidor Linux com Docker e um domínio).
 
 ## Repositório
@@ -36,6 +37,8 @@
 
 ## Bloqueios externos
 - **Token do INMET**: pedido por e-mail em 2026-11-19. A resposta de 2026-11-23 não concede token: indica o portal, o BDMEP (dados históricos, pedido manual por e-mail) e, para acesso por API, um Acordo de Cooperação Técnica (ACT) entre instituições. Sem token, as observações das estações do INMET continuam indisponíveis (FR-028), e a T020 fica fora do escopo enquanto não houver ACT. Cadastro de estações, avisos meteorológicos e previsão não dependem do token.
+
+- **Cemaden (chuva medida)**: a plataforma PED tem cadastro aberto, mas o login exige captcha; a coleta automática depende de criar a conta e confirmar se existe acesso por API sem captcha.
 
 ## Pendências técnicas
 - Migrar Vitest 2 → versão principal atual (alertas restritos à ferramenta de teste).
