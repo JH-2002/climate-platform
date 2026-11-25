@@ -8,8 +8,13 @@ on:
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
+  # Cada mudança no código publicada na main atualiza a vitrine.
   push:
-    branches: ["feat/012-public-demo"]
+    branches: [main]
+    paths:
+      - "frontend/**"
+      - "backend/**"
+      - ".github/workflows/demo.yml"
 
 permissions:
   contents: read
