@@ -22,13 +22,13 @@ docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
 - O agendador dispara as coletas iniciais: subprefeituras, Defesa Civil, INMET, previsão, reanálise (começa a preencher 1991–hoje aos poucos) e o recorte do relevo (cerca de 47 MB, uma vez).
 - O Caddy obtém o certificado no primeiro acesso a `https://DOMAIN`. Se falhar, veja a seção 7.
 
-**Testar a pilha na própria máquina:** use `DOMAIN=localhost`, `CADDY_HTTP_PORT=8080` e `CADDY_HTTPS_PORT=8443` e abra `https://localhost:8443`. O Caddy usa uma CA local, então o navegador vai pedir para aceitar o certificado.
+**Testar a pilha na própria máquina (Windows):** `powershell -ExecutionPolicy Bypass -File scripts\validar-producao.ps1` cria um `.env.prod` de teste (`DOMAIN=localhost`, portas 8080/8443, senhas aleatórias), sobe a pilha, confere saúde e cabeçalhos, faz backup e restauração e grava tudo em `validacao-producao.log`. À mão: use `DOMAIN=localhost`, `CADDY_HTTP_PORT=8080` e `CADDY_HTTPS_PORT=8443` e abra `https://localhost:8443`. O Caddy usa uma CA local, então o navegador vai pedir para aceitar o certificado.
 
 ## 3. Verificar a saúde
 ```bash
 docker compose -f docker-compose.prod.yml --env-file .env.prod ps
 curl -fsS https://DOMAIN/api/v1/health    # processo da API
-curl -fsS https://DOMAIN/api/v1/ready     # banco, PostGIS, Redis e worker
+curl -fsS https://DOMAIN/api/v1/health/ready   # banco, PostGIS, Redis e worker
 ```
 - Página **Estado do sistema** (`/status`): frescor de cada fonte e a última coleta.
 - Logs em JSON, com rotação de 10 MB × 3 por contêiner. Para ver: `docker compose -f docker-compose.prod.yml logs -f --tail=100 api worker beat`.
@@ -76,8 +76,8 @@ docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
 ## 7. Problemas comuns
 | Sintoma | O que verificar |
 |---|---|
-| Certificado não sai | O DNS aponta para o servidor? As portas 80 e 443 estão abertas? `docker compose ... logs caddy` |
-| `/api/v1/ready` falha no worker | `docker compose ... logs worker`. Se o worker morreu por falta de memória, suba `mem_limit` do worker |
+| Certificado não sai | O DNS aponta para o servidor? As portas 80 e 443 estão abertas? O `ACME_EMAIL` está preenchido? `docker compose ... logs caddy` |
+| `/api/v1/health/ready` falha no worker | `docker compose ... logs worker`. Se o worker morreu por falta de memória, suba `mem_limit` do worker |
 | API não sobe e o log diz "16 caracteres" | A senha do banco no `.env.prod` é fraca ou é a de exemplo (FR-175) |
 | Visitantes recebem 429 | O limite é por IP. Ajuste `RATE_LIMIT_GENERAL` / `RATE_LIMIT_HEAVY` e reinicie a API. Se todos os acessos aparecem com o mesmo IP, o proxy não está repassando o `X-Forwarded-For` |
 | Fonte "Indisponível" em `/status` | Veja a última mensagem de erro na própria página e os logs do worker. Fontes externas param às vezes; os alertas de qualidade dos dados avisam na página Alertas |

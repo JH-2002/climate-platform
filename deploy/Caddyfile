@@ -3,7 +3,7 @@
 # do Caddy (para testar a pilha na própria máquina). Sem log de acesso: o IP dos visitantes
 # não é gravado (a API registra só um hash dele).
 {
-	email {$ACME_EMAIL:admin@localhost}
+	email {$ACME_EMAIL}
 }
 
 {$DOMAIN:localhost} {

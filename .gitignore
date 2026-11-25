@@ -40,3 +40,6 @@ data/raw/
 # Playwright (E2E)
 frontend/playwright-report/
 frontend/test-results/
+
+# Saída do script de validação da produção
+validacao-producao.log
