@@ -45,6 +45,8 @@ from app.services.simulation import BANNER, HYBRID_BANNER
 
 TILE_MIN_ZOOM = 6
 TILE_MAX_ZOOM = 14
+# Compressão rápida: o bloco é gerado sob demanda e fica em cache no navegador.
+TILE_PNG_LEVEL = 1
 TILE_CACHE_SIZE = 256
 RELIEF_MAX_PX = 900
 CATEGORY_CODES = {"LOW": 1, "MODERATE": 2, "HIGH": 3, "CRITICAL": 4, "UNKNOWN": 5}
@@ -93,7 +95,7 @@ def terrain_tile(dem: DemRaster, zoom: int, x: int, y: int) -> bytes:
     else:
         lons, lats = tile_centers(zoom, x, y)
         elevation = sample_grid(dem.z, spec, lons, lats)
-    png = encode_png(terrarium_rgb(elevation, _fill_value(dem)))
+    png = encode_png(terrarium_rgb(elevation, _fill_value(dem)), level=TILE_PNG_LEVEL)
     with _tile_lock:
         _tiles[key] = png
         while len(_tiles) > TILE_CACHE_SIZE:

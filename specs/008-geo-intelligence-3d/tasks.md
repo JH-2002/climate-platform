@@ -30,9 +30,16 @@ Validação da Parte A (2026-11-24), com os dados reais:
 
 | ID | Tarefa | Arquivos | Critério de conclusão | Testes | Status |
 |---|---|---|---|---|---|
-| T129 | Blocos de relevo "terrarium" do Copernicus e ficha do bloco da bacia | `geo/terrain.py`, `geo/png.py`, `services/geo_relief.py`, `api/v1/geo.py` | FR-128, NFR-121 | unitários + integração | [ ] |
-| T130 | Bloco 3D no MapLibre sobre o relevo do Copernicus, com exagero vertical | `components/geo/BasinBlock3D.tsx` | FR-128, NFR-122 | `geo.test.tsx` | [ ] |
-| T131 | Camadas sobre o bloco, incluindo simulação | idem | FR-129, AC-124 | idem | [ ] |
-| T132 | Controles por teclado e exportação PNG | idem | FR-130 | idem | [ ] |
-| T133 | Alternativa em 2D (relevo sombreado em PNG e tabela) | `services/geo_relief.py`, `components/geo/BasinBlock2D.tsx` | FR-131, AC-125 | integração + `geo.test.tsx` | [ ] |
-| T134 | Validação da Parte B e documentação | docs | Navegador + CI | manual | [ ] |
+| T129 | Blocos de relevo "terrarium" do Copernicus e ficha do bloco da bacia | `geo/terrain.py`, `geo/png.py`, `services/geo_relief.py`, `api/v1/geo.py` | FR-128, NFR-121 | unitários + integração | [x] |
+| T130 | Bloco 3D no MapLibre sobre o relevo do Copernicus, com exagero vertical | `components/geo/BasinBlock3D.tsx` | FR-128, NFR-122 | `geo.test.tsx` | [x] |
+| T131 | Camadas sobre o bloco, incluindo simulação | idem | FR-129, AC-124 | idem | [x] |
+| T132 | Controles por teclado e exportação PNG | idem | FR-130 | idem | [x] |
+| T133 | Alternativa em 2D (relevo sombreado em PNG e tabela) | `services/geo_relief.py`, `components/geo/BasinBlock2D.tsx` | FR-131, AC-125 | integração + `geo.test.tsx` | [x] |
+| T134 | Validação da Parte B e documentação | docs | Navegador + CI | manual | [x] |
+
+### Validação da Parte B (2026-11-24, navegador + dados reais)
+- Bacia do Aricanduva (257): bloco 3D com relevo do Copernicus, sombreado, máscara fora da bacia, drenagem, piscinões da bacia e 74 setores; exagero de 1× a 5× e reinício da vista.
+- Seletor real/simulação atualiza a URL e as cores (simulação HYBRID: 5 setores em alto, com a faixa de cenário hipotético).
+- Exportação PNG com título, legenda e fontes (`bacia-257-simulacao.png`, cerca de 0,8 MB).
+- Versão 2D: relevo sombreado de 667 × 469 px com texto alternativo e tabela dos 74 setores.
+- Ajustes da validação: blocos de relevo até o zoom 12 (a grade de 30 m não ganha detalhe acima disso), geração dos blocos em thread e compressão rápida, enquadramento inclinado mais próximo e só os piscinões da caixa da bacia.

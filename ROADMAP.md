@@ -12,7 +12,7 @@ Cada fase tem spec, plan, tasks e critérios de conclusão próprios. Uma fase s
 | 5 ✅ | Flood Risk Engine | 005 | Modelo heurístico v0 experimental, explicável (setores do GeoSampa × chuva prevista) | — (ANA e CGE viram melhorias) |
 | 6 ✅ | Analytics | 006 | KPIs e painel executivo, chuva, tendências (IAG/USP 1933–2025), risco, fontes, Studio, Data Explorer, insights por regra | — |
 | 7 ✅ | Simulation Lab | 007 | Motor com seed, modos SIMULATION/HYBRID | — |
-| 8 | Geo Intelligence 3D | 008 | Terreno Copernicus DEM, camadas 3D, fallback 2D | — |
+| 8 ✅ | Geo Intelligence 3D | 008 | Terreno Copernicus DEM, camadas 3D, fallback 2D | — |
 | 9 | Alerts | 009 | Regras, alertas oficiais × internos, notificações | Fonte de alertas oficiais |
 | 10 | Report Center | 010 | PDF/CSV/JSON assíncronos | — |
 | 11 | Hardening | 011 | Segurança, performance, a11y, E2E, deploy | Hospedagem |

@@ -1,6 +1,6 @@
 # Spec 008 — Geointeligência 3D
 
-> Status: **Aprovada** (2026-11-20) · Fase: 8 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md) · ADR: [ADR-013](../../docs/architecture/adr/ADR-013-terrain-and-hydrography.md)
+> Status: **Concluída** (2026-11-24; aprovada em 2026-11-20) · Fase: 8 · Plano: [plan.md](plan.md) · Tarefas: [tasks.md](tasks.md) · ADR: [ADR-013](../../docs/architecture/adr/ADR-013-terrain-and-hydrography.md)
 
 ## Contexto
 O mapa da Fase 4 já mostra relevo em 3D, mas o relevo é **só visual** (Terrain Tiles, ADR-009). O motor de risco da Fase 5 não sabe em que **bacia** um setor está, nem se ele fica num **fundo de vale** ou numa encosta. O roadmap pede para esta fase: terreno do Copernicus DEM, camadas 3D e alternativa em 2D.

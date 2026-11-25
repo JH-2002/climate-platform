@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import uuid
 from typing import Annotated
 
@@ -121,7 +122,8 @@ async def read_terrain_tile(
 ) -> Response:
     try:
         dem = await require_terrain(session, settings)
-        png = terrain_tile(dem, zoom, x, y)
+        # Cálculo em thread: numpy e zlib liberam o GIL, e a API segue respondendo.
+        png = await asyncio.to_thread(terrain_tile, dem, zoom, x, y)
     except TerrainUnavailableError as exc:
         raise _unavailable(exc) from None
     except TileError as exc:

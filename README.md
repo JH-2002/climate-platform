@@ -2,7 +2,7 @@
 
 Plataforma web de monitoramento meteorológico, análise geoespacial, estimativa de condições favoráveis a alagamentos, simulação de cenários e relatórios — construída com dados reais, rastreáveis e com limitações declaradas.
 
-> **Estado:** Fases 0–7 concluídas. Coleta automática de estações do INMET, previsão da Open-Meteo e camadas de risco do GeoSampa; painel do clima em http://localhost:3000/weather, mapa 2D/3D em http://localhost:3000/map e risco de alagamento estimado (experimental, não é alerta oficial) em http://localhost:3000/risk; análises e painel executivo em http://localhost:3000/analytics e na Visão geral; laboratório de simulação em http://localhost:3000/simulation; geointeligência (Fase 8, Parte A) em http://localhost:3000/geo-3d. Observações medidas do INMET aguardam token. Veja [CURRENT_STATUS.md](CURRENT_STATUS.md).
+> **Estado:** Fases 0–8 concluídas. Coleta automática de estações do INMET, previsão da Open-Meteo e camadas de risco do GeoSampa; painel do clima em http://localhost:3000/weather, mapa 2D/3D em http://localhost:3000/map e risco de alagamento estimado (experimental, não é alerta oficial) em http://localhost:3000/risk; análises e painel executivo em http://localhost:3000/analytics e na Visão geral; laboratório de simulação em http://localhost:3000/simulation; geointeligência (bacias, perfil do relevo e bloco 3D da bacia) em http://localhost:3000/geo-3d. Observações medidas do INMET aguardam token. Veja [CURRENT_STATUS.md](CURRENT_STATUS.md).
 
 ## Região piloto
 Município de São Paulo, com expansão para a RMSP ([ADR-002](docs/architecture/adr/ADR-002-pilot-region-sao-paulo.md)).

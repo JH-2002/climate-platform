@@ -21,7 +21,10 @@ import { formatNumber } from "@/lib/format";
 const STYLE_URL = process.env.NEXT_PUBLIC_MAP_STYLE_URL ?? "https://tiles.openfreemap.org/styles/liberty";
 const WORKER_URL = process.env.NEXT_PUBLIC_MAPLIBRE_WORKER_URL ?? "/vendor/maplibre-gl-worker.mjs";
 const PITCH = 62;
+// Grade de 30 m ≈ zoom 12: acima disso o MapLibre reaproveita os blocos (sem pedir mais).
+const TERRAIN_MAX_ZOOM = 12;
 const BEARING = -20;
+const TILT_ZOOM_IN = 0.5;
 
 interface Props {
   block: BasinBlock;
@@ -66,6 +69,20 @@ function sectorPoints(block: BasinBlock): unknown {
       properties: { category: s.category, code: s.code },
       geometry: { type: "Point", coordinates: [s.longitude, s.latitude] },
     })),
+  };
+}
+
+/** Só os piscinões na caixa da bacia (a camada da cidade tem 72). */
+function insideBounds(
+  collection: FeatureCollection<Record<string, unknown>>,
+  b: BasinBlock["bounds"],
+): FeatureCollection<Record<string, unknown>> {
+  return {
+    ...collection,
+    features: collection.features.filter(({ geometry }) => {
+      const [lon, lat] = geometry.coordinates;
+      return lon >= b.west && lon <= b.east && lat >= b.south && lat <= b.north;
+    }),
   };
 }
 
@@ -119,13 +136,16 @@ export default function BasinBlock3D({ block, basin, reservoirs, title, onError 
   function resetView(map: MapLibreMap | null = mapRef.current, duration = 600) {
     if (!map) return;
     const b = block.bounds;
-    map.fitBounds(
+    // Enquadra de cima e aproxima um pouco: inclinada, a vista já mostra mais terreno ao fundo.
+    const camera = map.cameraForBounds(
       [
         [b.west, b.south],
         [b.east, b.north],
       ],
-      { padding: 40, pitch: PITCH, bearing: BEARING, duration },
+      { padding: 24, bearing: BEARING },
     );
+    if (!camera?.center || camera.zoom === undefined) return;
+    map.easeTo({ center: camera.center, zoom: camera.zoom + TILT_ZOOM_IN, pitch: PITCH, bearing: BEARING, duration });
   }
 
   useEffect(() => {
@@ -159,14 +179,21 @@ export default function BasinBlock3D({ block, basin, reservoirs, title, onError 
       map.on("load", async () => {
         if (!map) return;
         const tiles = terrainTilesUrl(window.location.origin);
-        map.addSource("relevo", { type: "raster-dem", tiles: [tiles], encoding: "terrarium", tileSize: 256, minzoom: 6, maxzoom: 14 });
+        map.addSource("relevo", {
+          type: "raster-dem",
+          tiles: [tiles],
+          encoding: "terrarium",
+          tileSize: 256,
+          minzoom: 6,
+          maxzoom: TERRAIN_MAX_ZOOM,
+        });
         map.addSource("relevo-sombra", {
           type: "raster-dem",
           tiles: [tiles],
           encoding: "terrarium",
           tileSize: 256,
           minzoom: 6,
-          maxzoom: 14,
+          maxzoom: TERRAIN_MAX_ZOOM,
         });
         map.addLayer({
           id: "sombreado",
@@ -232,7 +259,7 @@ export default function BasinBlock3D({ block, basin, reservoirs, title, onError 
     if (!ready || !map) return;
     setData(map, "fora", outsideMask(basin));
     setData(map, "setores", sectorPoints(block));
-    if (reservoirs) setData(map, "piscinoes", reservoirs);
+    if (reservoirs) setData(map, "piscinoes", insideBounds(reservoirs, block.bounds));
   }, [ready, basin, block, reservoirs]);
 
   useEffect(() => {
