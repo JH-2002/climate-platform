@@ -110,7 +110,9 @@ jobs:
         env:
           DEMO_OUT: ${{ runner.temp }}/demo-data
           DEMO_API_URL: http://127.0.0.1:8000
-        run: npx playwright test -c demo/playwright.config.ts
+        run: |
+          rm -rf "$DEMO_OUT"
+          npx playwright test -c demo/playwright.config.ts
 
       - name: Build estático (modo demonstração)
         working-directory: frontend

@@ -52,6 +52,18 @@ async function fetchAndSave(page: Page, apiPath: string): Promise<unknown> {
   return (response.headers()["content-type"] ?? "").includes("json") ? (JSON.parse(body.toString("utf8")) as unknown) : null;
 }
 
+/** Várias rotas de detalhe de uma vez (o roteiro em série estourava o tempo com 793 setores). */
+async function fetchAll(page: Page, paths: string[], parallel = 8) {
+  let next = 0;
+  const worker = async () => {
+    while (next < paths.length) {
+      const apiPath = paths[next++]!;
+      await fetchAndSave(page, apiPath).catch(() => undefined);
+    }
+  };
+  await Promise.all(Array.from({ length: parallel }, worker));
+}
+
 async function settle(page: Page, extra = 1500) {
   await page.waitForLoadState("networkidle", { timeout: 30_000 }).catch(() => undefined);
   await page.waitForTimeout(extra);
@@ -63,8 +75,9 @@ async function visit(page: Page, url: string, extra?: number) {
   await settle(page, extra);
 }
 
+// A pasta de saída é limpa pelo workflow, uma vez: se o Playwright reiniciar depois de uma
+// falha, o que já foi gravado continua lá.
 test.beforeAll(() => {
-  fs.rmSync(OUT, { recursive: true, force: true });
   fs.mkdirSync(OUT, { recursive: true });
 });
 
@@ -101,12 +114,11 @@ test("risco: categorias, subprefeituras e detalhes de todos os setores", async (
   await settle(page);
   // Detalhe e terreno de cada setor: a explicação ("Por quê?") pede os dois.
   const layer = (await fetchAndSave(page, "/api/v1/map/layers/risk")) as { features?: { properties?: { id?: number } }[] };
-  for (const feature of layer?.features ?? []) {
-    const id = feature.properties?.id;
-    if (id === undefined) continue;
-    await fetchAndSave(page, `/api/v1/risk/areas/${id}`);
-    await fetchAndSave(page, `/api/v1/geo/sectors/${id}/terrain`);
-  }
+  const ids = (layer?.features ?? []).flatMap((f) => (f.properties?.id === undefined ? [] : [f.properties.id]));
+  await fetchAll(
+    page,
+    ids.flatMap((id) => [`/api/v1/risk/areas/${id}`, `/api/v1/geo/sectors/${id}/terrain`]),
+  );
   // Uma explicação aberta pela interface, para gravar o que mais ela pedir.
   await page.getByRole("button", { name: /^Por quê\? Explicação do setor/ }).first().click();
   await settle(page);
@@ -115,8 +127,8 @@ test("risco: categorias, subprefeituras e detalhes de todos os setores", async (
 test("alertas: detalhes dos alertas oficiais", async ({ page }) => {
   await visit(page, "/alerts");
   const active = (await fetchAndSave(page, "/api/v1/alerts/active")) as { official?: { id: number }[] };
-  for (const alert of active?.official ?? []) {
-    await fetchAndSave(page, `/api/v1/alerts/official/${alert.id}`);
+  await fetchAll(page, (active?.official ?? []).map((a) => `/api/v1/alerts/official/${a.id}`));
+  for (const alert of (active?.official ?? []).slice(0, 5)) {
     await visit(page, `/alerts?alerta=${alert.id}`, 500);
   }
 });
@@ -134,7 +146,7 @@ test("geointeligência: bacias, ficha e bloco 3D", async ({ page }) => {
   }
   const list = (await fetchAndSave(page, "/api/v1/geo/basins?ordem=alto")) as { items?: { id: number }[] };
   const basins = list?.items ?? [];
-  for (const basin of basins) await fetchAndSave(page, `/api/v1/geo/basins/${basin.id}`);
+  await fetchAll(page, basins.map((b) => `/api/v1/geo/basins/${b.id}`));
   // Bloco 3D (com os blocos do relevo) para as bacias mais críticas.
   for (const basin of basins.slice(0, 5)) {
     await visit(page, `/geo-3d?aba=bloco&bacia=${basin.id}`, 6000);
