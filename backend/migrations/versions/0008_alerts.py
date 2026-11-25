@@ -14,8 +14,6 @@ down_revision: str | None = "0007"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
-_SOURCES = "('idap-alerts', 'inmet-warnings', 'geosampa-subprefectures')"
-
 
 def _run_each(sql: str) -> None:
     """O asyncpg não aceita vários comandos numa execução; envia um por vez."""
@@ -132,15 +130,16 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     _run_each(
-        f"""
+        """
         DROP TABLE IF EXISTS system_alerts;
         DROP TABLE IF EXISTS ignored_alert_items;
         DROP TABLE IF EXISTS official_alerts;
         DROP TABLE IF EXISTS subprefectures;
-        DELETE FROM raw_payloads WHERE source_id IN
-            (SELECT id FROM data_sources WHERE code IN {_SOURCES});
-        DELETE FROM ingestion_runs WHERE source_id IN
-            (SELECT id FROM data_sources WHERE code IN {_SOURCES});
-        DELETE FROM data_sources WHERE code IN {_SOURCES}
+        DELETE FROM raw_payloads WHERE source_id IN (SELECT id FROM data_sources WHERE code IN
+            ('idap-alerts', 'inmet-warnings', 'geosampa-subprefectures'));
+        DELETE FROM ingestion_runs WHERE source_id IN (SELECT id FROM data_sources WHERE code IN
+            ('idap-alerts', 'inmet-warnings', 'geosampa-subprefectures'));
+        DELETE FROM data_sources WHERE code IN
+            ('idap-alerts', 'inmet-warnings', 'geosampa-subprefectures')
         """
     )
