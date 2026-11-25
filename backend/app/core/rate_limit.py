@@ -157,14 +157,14 @@ class RateLimitMiddleware:
     @staticmethod
     async def _reject(send: Send, scope: Scope, rule: Rule, retry_after: int) -> None:
         kind = (
-            "pedidos pesados (simulação, relatório, perfil, séries)"
+            "Muitos pedidos pesados (simulação, relatório, perfil, séries)"
             if rule.group == "pesada"
-            else "requisições"
+            else "Muitas requisições"
         )
         body = json.dumps(
             build_problem(
                 status=429,
-                detail=f"Muitas {kind} em pouco tempo: o limite é {rule.limit} por minuto. "
+                detail=f"{kind} em pouco tempo: o limite é {rule.limit} por minuto. "
                 f"Tente de novo em {retry_after} s.",
                 instance=scope.get("path"),
                 correlation_id=correlation_id_var.get(),
