@@ -69,4 +69,5 @@ def test_request_params_ask_for_ms_and_local_timezone() -> None:
     assert params["wind_speed_unit"] == "ms"
     assert params["timezone"] == "America/Sao_Paulo"
     assert params["forecast_days"] == "7"
+    assert params["past_days"] == "3"  # chuva antecedente do motor de risco (spec 005, FR-061)
     assert point_key(-23.514938, -46.610504) == "-23.5149,-46.6105"

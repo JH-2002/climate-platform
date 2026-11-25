@@ -14,13 +14,36 @@ HEARTBEAT_KEY = "climate:beat:last_heartbeat"
 HEARTBEAT_INTERVAL_S = 30
 STATIONS_SYNC_INTERVAL_S = 24 * 3600
 FORECAST_INTERVAL_S = 3600
+GEOSAMPA_SYNC_INTERVAL_S = 24 * 3600
+ARCHIVE_UPDATE_INTERVAL_S = 24 * 3600
+# Carga inicial da reanálise: um ponto a cada 2 min (limite gratuito da fonte, NFR-082).
+ARCHIVE_BACKFILL_INTERVAL_S = 120
+REFERENCE_IMPORT_INTERVAL_S = 7 * 24 * 3600
+SIMULATION_PURGE_INTERVAL_S = 24 * 3600
+GEO_REFRESH_INTERVAL_S = 24 * 3600
+# Alertas (spec 009): o feed da IDAP guarda só ~12 h; coleta curta para não perder nada.
+IDAP_INTERVAL_S = 600
+INMET_WARNINGS_INTERVAL_S = 1800
+ALERT_EVALUATION_INTERVAL_S = 600
+SUBPREFECTURES_INTERVAL_S = 24 * 3600
+# Relatórios (spec 010): arquivos vencidos e pedidos presos.
+REPORT_HOUSEKEEPING_INTERVAL_S = 600
 
 _settings = get_settings()
 
 celery_app = Celery(
     "climate",
     broker=_settings.redis_url,
-    include=["app.workers.tasks.system", "app.workers.tasks.ingestion"],
+    include=[
+        "app.workers.tasks.system",
+        "app.workers.tasks.ingestion",
+        "app.workers.tasks.risk",
+        "app.workers.tasks.analytics",
+        "app.workers.tasks.simulation",
+        "app.workers.tasks.geo",
+        "app.workers.tasks.alerts",
+        "app.workers.tasks.reports",
+    ],
 )
 
 celery_app.conf.update(
@@ -48,6 +71,50 @@ celery_app.conf.update(
             "task": "ingestion.open_meteo_forecast",
             "schedule": float(FORECAST_INTERVAL_S),
         },
+        "geosampa-sync": {
+            "task": "ingestion.sync_geosampa",
+            "schedule": float(GEOSAMPA_SYNC_INTERVAL_S),
+        },
+        "open-meteo-archive": {
+            "task": "ingestion.open_meteo_archive",
+            "schedule": float(ARCHIVE_UPDATE_INTERVAL_S),
+        },
+        "open-meteo-archive-backfill": {
+            "task": "ingestion.open_meteo_archive_backfill",
+            "schedule": float(ARCHIVE_BACKFILL_INTERVAL_S),
+        },
+        "reference-import": {
+            "task": "ingestion.import_reference",
+            "schedule": float(REFERENCE_IMPORT_INTERVAL_S),
+        },
+        "geo-refresh": {
+            "task": "geo.refresh",
+            "schedule": float(GEO_REFRESH_INTERVAL_S),
+        },
+        "alerts-idap": {
+            "task": "alerts.fetch_idap",
+            "schedule": float(IDAP_INTERVAL_S),
+        },
+        "alerts-inmet": {
+            "task": "alerts.fetch_inmet",
+            "schedule": float(INMET_WARNINGS_INTERVAL_S),
+        },
+        "alerts-evaluate": {
+            "task": "alerts.evaluate",
+            "schedule": float(ALERT_EVALUATION_INTERVAL_S),
+        },
+        "alerts-subprefectures": {
+            "task": "alerts.sync_subprefectures",
+            "schedule": float(SUBPREFECTURES_INTERVAL_S),
+        },
+        "reports-housekeeping": {
+            "task": "reports.housekeeping",
+            "schedule": float(REPORT_HOUSEKEEPING_INTERVAL_S),
+        },
+        "simulation-purge": {
+            "task": "simulation.purge_old_runs",
+            "schedule": float(SIMULATION_PURGE_INTERVAL_S),
+        },
     },
 )
 
@@ -58,7 +125,22 @@ def _configure_celery_logging(**_kwargs: Any) -> None:
     configure_logging(_settings.log_level, service="worker")
 
 
-STARTUP_TASKS = ("ingestion.sync_inmet_stations", "ingestion.open_meteo_forecast")
+STARTUP_TASKS = (
+    "ingestion.sync_inmet_stations",
+    "ingestion.open_meteo_forecast",
+    "ingestion.sync_geosampa",
+    "ingestion.import_reference",
+    "ingestion.open_meteo_archive_backfill",
+    # A atualização diária também roda ao iniciar: reinícios frequentes do agendador
+    # adiariam o ciclo de 24 h indefinidamente.
+    "ingestion.open_meteo_archive",
+    # Hidrografia, DEM e terreno: cada etapa se pula quando já está em dia (spec 008).
+    "geo.refresh",
+    # Alertas (spec 009): subprefeituras antes, para a interseção usar o limite real.
+    "alerts.sync_subprefectures",
+    "alerts.fetch_idap",
+    "alerts.fetch_inmet",
+)
 
 
 @beat_init.connect

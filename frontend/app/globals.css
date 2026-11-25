@@ -18,3 +18,9 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Caixas com rolagem horizontal contêm os textos só para leitores de tela (`sr-only`, que são
+   absolutos): sem isso, eles escapam da caixa e alargam a página inteira. */
+.overflow-x-auto {
+  position: relative;
+}

@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Callable
+from datetime import UTC, datetime
 from typing import Annotated
 
 from fastapi import Depends, Request
@@ -20,3 +21,11 @@ async def get_session(request: Request) -> AsyncIterator[AsyncSession]:
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 SettingsDep = Annotated[Settings, Depends(get_settings)]
+
+
+def get_clock() -> Callable[[], datetime]:
+    """Relógio injetável: os testes substituem por um horário fixo."""
+    return lambda: datetime.now(UTC)
+
+
+ClockDep = Annotated[Callable[[], datetime], Depends(get_clock)]

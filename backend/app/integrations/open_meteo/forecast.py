@@ -56,7 +56,13 @@ class ForecastParseResult:
     missing_values: int
 
 
-def build_params(lat: float, lon: float, days: int = 7) -> dict[str, str]:
+# Horas anteriores à coleta (spec 005, FR-061): chuva estimada nas 72 h anteriores.
+PAST_DAYS = 3
+
+
+def build_params(
+    lat: float, lon: float, days: int = 7, past_days: int = PAST_DAYS
+) -> dict[str, str]:
     return {
         "latitude": f"{lat:.4f}",
         "longitude": f"{lon:.4f}",
@@ -64,6 +70,7 @@ def build_params(lat: float, lon: float, days: int = 7) -> dict[str, str]:
         "daily": ",".join(DAILY_VARIABLES),
         "wind_speed_unit": "ms",
         "forecast_days": str(days),
+        "past_days": str(past_days),
         "timezone": TIMEZONE,
     }
 

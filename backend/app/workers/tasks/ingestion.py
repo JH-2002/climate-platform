@@ -30,4 +30,7 @@ def sync_inmet_stations() -> dict[str, Any]:
 
 @celery_app.task(name="ingestion.open_meteo_forecast")
 def open_meteo_forecast() -> dict[str, Any]:
-    return _summary(asyncio.run(run_forecast(get_settings())))
+    outcome = asyncio.run(run_forecast(get_settings()))
+    # O risco estimado usa a previsão: recalcula logo após cada coleta (FR-064).
+    celery_app.send_task("risk.compute_flood_risk")
+    return _summary(outcome)

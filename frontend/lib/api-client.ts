@@ -53,12 +53,30 @@ export interface GetOptions {
 }
 
 export async function apiGet<T>(path: string, options: GetOptions = {}): Promise<ApiResponse<T>> {
+  return request<T>("GET", path, undefined, options);
+}
+
+/** POST com corpo JSON; erros chegam como `ApiError` com o `detail` da API. */
+export async function apiPost<T>(path: string, body: unknown, options: GetOptions = {}): Promise<ApiResponse<T>> {
+  return request<T>("POST", path, body, options);
+}
+
+async function request<T>(
+  method: "GET" | "POST",
+  path: string,
+  payload: unknown,
+  options: GetOptions,
+): Promise<ApiResponse<T>> {
   const { signal, acceptStatuses = [], fetchImpl = fetch } = options;
   let response: Response;
   try {
     response = await fetchImpl(`${apiBaseUrl()}${path}`, {
-      method: "GET",
-      headers: { Accept: "application/json" },
+      method,
+      headers:
+        method === "POST"
+          ? { Accept: "application/json", "Content-Type": "application/json" }
+          : { Accept: "application/json" },
+      body: method === "POST" ? JSON.stringify(payload) : undefined,
       signal,
     });
   } catch (error) {

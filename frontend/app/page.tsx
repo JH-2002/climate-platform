@@ -1,54 +1,121 @@
-import Link from "next/link";
-import { StatusBadge } from "@/components/ui/StatusBadge";
+"use client";
 
-/**
- * Visão geral — Fase 1. Ainda não há dados meteorológicos integrados, então a página
- * diz isso explicitamente em vez de mostrar números de exemplo (Constituição §7).
- */
-export default function OverviewPage() {
+import Link from "next/link";
+import type { ReactNode } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { AlertsNowCard } from "@/components/alerts/AlertsNowCard";
+import { InsightList } from "@/components/overview/InsightList";
+import { KpiGrid } from "@/components/overview/KpiGrid";
+import { WhereSection } from "@/components/overview/WhereSection";
+import { NowCard } from "@/components/weather/NowCard";
+import { useInsights, useKpis } from "@/features/analytics/hooks";
+import { fetchOccurrencesLayer, fetchRiskAreas } from "@/features/risk/api";
+import { useForecast } from "@/features/weather/hooks";
+
+// Praça da Sé: referência para "agora" na visão geral; o painel do clima permite escolher o local.
+const CENTER = { lat: -23.5505, lon: -46.6333 };
+
+function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
-    <div className="mx-auto max-w-4xl space-y-6">
+    <section aria-labelledby={id} className="space-y-3">
+      <h2 id={id} className="text-lg font-semibold">
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
+}
+
+function Loading({ label }: { label: string }) {
+  return (
+    <div role="status" className="h-24 animate-pulse rounded-lg bg-surface-muted motion-reduce:animate-none">
+      <span className="sr-only">{label}</span>
+    </div>
+  );
+}
+
+/** Painel executivo (spec 006, FR-086): agora, atenção, onde e confiabilidade. */
+export default function OverviewPage() {
+  const kpis = useKpis();
+  const insights = useInsights();
+  const forecast = useForecast(CENTER.lat, CENTER.lon);
+  const topRisk = useQuery({
+    queryKey: ["overview", "top-risk"],
+    queryFn: ({ signal }) => fetchRiskAreas({ category: null, subprefecture: null, sectorId: null }, signal),
+    select: (page) => page.items.slice(0, 5),
+    refetchInterval: 10 * 60_000,
+  });
+  const occurrences = useQuery({
+    queryKey: ["map", "occurrences"],
+    queryFn: ({ signal }) => fetchOccurrencesLayer(signal),
+    staleTime: 60 * 60_000,
+  });
+
+  return (
+    <div className="mx-auto max-w-6xl space-y-8">
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold">Visão geral</h1>
-        <p className="text-sm text-ink-muted">Região piloto: Município de São Paulo.</p>
+        <p className="text-sm text-ink-muted">
+          Município de São Paulo. Cada número mostra a fonte e o tipo: medido, modelo, previsão
+          ou calculado pelo sistema.
+        </p>
       </header>
 
-      <section
-        aria-labelledby="dados-titulo"
-        className="space-y-3 rounded-lg border border-surface-border bg-surface p-5"
-      >
-        <h2 id="dados-titulo" className="text-lg font-semibold">
-          Dados meteorológicos
-        </h2>
-        <StatusBadge tone="warn" label="Coleta ativa; painel na Fase 3" />
-        <p className="text-sm text-ink-muted">
-          O cadastro de estações do INMET e a previsão da Open-Meteo já são coletados
-          automaticamente. As observações horárias do INMET aguardam o token de acesso. O painel
-          com os valores chega na Fase 3; até lá, acompanhe a coleta em{" "}
-          <Link href="/status" className="font-medium text-accent underline">
-            Estado do sistema
-          </Link>
-          .
-        </p>
-      </section>
+      <Section id="alertas-secao" title="Alertas agora">
+        <AlertsNowCard />
+      </Section>
 
-      <section
-        aria-labelledby="sistema-titulo"
-        className="space-y-3 rounded-lg border border-surface-border bg-surface p-5"
-      >
-        <h2 id="sistema-titulo" className="text-lg font-semibold">
-          Infraestrutura
-        </h2>
-        <p className="text-sm text-ink-muted">
-          Veja se API, banco geoespacial, fila e workers estão respondendo.
-        </p>
-        <Link
-          href="/status"
-          className="inline-block rounded-md bg-accent px-3 py-2 text-sm font-medium text-white hover:bg-accent-strong focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-        >
-          Abrir estado do sistema
+      <Section id="agora-secao" title="O que está acontecendo">
+        <div className="grid gap-4 lg:grid-cols-3">
+          <div className="lg:col-span-1">
+            {forecast.data ? <NowCard now={forecast.data.now} /> : <Loading label="Carregando a estimativa para agora…" />}
+            <p className="mt-1 text-xs text-ink-muted">
+              Centro (Sé).{" "}
+              <Link className="text-accent underline" href="/weather">
+                Escolher outro local
+              </Link>
+            </p>
+          </div>
+          <div className="lg:col-span-2">
+            {kpis.isPending && <Loading label="Carregando os indicadores…" />}
+            {kpis.isError && (
+              <p role="alert" className="rounded-lg border border-surface-border bg-surface p-3 text-sm">
+                Não foi possível carregar os indicadores. {kpis.error.message}
+              </p>
+            )}
+            {kpis.data && <KpiGrid items={kpis.data.items} />}
+          </div>
+        </div>
+      </Section>
+
+      <Section id="atencao-secao" title="O que merece atenção">
+        {insights.isPending && <Loading label="Avaliando as regras…" />}
+        {insights.isError && (
+          <p role="alert" className="rounded-lg border border-surface-border bg-surface p-3 text-sm">
+            Não foi possível avaliar as regras. {insights.error.message}
+          </p>
+        )}
+        {insights.data && (
+          <InsightList
+            items={insights.data.items}
+            notes={insights.data.notes}
+            rulesVersion={insights.data.rules_version}
+          />
+        )}
+      </Section>
+
+      <Section id="onde-secao" title="Onde">
+        <WhereSection areas={topRisk.data} occurrences={occurrences.data} />
+      </Section>
+
+      <p className="text-xs text-ink-muted">
+        Para avisos oficiais, acompanhe também a Defesa Civil (199) e o CGE. Estado detalhado das fontes e
+        da infraestrutura em{" "}
+        <Link className="text-accent underline" href="/status">
+          Estado do sistema
         </Link>
-      </section>
+        .
+      </p>
     </div>
   );
 }

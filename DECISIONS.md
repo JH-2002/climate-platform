@@ -10,6 +10,11 @@
 | [ADR-004](docs/architecture/adr/ADR-004-open-meteo-forecast.md) | Open-Meteo para previsão, rotulada como FORECAST/MODELED | Aceita | 2026-11-19 |
 | [ADR-005](docs/architecture/adr/ADR-005-long-format-observations.md) | Observações em formato longo (variable/value) | Aceita | 2026-11-19 |
 | [ADR-006](docs/architecture/adr/ADR-006-postgis-srid.md) | PostGIS, SRID 4326 para armazenamento, 31983 para métricas | Aceita | 2026-11-19 |
+| [ADR-007](docs/architecture/adr/ADR-007-current-conditions-from-forecast.md) | "Agora" a partir da previsão horária, rotulado como estimativa | Aceita | 2026-11-19 |
+| [ADR-008](docs/architecture/adr/ADR-008-locations-in-browser.md) | Locais salvos no navegador até existir autenticação | Aceita | 2026-11-19 |
+| [ADR-009](docs/architecture/adr/ADR-009-maplibre-2d-3d.md) | MapLibre GL para o mapa 2D/3D (no lugar de Leaflet) | Aceita | 2026-11-19 |
+| [ADR-010](docs/architecture/adr/ADR-010-geosampa-risk-matrix.md) | GeoSampa como base de suscetibilidade e motor de risco em matriz | Aceita | 2026-11-19 |
+| [ADR-011](docs/architecture/adr/ADR-011-reference-series-and-rule-insights.md) | Séries de referência (IAG/USP e reanálise) e insights por regra | Aceita | 2026-11-19 |
 
 ## Decisões menores (sem ADR)
 
