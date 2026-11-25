@@ -219,7 +219,8 @@ async def apply_references(ctx: IngestionContext) -> int:
             ended_reason=case((newer.c.msg_type == "Cancel", "CANCELLED"), else_="SUPERSEDED"),
         )
     )
-    return int((await ctx.session.execute(stmt)).rowcount or 0)
+    result = await ctx.session.execute(stmt)
+    return int(getattr(result, "rowcount", 0) or 0)
 
 
 def make_idap_job(fetch_bytes: BytesFetcher, url: str, region: BoundingBox, ibge_code: str) -> Job:
