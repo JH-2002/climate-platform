@@ -6,7 +6,8 @@ do sistema da vitrine mostra o resultado real de cada uma.
 
     python scripts/demo_collect.py --backfill-minutes 8
 
-Sai com código 1 só se os setores de risco não vierem: sem eles a vitrine não tem o que mostrar.
+Sai com código 1 só se não houver setores de risco no banco (desta coleta ou de uma anterior,
+recuperada do cache): sem eles a vitrine não tem o que mostrar.
 """
 
 from __future__ import annotations
@@ -19,8 +20,13 @@ import time
 from collections.abc import Awaitable, Callable
 from typing import Any
 
+from sqlalchemy import func, select
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.pool import NullPool
+
 from app.core.config import get_settings
 from app.ingestion import runner
+from app.models.tables import hydro_risk_sectors
 
 
 def describe(result: Any) -> str:
@@ -60,7 +66,7 @@ async def collect(backfill_minutes: float) -> dict[str, str]:
     settings = get_settings()
     summary: dict[str, str] = {}
     await step("subprefeituras", lambda: runner.run_subprefecture_sync(settings), summary)
-    sectors = await step("geosampa", lambda: runner.run_geosampa_sync(settings), summary)
+    await step("geosampa", lambda: runner.run_geosampa_sync(settings), summary)
     await step("estações INMET", lambda: runner.run_station_sync(settings), summary)
     await step("previsão", lambda: runner.run_forecast(settings), summary)
     await step("tabela IAG/USP", lambda: runner.run_iag_import(settings), summary)
@@ -85,16 +91,20 @@ async def collect(backfill_minutes: float) -> dict[str, str]:
     await step("Defesa Civil", lambda: runner.run_idap(settings), summary)
     await step("avisos INMET", lambda: runner.run_inmet_warnings(settings), summary)
     await step("alertas do sistema", lambda: runner.run_alert_evaluation(settings), summary)
-    summary["setores ok"] = "sim" if sectors and _sectors_ok(sectors) else "não"
+    active = await _active_sectors(settings.database_url)
+    summary["setores no banco"] = str(active)
+    summary["setores ok"] = "sim" if active > 0 else "não"
     return summary
 
 
-def _sectors_ok(results: list[tuple[str, Any]]) -> bool:
-    return any(
-        code == runner.GEOSAMPA_SECTORS_SOURCE
-        and getattr(outcome, "status", "") in ("SUCCESS", "PARTIAL")
-        for code, outcome in results
-    )
+async def _active_sectors(database_url: str) -> int:
+    engine = create_async_engine(database_url, poolclass=NullPool)
+    try:
+        async with engine.connect() as conn:
+            query = select(func.count()).where(hydro_risk_sectors.c.active.is_(True))
+            return int((await conn.execute(query)).scalar_one())
+    finally:
+        await engine.dispose()
 
 
 def main(argv: list[str] | None = None) -> int:
