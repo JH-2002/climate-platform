@@ -80,6 +80,8 @@ describe("frases da avaliação (FR-216, BR-210)", () => {
     const text = calibrationSentence(evaluation);
     expect(text).toMatch(/^Faixas mais baixas \(fator 0,7: 7, 17,5, 35 mm em 1 h e 21, 42, 70 mm em 24 h\)/);
     expect(text).toMatch(/o motor oficial não muda/);
+    expect(text).not.toMatch(/limite da faixa/);
+    expect(calibrationSentence({ ...evaluation, best_factor: 0.5 })).toMatch(/limite da faixa testada/);
     expect(calibrationSentence({ ...evaluation, best_factor: 1 })).toMatch(/as atuais tiveram o melhor/);
   });
 

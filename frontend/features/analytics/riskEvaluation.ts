@@ -39,11 +39,15 @@ export function calibrationSentence(data: RiskEvaluation): string {
     return "Entre as faixas testadas, as atuais tiveram o melhor índice de sucesso crítico.";
   }
   const direction = best < 1 ? "mais baixas" : "mais altas";
+  const factors = data.calibration.map((r) => r.factor);
+  const atEdge = best === Math.min(...factors) || best === Math.max(...factors);
+  const edgeNote = atEdge ? " O melhor fator ficou no limite da faixa testada: o ponto ótimo pode estar além dele." : "";
   return (
     `Faixas ${direction} (fator ${formatNumber(best, 1)}: ${thresholds(data.current_thresholds.p1h_mm, best)} mm em 1 h e ` +
     `${thresholds(data.current_thresholds.p24_mm, best)} mm em 24 h) teriam o melhor índice de sucesso crítico: ` +
     `${pct(winner.csi)} contra ${pct(current.csi)}, com detecção de ${pct(current.pod)} para ${pct(winner.pod)} ` +
-    `e alarmes falsos de ${pct(current.far)} para ${pct(winner.far)}. É uma recomendação: o motor oficial não muda sem nova versão.`
+    `e alarmes falsos de ${pct(current.far)} para ${pct(winner.far)}. É uma recomendação: o motor oficial não muda sem nova versão.` +
+    edgeNote
   );
 }
 

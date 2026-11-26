@@ -147,7 +147,7 @@ export function RiskEvaluationTab() {
         title="Calibração das faixas de chuva"
         summary={calibrationSentence(data)}
         kind="DERIVED"
-        source="Mesmo retroteste com as faixas de 1 h e 24 h multiplicadas por fatores de 0,5 a 1,5"
+        source="Mesmo retroteste com as faixas de 1 h e 24 h multiplicadas por fatores de 0,3 a 1,5"
         notes={[
           `Faixas atuais (fator 1,0): ${data.current_thresholds.p1h_mm.join(", ")} mm em 1 h e ${data.current_thresholds.p24_mm.join(", ")} mm em 24 h.`,
         ]}

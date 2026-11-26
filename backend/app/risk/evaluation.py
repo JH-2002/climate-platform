@@ -16,7 +16,7 @@ from app.risk.coefficients import Category, Coefficients
 
 ORDER = {Category.LOW: 0, Category.MODERATE: 1, Category.HIGH: 2, Category.CRITICAL: 3}
 POSITIVE = frozenset({Category.HIGH, Category.CRITICAL})
-CALIBRATION_FACTORS: tuple[float, ...] = tuple(round(0.5 + 0.1 * i, 1) for i in range(11))
+CALIBRATION_FACTORS: tuple[float, ...] = tuple(round(0.3 + 0.1 * i, 1) for i in range(13))
 
 
 def normalize_name(name: str | None) -> str:
