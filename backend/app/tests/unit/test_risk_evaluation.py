@@ -79,8 +79,8 @@ def test_calibracao_escala_so_as_faixas_de_chuva() -> None:
     assert half.p1h_thresholds_mm == (5.0, 12.5, 25.0)
     assert half.p24_thresholds_mm == (15.0, 30.0, 50.0)
     assert half.antecedent_threshold_mm == DEFAULT_COEFFICIENTS.antecedent_threshold_mm
-    assert CALIBRATION_FACTORS[0] == 0.5 and CALIBRATION_FACTORS[-1] == 1.5
-    assert 1.0 in CALIBRATION_FACTORS and len(CALIBRATION_FACTORS) == 11
+    assert CALIBRATION_FACTORS[0] == 0.3 and CALIBRATION_FACTORS[-1] == 1.5
+    assert 1.0 in CALIBRATION_FACTORS and len(CALIBRATION_FACTORS) == 13
 
 
 def test_melhor_fator_desempata_pelo_atual() -> None:

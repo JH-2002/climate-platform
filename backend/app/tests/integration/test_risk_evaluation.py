@@ -91,6 +91,8 @@ def test_retroteste_acerta_a_inundacao_com_chuva_forte(client: TestClient) -> No
     assert table["units"] == summary.units and table["events"] == summary.events
     assert body["decision"] == "HIGH_OR_CRITICAL"
     assert [row["factor"] for row in body["calibration"]] == [
+        0.3,
+        0.4,
         0.5,
         0.6,
         0.7,
