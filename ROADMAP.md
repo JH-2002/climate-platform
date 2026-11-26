@@ -19,6 +19,7 @@ Cada fase tem spec, plan, tasks e critérios de conclusão próprios. Uma fase s
 | 12 ✅ | Vitrine pública | 012 | Demonstração estática no GitHub Pages, atualizada pelo Actions a cada 6 h | — |
 | 13 ✅ | Celular e app instalável | 013 | Menu recolhível, PWA instalável e uso sem conexão | — |
 | 14 ✅ | Atualização das dependências | 014 | Vitest 5, Recharts 3, Next 16, mypy 2.4 | — |
+| 15 ✅ | Avaliação do motor de risco | 015 | Retroteste com previsão arquivada × ocorrências, calibração das faixas | — |
 
 ## Ordem de prioridade dentro do produto
 1. Dados reais confiáveis e rastreáveis (Fases 1–2).
