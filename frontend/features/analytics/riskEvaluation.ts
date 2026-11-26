@@ -9,8 +9,10 @@ export function detectionSentence(table: ContingencyTable): string {
   if (table.pod === null || table.events === 0) {
     return "Não houve dia-subprefeitura com ocorrência registrada no período avaliado.";
   }
-  const ofTen = Math.round(table.pod * 10);
-  return `De cada 10 dias-subprefeitura com alagamento registrado, o sistema marcou ${ofTen} como alto ou crítico (taxa de detecção de ${pct(table.pod)}).`;
+  // Com taxas baixas, "0 de cada 10" esconde o número: passa para "de cada 100".
+  const base = table.pod >= 0.1 ? 10 : 100;
+  const marked = Math.round(table.pod * base);
+  return `De cada ${base} dias-subprefeitura com alagamento registrado, o sistema marcou ${marked} como alto ou crítico (taxa de detecção de ${pct(table.pod)}).`;
 }
 
 export function falseAlarmSentence(table: ContingencyTable): string {

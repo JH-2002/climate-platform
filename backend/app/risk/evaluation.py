@@ -23,8 +23,10 @@ def normalize_name(name: str | None) -> str:
     """Nome de subprefeitura comparável: sem acento, maiúsculo, espaços simples."""
     if not name:
         return ""
-    plain = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
-    return " ".join(plain.upper().replace("-", " ").split())
+    plain = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode().upper()
+    for sep in ("-", "/", "'"):
+        plain = plain.replace(sep, " ")
+    return " ".join(plain.split())
 
 
 @dataclass(frozen=True)
