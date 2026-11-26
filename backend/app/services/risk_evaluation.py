@@ -28,6 +28,7 @@ from app.models.tables import (
     forecast_archive_hourly,
     hydro_risk_sectors,
     risk_evaluations,
+    subprefectures,
 )
 from app.risk.coefficients import DEFAULT_COEFFICIENTS, ENGINE_VERSION, Category, Coefficients
 from app.risk.engine import RainInput, SectorInput, assess
@@ -119,6 +120,21 @@ class EvaluationSummary:
     error: str | None = None
 
 
+def _containing_subprefecture(point: Any) -> Any:
+    """Nome da subprefeitura oficial (GeoSampa) que contém o ponto.
+
+    Os textos de subprefeitura variam entre as camadas ("ARICANDUVA/VILA FORMOSA" nas
+    ocorrências, "ARICANDUVA-FORMOSA-CARRAO" nos setores); o limite geográfico não varia.
+    """
+    sp = subprefectures
+    return (
+        select(sp.c.name)
+        .where(sp.c.active.is_(True), func.ST_Contains(sp.c.geom, point))
+        .limit(1)
+        .scalar_subquery()
+    )
+
+
 @dataclass(frozen=True)
 class _Sector:
     sector_id: int
@@ -143,7 +159,9 @@ async def _sectors(
         select(
             s.c.id,
             s.c.grade,
-            s.c.subprefecture,
+            func.coalesce(_containing_subprefecture(anchor), s.c.subprefecture).label(
+                "subprefecture"
+            ),
             in_flood.label("in_flood"),
             func.ST_Y(anchor).label("lat"),
             func.ST_X(anchor).label("lon"),
@@ -190,9 +208,10 @@ async def _occurrence_days_by_sector(
 async def _observed(session: AsyncSession, since: date, until: date) -> set[tuple[date, str]]:
     o = flood_occurrences
     rows = await session.execute(
-        select(o.c.occurred_on, o.c.subprefecture).where(
-            o.c.occurred_on >= since, o.c.occurred_on <= until
-        )
+        select(
+            o.c.occurred_on,
+            func.coalesce(_containing_subprefecture(o.c.geom), o.c.subprefecture),
+        ).where(o.c.occurred_on >= since, o.c.occurred_on <= until)
     )
     return {(day, normalize_name(sub)) for day, sub in rows.tuples() if sub}
 

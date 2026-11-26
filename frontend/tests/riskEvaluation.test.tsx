@@ -64,6 +64,9 @@ describe("frases da avaliação (FR-216, BR-210)", () => {
     expect(detectionSentence(current)).toBe(
       "De cada 10 dias-subprefeitura com alagamento registrado, o sistema marcou 3 como alto ou crítico (taxa de detecção de 30%).",
     );
+    expect(detectionSentence(table(9, 206, 30, 9830))).toBe(
+      "De cada 100 dias-subprefeitura com alagamento registrado, o sistema marcou 4 como alto ou crítico (taxa de detecção de 4%).",
+    );
     expect(detectionSentence(table(0, 0, 2, 10))).toMatch(/Não houve dia-subprefeitura com ocorrência/);
   });
 

@@ -27,7 +27,8 @@ SUB = {1: "SE", 2: "SE", 3: "LAPA", 4: "LAPA"}
 def test_nomes_de_subprefeitura_comparaveis() -> None:
     assert normalize_name("São Miguel Paulista") == "SAO MIGUEL PAULISTA"
     assert normalize_name("  Cidade   Ademar ") == "CIDADE ADEMAR"
-    assert normalize_name("M'Boi Mirim") == normalize_name("M'BOI MIRIM")
+    assert normalize_name("M'Boi Mirim") == "M BOI MIRIM"
+    assert normalize_name("Aricanduva/Vila Formosa") == "ARICANDUVA VILA FORMOSA"
     assert normalize_name("Casa Verde-Cachoeirinha") == "CASA VERDE CACHOEIRINHA"
     assert normalize_name(None) == ""
 
