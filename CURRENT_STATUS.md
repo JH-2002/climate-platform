@@ -17,6 +17,7 @@
 - **Fase 12 — Vitrine pública: concluída** — https://jh-2002.github.io/climate-platform/ (GitHub Pages, dados reais coletados e gravados pelo Actions a cada 6 h e a cada mudança no código; ADR-017).
 - **Fase 13 — Celular e app instalável: concluída** (menu recolhível, PWA com ícones próprios e service worker, uso sem conexão com aviso, tabelas roláveis acessíveis pelo teclado, E2E em tela de celular).
 - **Fase 14 — Atualização das dependências: concluída** (Vitest 5, jsdom 31, Recharts 3, Next 16, mypy 2.4, ruff 0.17; spec 014).
+- **Fase 15 — Avaliação retrospectiva do motor de risco: concluída** (retroteste diário com previsão arquivada × ocorrências do GeoSampa; primeiro resultado: detecção de 3%, sucesso crítico de 2,9%, categorias com confiabilidade crescente; faixas ~40% mais baixas triplicariam o sucesso crítico — recomendação registrada na spec 015, motor não alterado; ADR-018).
 - **Publicação completa:** a pilha de produção está pronta e validada na máquina local; falta escolher a hospedagem (servidor Linux com Docker e um domínio).
 
 ## Repositório

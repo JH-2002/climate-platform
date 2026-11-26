@@ -1,6 +1,6 @@
 # Spec 015 — Avaliação retrospectiva do motor de risco
 
-> Status: **Em andamento** (2026-11-25) · Fase: 15 · ADR: [ADR-018](../../docs/architecture/adr/ADR-018-risk-hindcast.md)
+> Status: **Concluída** (2026-11-25) · Fase: 15 · ADR: [ADR-018](../../docs/architecture/adr/ADR-018-risk-hindcast.md)
 
 ## Contexto
 O motor de risco v0 (spec 005) é experimental: as faixas de chuva (10/25/50 mm em 1 h, 30/60/100 mm
@@ -49,3 +49,34 @@ publicadas depois de 2026-11-19, a mesma rotina passa a cobri-la).
 - A previsão arquivada junta as primeiras horas de cada rodada do modelo: é melhor que a previsão de véspera que o motor usa ao vivo, então o retroteste tende a ser otimista.
 - A malha de 12 pontos não vê chuvas muito localizadas.
 - As ocorrências do GeoSampa podem ser revisadas e publicadas com atraso.
+
+## Primeiro resultado com dados reais (2026-11-26, vitrine)
+325 dias (2026-01-04 a 2026-11-24), 31 subprefeituras com setores, 10.075 dias-subprefeitura,
+280 com ocorrência registrada (2,8%).
+
+| Medida | Faixas atuais (fator 1,0) |
+|---|---|
+| Taxa de detecção (POD) | 3,2% (9 de 280) |
+| Alarmes falsos (FAR) | 77% (30 de 39) |
+| Índice de sucesso crítico (CSI) | 2,9% |
+| Viés de frequência | 0,14 (marca alto/crítico 7 vezes menos que a frequência das ocorrências) |
+
+**Confiabilidade:** a parte dos dias com ocorrência cresce com a categoria — baixo 2,5% (242/9.733),
+moderado 9,6% (29/303), alto 23% (9/39); nenhum dia crítico. As categorias discriminam, mas o motor
+quase nunca chega a alto.
+
+**Calibração:** CSI de 8,3–8,8% com fatores de 0,4 a 0,6 (melhor 0,4), três vezes o atual. Com 0,6
+(faixas 6/15/30 mm em 1 h e 18/36/60 mm em 24 h) o viés fica em 0,77, perto de marcar na mesma
+frequência das ocorrências; com 0,4 o viés passa de 2,5 (marca demais). A primeira busca ia de
+0,5 a 1,5 e o melhor caiu no limite; a faixa foi ampliada para 0,3.
+
+**Leitura:** a habilidade é baixa em qualquer fator (CSI abaixo de 9%). A grade de 12 pontos e a
+previsão de modelo não veem bem as chuvas convectivas localizadas que causam a maior parte dos
+alagamentos; as ocorrências registradas são poucas e sub-registradas. Recomendação (não aplicada):
+estudar um motor v0.2 com faixas cerca de 40% mais baixas, conferindo antes com a operação ao vivo
+quando houver ocorrências publicadas depois de 2026-11-19.
+
+**Achados durante a validação:** 7 subprefeituras não casavam pelo texto entre ocorrências e setores
+(65 dias-subprefeitura com ocorrência ficavam de fora) — corrigido com o limite geográfico oficial;
+o último dia ficava de fora pelo fuso (arquivo pedido até hoje em UTC); a faixa recomendada de
+17,5 mm aparecia como 18; uma falha passageira do GeoSampa derrubava a atualização da vitrine.
